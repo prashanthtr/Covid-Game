@@ -198,7 +198,7 @@ function iterate( n, disconnect, testing ){
 
     for( let iter = 0; iter < n; iter++){
         cagrid.gridDisplay()
-        cagrid.simulate_input(n, disconnect, testing)
+        cagrid.simulate_input(iter, disconnect, testing)
         cagrid.update()
 
     }
