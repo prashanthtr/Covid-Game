@@ -37,7 +37,7 @@ class Grid {
         }
     }
 
-    addEdge(node1id, node2id, weight = 1/3) {
+    addEdge(node1id, node2id, weight = 1) {
         this.connected[node1id].push({ node: this.nodes[node2id], weight: weight });
         var connectStr = this.connected[node1id].map((n) => JSON.stringify(n.node));
 
@@ -50,7 +50,7 @@ class Grid {
         let graph = "";
 
         for (const value of Object.values(this.nodes)) {
-            graph += value.state + " " +  "->" + this.connected[value.id].map(n => n.node.state).join(", ") + "\n";
+            graph += value.id + " " +  "->" + this.connected[value.id].map(n => n.node.color).join(", ") + "\n";
         }
         console.log(graph);
     }
@@ -61,14 +61,17 @@ class Grid {
         for(var row=0; row < n; row++){
             for(var col=0; col < n; col++){
 
-                if( this.nodes[row+","+col].disconnected != 0){
-                    grid += "[" + this.nodes[row+","+col].color + "]\t"
+                if(  this.nodes[row+","+col].tested != 0 && this.nodes[row+","+col].disconnected != 0 ){
+                    grid +=  addspaces("[*" + this.nodes[row+","+col].color + "*]")+"\t"
+                }
+                else if( this.nodes[row+","+col].disconnected != 0){
+                    grid += addspaces("[" + this.nodes[row+","+col].color + "]")+ "\t"
                 }
                 else if(  this.nodes[row+","+col].tested != 0 ){
-                    grid += "*" + this.nodes[row+","+col].color + "*\t"
+                    grid += addspaces("*" + this.nodes[row+","+col].color + "*") + "\t"
                 }
                 else {
-                    grid += this.nodes[row+","+col].color + "\t"
+                    grid += addspaces(this.nodes[row+","+col].color) + "\t"
                 }
 
             }
@@ -78,14 +81,14 @@ class Grid {
     }
 
     testing ( nodeid ){
-        this.nodes[nodeid].tested = 0.6; //weight for testing
+        this.nodes[nodeid].tested = 1; //weight for testing
     }
 
     disconnect ( nodeid, value ){
 
         if(value == 1 ){
             // connect the nodes with adjacent
-            this.nodes[nodeid].disconnected = 1/3 //weight for connecting
+            this.nodes[nodeid].disconnected = 1 //weight for connecting
         }
         else {
             // connect the nodes with adjacent
@@ -125,42 +128,96 @@ class Grid {
     update (){
 
         //shouldnt' I be storing it and using the old values
-        var new_obj = JSON.parse(JSON.stringify(this.nodes));
+        var temp_nodes = JSON.parse(JSON.stringify(this.nodes));
+        var temp_connections = JSON.parse(JSON.stringify(this.connected));
 
         var sum = 0
-        for (const value of Object.values(new_obj)) {
+        for (const value of Object.values(temp_nodes)) {
 
+            let adjacent = 0;
             //calculate adjacent neighbours sum
-            let adjacent = this.connected[value.id].map( n => ((value.disconnected!=0||n.node.disconnected!=0)?0:n.node.weight*n.node.state)).reduce((a,b)=> a+b);
-            //the edge weights are added here to keep connection and disconnection
-
-
-            let spread_across_region = adjacent/16; //to keep sum within 1
-            let R0 = 2.28; // a corona constant. testing reduces its impact spread
-
-            let w2 = 1/3;
-            let spread_within_region = (w2-value.tested)*R0
-            let w3 = 0.1; //persistence of each cell to continue its current state
-            let persistence = w3*value.state/2; //1/3 if red, 1/6 if orange, and 0 is green
-
-            let score = spread_across_region + spread_within_region  + persistence; //
-
-            if ( score <= 0.25){
-                value.state = 0
-                value.color = "green"
-            }
-            else if( score > 0.25 && score <= 0.5){
-                value.state = 1
-                value.color = "orange"
+            if( value.disconnected == 1){
             }
             else{
-                value.state = 2
-                value.color = "red"
+                adjacent = temp_connections[value.id].map(n => n.node.disconnected==1?0:n.weight*n.node.state).reduce((a,b)=> a+b);
+                //n.node.disconnected==1?0:
+            }
+
+            //the edge weights are added here to keep connection and disconnection
+
+            // let spread_across_region = adjacent/16; //to keep sum within 1
+            // let R0 = 2.28; // a corona constant. testing reduces its impact spread
+
+            // let w2 = 1/2;
+            // //let spread_within_region = (w2-value.tested)*R0
+            // let w3 = 0.1; //persistence of each cell to continue its current state
+            // let persistence = (w2-value.tested)*value.state/2; //1/3 if red, 1/6 if orange, and 0 is green
+
+            // let score = spread_across_region + persistence; //
+            // //+ spread_within_region +
+
+            //console.log( value.id + "  " + adjacent)
+            let score = adjacent;
+
+            //green to orange
+            if( value.color == "green" ){
+
+                if( value.disconnected == 1 && value.tested == 1){
+                    //no change
+                }
+                else if(  value.disconnected == 1){
+                    //no change
+                }
+                else if( value.color == "green" && score >= 3){
+                    value.state = 1
+                    value.color = "orange"
+                }
+            }
+            else if ( value.color == "orange"){
+                if( value.disconnected == 1 && value.tested == 1){
+                    value.state = 0
+                    value.color = "green"
+                }
+                else if(  value.disconnected == 1){
+                    //no change
+                }
+                else if( value.tested == 1){
+                    value.state = 0
+                    value.color = "green"
+                }
+                else if( score >= 3){
+                    value.state = 2
+                    value.color = "red"
+                }
+                else{
+                    //remains same
+                }
+            }
+            else{
+
+                if( value.disconnected == 1 && value.tested == 1){
+                    value.state = 1
+                    value.color = "orange"
+                }
+                else if(  value.disconnected == 1){
+                    //no change
+                }
+                else if( value.tested == 1){
+                    value.state = 1
+                    value.color = "orange"
+                }
+                else{
+                    //remains same
+                }
             }
         }
 
+        for (const value of Object.values(temp_nodes)) {
+            this.nodes[value.id].state = value.state
+            this.nodes[value.id].color = value.color
+        }
         //repaste
-        this.nodes = JSON.parse(JSON.stringify(new_obj))
+        //this.nodes = JSON.parse(JSON.stringify(temp_nodes))
 
     }
 
@@ -194,14 +251,20 @@ function populate_grid ( n ){
 }
 
 
-function iterate( n, disconnect, testing ){
+function iterate( n, iterations, disconnect, testing ){
 
-    for( let iter = 0; iter < n; iter++){
+    for( let iter = 0; iter < iterations; iter++){
+        cagrid.simulate_input(n, disconnect, testing)
+        console.log("Time step " + (iter+1) + ":")
         cagrid.gridDisplay()
-        cagrid.simulate_input(iter, disconnect, testing)
+        //cagrid.display()
         cagrid.update()
 
     }
+}
+
+function addspaces( str ){
+    return str+ " ".repeat(10-str.length);
 }
 
 
@@ -218,10 +281,17 @@ function iterate( n, disconnect, testing ){
 
 //console.log("Type input as : node graphs.js number_cells n_iterations, disconnection%, testing%")
 
-var n = parseFloat(process.argv[2]);
-var iterations = parseFloat(process.argv[3]);
-var disconnect = parseFloat(process.argv[4]);
-var testing = parseFloat(process.argv[5]);
+var n = parseFloat(process.argv[2]) || 3;
+var iterations = parseFloat(process.argv[3]) || 3;
+var disconnect = parseFloat(process.argv[4]) || 10;
+var testing = parseFloat(process.argv[5]) || 10;
+
+console.log("\nSimulation runs with " + n + "*" + n + "cells for " + iterations + " iterations.");
+console.log("Every time step : " + disconnect + "% of cells are disconnected, and " + testing + "% of cells are tested");
 
 populate_grid(n);
-iterate( iterations, disconnect, testing);
+
+console.log("\nStarting config:")
+cagrid.gridDisplay()
+console.log("Inputs start: \n")
+iterate( n, iterations, disconnect, testing);
