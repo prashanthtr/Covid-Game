@@ -98,17 +98,18 @@ class Grid {
 
     }
 
-    simulate_input ( ){
+    //takes two percentages
+    simulate_input ( n, disconnect, testing) {
 
         //testing 1% of cells
         for(var row=0; row < n; row++){
             for(var col=0; col < n; col++){
 
-                if( Math.random() > 0.9){
+                if( Math.random() > (1-testing/100)){
                     this.testing(row+","+col);
                 }
 
-                if( Math.random() > 0.95){
+                if( Math.random() > (1-disconnect/100)){
                     this.disconnect(row+","+col, 1);
                 }
                 else{
@@ -167,37 +168,60 @@ class Grid {
 
 var cagrid = new Grid();
 
-var n = 10;
+function populate_grid ( n ){
 
-for(var row=0; row < n; row++){
-    for(var col=0; col < n; col++){
-        cagrid.addNode({x: col, y: row, id: ""+row+","+col});
+    for(var row=0; row < n; row++){
+        for(var col=0; col < n; col++){
+            cagrid.addNode({x: col, y: row, id: ""+row+","+col});
+        }
+    }
+
+    for(var row=0; row < n; row++){
+        for(var col=0; col < n; col++){
+
+            var up1 = (row - 1) < 0?row:(cagrid.addEdge( (row+","+col), ((row-1)+","+col)));
+            var down1 = (row + 1)>= n?0: (cagrid.addEdge( (row+","+col), ((row+1)+","+col)));
+            var left1 = (col - 1) < 0? (n-1): (cagrid.addEdge( (row+","+col), ((row)+","+(col-1))));
+            var right1 = (col + 1) >= n? 0: (cagrid.addEdge( (row+","+col), ((row)+","+(col+1))));
+
+            var upleft = ((row - 1 >= 0)&&(col - 1 >= 0))?(cagrid.addEdge( (row+","+col), ((row-1)+","+(col-1)))):0
+            var upright = ((row - 1 >= 0)&&(col + 1 < n))?(cagrid.addEdge( (row+","+col), ((row-1)+","+(col+1)))):0
+            var downright = ((row + 1 < n)&&(col + 1 < n))?(cagrid.addEdge( (row+","+col), ((row+1)+","+(col+1)))):0
+            var downleft = ((row + 1 < n)&&(col - 1 >= 0))?(cagrid.addEdge( (row+","+col), ((row+1)+","+(col-1)))):0
+
+        }
     }
 }
 
-for(var row=0; row < n; row++){
-    for(var col=0; col < n; col++){
 
-        var up1 = (row - 1) < 0?row:(cagrid.addEdge( (row+","+col), ((row-1)+","+col)));
-        var down1 = (row + 1)>= n?0: (cagrid.addEdge( (row+","+col), ((row+1)+","+col)));
-        var left1 = (col - 1) < 0? (n-1): (cagrid.addEdge( (row+","+col), ((row)+","+(col-1))));
-        var right1 = (col + 1) >= n? 0: (cagrid.addEdge( (row+","+col), ((row)+","+(col+1))));
+function iterate( n, disconnect, testing ){
 
-        var upleft = ((row - 1 >= 0)&&(col - 1 >= 0))?(cagrid.addEdge( (row+","+col), ((row-1)+","+(col-1)))):0
-        var upright = ((row - 1 >= 0)&&(col + 1 < n))?(cagrid.addEdge( (row+","+col), ((row-1)+","+(col+1)))):0
-        var downright = ((row + 1 < n)&&(col + 1 < n))?(cagrid.addEdge( (row+","+col), ((row+1)+","+(col+1)))):0
-        var downleft = ((row + 1 < n)&&(col - 1 >= 0))?(cagrid.addEdge( (row+","+col), ((row+1)+","+(col-1)))):0
+    for( let iter = 0; iter < n; iter++){
+        cagrid.gridDisplay()
+        cagrid.simulate_input(n, disconnect, testing)
+        cagrid.update()
 
     }
 }
 
-cagrid.gridDisplay()
-cagrid.simulate_input()
-cagrid.update()
-cagrid.gridDisplay()
-cagrid.simulate_input()
-cagrid.update()
-cagrid.gridDisplay()
-cagrid.simulate_input()
-cagrid.update()
-cagrid.gridDisplay()
+
+// cagrid.gridDisplay()
+// cagrid.simulate_input()
+// cagrid.update()
+// cagrid.gridDisplay()
+// cagrid.simulate_input()
+// cagrid.update()
+// cagrid.gridDisplay()
+
+
+// takes 4 arguments now - number_cells, n_iterations, %disconnection, %testing (last two are inputs)
+
+//console.log("Type input as : node graphs.js number_cells n_iterations, disconnection%, testing%")
+
+var n = parseFloat(process.argv[2]);
+var iterations = parseFloat(process.argv[3]);
+var disconnect = parseFloat(process.argv[4]);
+var testing = parseFloat(process.argv[5]);
+
+populate_grid(n);
+iterate( iterations, disconnect, testing);

@@ -12,4 +12,4 @@ Steps to run the game on the console/terminal:
 1) Install node
 2) Open terminal or npm console in windows
 3) Navigate to the folder
-4) > node graphs.js
+4) > node graphs.js number_cells n_iterations, disconnection%, testing%
