@@ -125,6 +125,7 @@ class Grid {
     }
 
     //counts number of green and connected green
+    //
     score ( ){
 
         var sum = 0;
@@ -301,7 +302,7 @@ var testing = parseFloat(process.argv[5]) || 0;
 
 console.log("\nSimulation runs with " + n + "*" + n + "cells for " + iterations + " iterations.");
 console.log("Every time step : " + disconnect + "% of cells are disconnected, and " + testing + "% of cells are tested");
-console.log("Scoring: Score = Number of green cells + number of connected green cells");
+console.log("Scoring: Score = green cells + adjacent green cells (counted once)");
 
 populate_grid(n);
 
