@@ -1,0 +1,170 @@
+
+<!-- This piece of code is to say that the data of the nodes is bound to the -->
+<!-- rectangles on screen. After every update - synchronously the rectangles change -->
+<!-- color based on the current values of the cells. -->
+
+<!-- need to figure out the drag and drop functionality. -->
+
+
+<html>
+  <head>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"> </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"> </script>
+
+    <style>
+      .item {
+        height: 20;
+        width: 20;
+        touch-action: none;
+        user-select: none;
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div class="item" style="background:orange;" > </div> <br>
+
+    <script>
+
+      let rects = [];
+
+      for (i = 0 ; i < 20; i++){
+          for(j =0; j<10; j++){
+              rects.push({"x": j, "y": i, "color": Math.random(), "tested": 0,
+          "disconnected": 0 })
+          }
+      }
+
+      var svgContainer = d3.select("body").append("svg")
+          .attr("width", 600)
+          .attr("height", 600);
+
+      var rectangles = svgContainer.selectAll("rect")
+          .data(rects)
+          .enter()
+          .append("rect");
+
+      // .attr('x', function(d) {
+          //     return d.x * 30;
+          // })
+          // .attr('y', function(d) {
+          //     return d.y * 30;
+          // })
+          // .attr("width",25)
+          // .attr("height", 25)
+          // .style("fill",function(d) {
+          //     if( d.color > 0.5 ){
+          //         return "green"
+          //     }
+          //     else{
+          //         return "red"
+          //     }
+          // });
+
+      d3.selectAll("rect")
+      .on("mouseover", function(d, i) { rects[i].color = Math.random(); update() });
+
+      function update(){
+
+          setTimeout( function(){
+
+              // for (i = 0 ; i < rects.length; i++){
+              //     rects[i].color = Math.random();
+              // }
+
+              d3.select("body")
+                  .select("svg")
+                  .selectAll("rect")
+                  .attr('x', function(d) {
+                      return d.x * 30;
+                  })
+                  .attr('y', function(d) {
+                      return d.y * 30;
+                  })
+                  .attr("width",25)
+                  .attr("height", 25)
+                  .style("fill",function(d) {
+                      if( d.color > 0.5 ){
+                          return "green"
+                      }
+                      else{
+                          return "red"
+                      }
+                  })
+                  .attr("cx",function(d){
+                      return d.x
+                  })
+                  .attr("cy", function(d){
+                      return d.y
+                  })
+                  .attr("class","dropzone")
+          },0);
+      }
+
+          interact('.dropzone')
+              .dropzone({
+                  accept: '.item',
+                  overlap: 0.8,
+                  inside: "false",
+                  ondropactivate: function (event) {
+                  },
+                  ondropdeactivate: function (event) {
+                      //console.log(event.target);
+                  },
+                  ondragenter: function(event){
+                      if( this.inside == "true"){
+                          console.log(event.target);
+                      }
+                      else{
+                          console.log(this.inside)
+                          this.inside = "true"
+                          //console.log(event.target);
+                      }
+                  },
+                  ondragleave: function(event){
+                      console.log(this.inside)
+                      this.inside = "false";
+                      //console.log(event.target);
+                  }
+              })
+
+
+
+
+      interact('.item')
+      .draggable({
+        onmove: function(event) {
+            const target = event.target;
+
+            const dataX = target.getAttribute('data-x');
+            const dataY = target.getAttribute('data-y');
+            const initialX = parseFloat(dataX) || 0;
+            const initialY = parseFloat(dataY) || 0;
+
+            const deltaX = event.dx;
+            const deltaY = event.dy;
+
+            const newX = initialX + deltaX;
+            const newY = initialY + deltaY;
+
+            target
+                .style
+                .transform = `translate(${newX}px, ${newY}px)`;
+
+            target.setAttribute('data-x', newX);
+            target.setAttribute('data-y', newY);
+        },
+        inertia: true,
+        restrict: {
+            restriction: 'parent',
+        }
+    })
+
+      update()
+
+    </script>
+  </body>
+
+</html>
