@@ -122,7 +122,20 @@ class Grid {
             }
         }
 
+    }
 
+    //counts number of green and connected green
+    score ( ){
+
+        var sum = 0;
+        for (const value of Object.values(this.nodes)) {
+            if( value.color == "green"){
+                sum+= 1;
+                sum += this.connected[value.id].map(n => (n.node.color=="green"&&n.node.disconnected==0)?1:0).reduce((a,b)=> a+b)/2; //because this is counted twice
+
+            }
+        }
+        return sum;
     }
 
     update (){
@@ -256,6 +269,7 @@ function iterate( n, iterations, disconnect, testing ){
     for( let iter = 0; iter < iterations; iter++){
         cagrid.simulate_input(n, disconnect, testing)
         console.log("Time step " + (iter+1) + ":")
+        console.log("Score: " + cagrid.score())
         cagrid.gridDisplay()
         //cagrid.display()
         cagrid.update()
@@ -268,8 +282,7 @@ function addspaces( str ){
 }
 
 
-// cagrid.gridDisplay()
-// cagrid.simulate_input()
+// cagrid.gridDisplay().simulate_input()
 // cagrid.update()
 // cagrid.gridDisplay()
 // cagrid.simulate_input()
@@ -283,15 +296,17 @@ function addspaces( str ){
 
 var n = parseFloat(process.argv[2]) || 3;
 var iterations = parseFloat(process.argv[3]) || 3;
-var disconnect = parseFloat(process.argv[4]) || 10;
-var testing = parseFloat(process.argv[5]) || 10;
+var disconnect = parseFloat(process.argv[4]) || 0;
+var testing = parseFloat(process.argv[5]) || 0;
 
 console.log("\nSimulation runs with " + n + "*" + n + "cells for " + iterations + " iterations.");
 console.log("Every time step : " + disconnect + "% of cells are disconnected, and " + testing + "% of cells are tested");
+console.log("Scoring: Score = Number of green cells + number of connected green cells");
 
 populate_grid(n);
 
-console.log("\nStarting config:")
+console.log("\nTime Step: 0")
+console.log("Score: " + cagrid.score())
 cagrid.gridDisplay()
-console.log("Inputs start: \n")
+//console.log("Inputs start: \n")
 iterate( n, iterations, disconnect, testing);
