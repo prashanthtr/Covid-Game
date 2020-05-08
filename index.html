@@ -61,9 +61,14 @@
     <script>
 
       // N1*N2 grids
-      var n1 = 3;
-      var n2 = 3;
+      var n1 = 20;
+      var n2 = 10;
       var ts = 0;
+
+      console.log("\nSimulation runs with " + n1 + "*" + n2 + "cells for " + iterations + " iterations.");
+      console.log("Every time step : " + disconnect + "% of cells are disconnected, and " + testing + "% of cells are tested");
+      console.log("Scoring: Score = green cells + adjacent green cells (counted once)");
+
 
       let rects = [];
 
@@ -84,7 +89,7 @@
           }
       }
 
-      populate_grid(n);
+      populate_grid(n1,n2);
 
       var svgContainer = d3.select("body").append("svg")
           .attr("width", 600)
@@ -139,7 +144,7 @@
 
       function update(){
 
-          run_grid();
+          run_grid(n1,n2);
 
           document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
           //var obj = cagrid.orderExport();
@@ -275,7 +280,7 @@
     })
 
       update();
-      setInterval(update, 3000);
+      setInterval(update, 10000);
 
     </script>
   </body>
