@@ -4,6 +4,11 @@
 // state. Otherwise, all the cells will eventually turn red.
 
 
+// To be clear on the rules
+// 1) testing means that it is testing + quarantine: continues to influennce the cells state, until is reconnected
+// 2) disconnect means that the cell does not influence neighbouring cells
+// 3) connect stops testing, and disconnection and resumes normal activity
+
 class Grid {
     constructor() {
         this.connected = {};
@@ -54,8 +59,8 @@ class Grid {
         //     order[key] = this.nodes[key];
         // });
         // return order;
-        console.log(this.nodes[nodeid])
-        console.log(nodeid + " " + this.nodes[nodeid].color)
+        //console.log(this.nodes[nodeid])
+        //console.log(nodeid + " " + this.nodes[nodeid].color)
         return this.nodes[nodeid].color;
     }
 

@@ -15,28 +15,30 @@
 
       .container{
         display: flex;
-        width: 8%;
+        width: 6%;
+      }
+
+      .bordered{
+        outline: 4px solid black;
+      }
+
+      .testinprogress{
+        outline: 3px dotted black;
       }
 
       .testing {
-        height: 15;
-        width: 15;
         touch-action: none;
         user-select: none;
         flex-grow: 1;
       }
 
       .disconnect {
-        height: 15;
-        width: 15;
         touch-action: none;
         user-select: none;
         flex-grow: 1;
       }
 
       .connect {
-        height: 15;
-        width: 15;
         touch-action: none;
         user-select: none;
         flex-grow: 1;
@@ -144,8 +146,6 @@
 
       function update(){
 
-          run_grid(n1,n2);
-
           document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
           //var obj = cagrid.orderExport();
           for(var iter=0; iter<rects.length; iter++){
@@ -153,50 +153,68 @@
               rects[iter].color = objColor;
           }
 
-          svgContainer.selectAll("rect").remove()
-
-          var rectangles = svgContainer.selectAll("rect")
-              .data(rects)
-              .enter()
-              .append("rect");
-
-          rectangles
-              .attr('x', function(d) {
-                  return d.x * 30;
+          svgContainer
+              .selectAll("rect")
+              .transition()
+              .style("fill", function(d){
+                  return d.color
               })
-              .attr('y', function(d) {
-                  return d.y * 30;
-              })
-              .attr("width",25)
-              .attr("height", 25)
-              .style("fill",function(d) {
-                  return d.color;
-              })
-              .attr("cx",function(d){
-                  return d.x
-              })
-              .attr("cy", function(d){
-                  return d.y
-              })
-              .attr("class","dropzone")
 
+          // var rectangles = svgContainer.selectAll("rect")
+          //     .data(rects)
+          //     .enter()
+          //     .append("rect");
 
+          // rectangles
+          //     .attr('x', function(d) {
+          //         return d.x * 30;
+          //     })
+          //     .attr('y', function(d) {
+          //         return d.y * 30;
+          //     })
+          //     .attr("width",25)
+          //     .attr("height", 25)
+          //     .style("fill",function(d) {
+          //         return d.color;
+          //     })
+          //     .attr("cx",function(d){
+          //         return d.x
+          //     })
+          //     .attr("cy", function(d){
+          //         return d.y
+          //     })
+          //     .attr("class","dropzone")
 
+          run_grid(n1,n2);
       }
 
-    interact('.dropzone')
+     interact('.dropzone')
     .dropzone({
         accept: ['.testing','.disconnect','.connect'],
         overlap: 0.5,
         ondrop: function (event) {
-             console.log(event.relatedTarget.getAttribute("class"));
+            console.log(event.relatedTarget.getAttribute("class"));
             var x = event.target.getAttribute("cx");
             var y = event.target.getAttribute("cy");
 
             switch(event.relatedTarget.getAttribute("class")){
-            case "testing": {cagrid.testing(y+","+x, 1);} break;
-            case "disconnect": {cagrid.disconnect(y+","+x, 1);} break;
-            case "connect": {cagrid.disconnect(y+","+x, 0);} break;
+            case "testing": {
+                cagrid.testing(y+","+x, 1);
+                const item = event.target
+                item.classList.add('testinprogress')
+            } break;
+            case "disconnect": {
+                cagrid.disconnect(y+","+x, 1);
+                const item = event.target
+                item.classList.add('bordered')
+            } break;
+            case "connect": {
+                cagrid.disconnect(y+","+x, 0);
+                const item = event.target;
+                item.classList.remove('bordered')
+                item.classList.remove('testinprogress')
+                cagrid.testing(y+","+x, 0);
+            } break;
             default: {cagrid.testing(y+","+x, 0);cagrid.disconnect(y+","+x, 0);}
             }
         }
@@ -279,8 +297,9 @@
         }
     })
 
-      update();
-      setInterval(update, 10000);
+      //update();
+      cagrid.gridDisplay(n1,n2)
+      setInterval(update, 1000);
 
     </script>
   </body>
