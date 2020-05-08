@@ -12,11 +12,34 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"> </script>
 
     <style>
-      .item {
-        height: 20;
-        width: 20;
+
+      .container{
+        display: flex;
+        width: 8%;
+      }
+
+      .testing {
+        height: 15;
+        width: 15;
         touch-action: none;
         user-select: none;
+        flex-grow: 1;
+      }
+
+      .disconnect {
+        height: 15;
+        width: 15;
+        touch-action: none;
+        user-select: none;
+        flex-grow: 1;
+      }
+
+      .connect {
+        height: 15;
+        width: 15;
+        touch-action: none;
+        user-select: none;
+        flex-grow: 1;
       }
 
     </style>
@@ -24,18 +47,44 @@
 
   <body>
 
-    <div class="item" style="background:orange;" > </div> <br>
+    <div class="container">
+      <div class="testing" style="background:black;color:white" > T </div> &nbsp
+      <div class="disconnect" style="background:black;color:white" > D </div> &nbsp
+      <div class="connect" style="background:black;color:white" > C </div> &nbsp
+    </div>
+
+    <br>
+
+    <p id="ts"> </p>
+    <script type="text/javascript" src="graphs.js"> </script>
 
     <script>
 
+      // N1*N2 grids
+      var n1 = 3;
+      var n2 = 3;
+      var ts = 0;
+
       let rects = [];
 
-      for (i = 0 ; i < 20; i++){
-          for(j =0; j<10; j++){
-              rects.push({"x": j, "y": i, "color": Math.random(), "tested": 0,
-          "disconnected": 0 })
+      for (i = 0 ; i < n1; i++){
+          for(j =0; j<n2; j++){
+              var color = "green"
+              var r = Math.random()
+              if( r < 0.3 ){
+                  color = "green"
+              }
+              else if( r >= 0.3 && r < 0.6 ){
+                  color = "orange"
+              }
+              else{
+                  color = "red"
+              }
+              rects.push({"x": j, "y": i, "color": color});
           }
       }
+
+      populate_grid(n);
 
       var svgContainer = d3.select("body").append("svg")
           .attr("width", 600)
@@ -45,6 +94,28 @@
           .data(rects)
           .enter()
           .append("rect");
+
+      rectangles
+        .attr('x', function(d) {
+            return d.x * 30;
+        })
+        .attr('y', function(d) {
+            return d.y * 30;
+        })
+        .attr("width",25)
+        .attr("height", 25)
+        .style("fill",function(d) {
+            return d.color;
+        })
+       .attr("cx",function(d){
+           return d.x
+       })
+       .attr("cy", function(d){
+         return d.y
+       })
+       .attr("class","dropzone")
+
+      document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
 
       // .attr('x', function(d) {
           //     return d.x * 30;
@@ -63,77 +134,70 @@
           //     }
           // });
 
-      d3.selectAll("rect")
-      .on("mouseover", function(d, i) { rects[i].color = Math.random(); update() });
+      // d3.selectAll("rect")
+      // .on("mouseover", function(d, i) { rects[i].color = Math.random(); update() });
 
       function update(){
 
-          setTimeout( function(){
+          run_grid();
 
-              // for (i = 0 ; i < rects.length; i++){
-              //     rects[i].color = Math.random();
-              // }
+          document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
+          //var obj = cagrid.orderExport();
+          for(var iter=0; iter<rects.length; iter++){
+              var objColor = cagrid.retrieveColor(rects[iter].y + "," + rects[iter].x)
+              rects[iter].color = objColor;
+          }
 
-              d3.select("body")
-                  .select("svg")
-                  .selectAll("rect")
-                  .attr('x', function(d) {
-                      return d.x * 30;
-                  })
-                  .attr('y', function(d) {
-                      return d.y * 30;
-                  })
-                  .attr("width",25)
-                  .attr("height", 25)
-                  .style("fill",function(d) {
-                      if( d.color > 0.5 ){
-                          return "green"
-                      }
-                      else{
-                          return "red"
-                      }
-                  })
-                  .attr("cx",function(d){
-                      return d.x
-                  })
-                  .attr("cy", function(d){
-                      return d.y
-                  })
-                  .attr("class","dropzone")
-          },0);
+          svgContainer.selectAll("rect").remove()
+
+          var rectangles = svgContainer.selectAll("rect")
+              .data(rects)
+              .enter()
+              .append("rect");
+
+          rectangles
+              .attr('x', function(d) {
+                  return d.x * 30;
+              })
+              .attr('y', function(d) {
+                  return d.y * 30;
+              })
+              .attr("width",25)
+              .attr("height", 25)
+              .style("fill",function(d) {
+                  return d.color;
+              })
+              .attr("cx",function(d){
+                  return d.x
+              })
+              .attr("cy", function(d){
+                  return d.y
+              })
+              .attr("class","dropzone")
+
+
+
       }
 
-          interact('.dropzone')
-              .dropzone({
-                  accept: '.item',
-                  overlap: 0.8,
-                  inside: "false",
-                  ondropactivate: function (event) {
-                  },
-                  ondropdeactivate: function (event) {
-                      //console.log(event.target);
-                  },
-                  ondragenter: function(event){
-                      if( this.inside == "true"){
-                          console.log(event.target);
-                      }
-                      else{
-                          console.log(this.inside)
-                          this.inside = "true"
-                          //console.log(event.target);
-                      }
-                  },
-                  ondragleave: function(event){
-                      console.log(this.inside)
-                      this.inside = "false";
-                      //console.log(event.target);
-                  }
-              })
+    interact('.dropzone')
+    .dropzone({
+        accept: ['.testing','.disconnect','.connect'],
+        overlap: 0.5,
+        ondrop: function (event) {
+             console.log(event.relatedTarget.getAttribute("class"));
+            var x = event.target.getAttribute("cx");
+            var y = event.target.getAttribute("cy");
 
+            switch(event.relatedTarget.getAttribute("class")){
+            case "testing": {cagrid.testing(y+","+x, 1);} break;
+            case "disconnect": {cagrid.disconnect(y+","+x, 1);} break;
+            case "connect": {cagrid.disconnect(y+","+x, 0);} break;
+            default: {cagrid.testing(y+","+x, 0);cagrid.disconnect(y+","+x, 0);}
+            }
+        }
+    });
 
-
-
-      interact('.item')
+      interact('.testing')
       .draggable({
         onmove: function(event) {
             const target = event.target;
@@ -157,12 +221,61 @@
             target.setAttribute('data-y', newY);
         },
         inertia: true,
-        restrict: {
-            restriction: 'parent',
+      })
+
+      interact('.disconnect')
+      .draggable({
+        onmove: function(event) {
+            const target = event.target;
+
+            const dataX = target.getAttribute('data-x');
+            const dataY = target.getAttribute('data-y');
+            const initialX = parseFloat(dataX) || 0;
+            const initialY = parseFloat(dataY) || 0;
+
+            const deltaX = event.dx;
+            const deltaY = event.dy;
+
+            const newX = initialX + deltaX;
+            const newY = initialY + deltaY;
+
+            target
+                .style
+                .transform = `translate(${newX}px, ${newY}px)`;
+
+            target.setAttribute('data-x', newX);
+            target.setAttribute('data-y', newY);
+        },
+        inertia: true,
+    })
+
+      interact('.connect')
+    .draggable({
+        onmove: function(event) {
+            const target = event.target;
+
+            const dataX = target.getAttribute('data-x');
+            const dataY = target.getAttribute('data-y');
+            const initialX = parseFloat(dataX) || 0;
+            const initialY = parseFloat(dataY) || 0;
+
+            const deltaX = event.dx;
+            const deltaY = event.dy;
+
+            const newX = initialX + deltaX;
+            const newY = initialY + deltaY;
+
+            target
+                .style
+                .transform = `translate(${newX}px, ${newY}px)`;
+
+            target.setAttribute('data-x', newX);
+            target.setAttribute('data-y', newY);
         }
     })
 
-      update()
+      update();
+      setInterval(update, 3000);
 
     </script>
   </body>

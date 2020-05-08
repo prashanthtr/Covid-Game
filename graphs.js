@@ -1,14 +1,7 @@
 
-// if a cell is red, then it continues to stay red
-// if a cell is orange, then it continues to stay orange, or move to red
-// if a cell is green, then it turns orange or continues to stay green.
-
-
-// THe goal of the rules in the Game of life were to keep adjacenecy interactions and state interactios such that based on letting chaos like things emerge out of the interaction.
-
-// The goal of our game is to model a game such that there are human interactions that alter the game rules to bring about a dynamic and chaotic state. Otherwise, all the cells will eventually turn red.
-
-// map structures for game of life simulation
+// The goal of our game is to model a game such that there are human
+// interactions that alter the game rules to bring about a dynamic and chaotic
+// state. Otherwise, all the cells will eventually turn red.
 
 
 class Grid {
@@ -55,6 +48,17 @@ class Grid {
         console.log(graph);
     }
 
+    retrieveColor ( nodeid ){
+        // var order = {};
+        // Object.keys(this.nodes).sort().forEach(function(key) {
+        //     order[key] = this.nodes[key];
+        // });
+        // return order;
+        console.log(this.nodes[nodeid])
+        console.log(nodeid + " " + this.nodes[nodeid].color)
+        return this.nodes[nodeid].color;
+    }
+
     gridDisplay (){
 
         var grid = ""
@@ -80,8 +84,8 @@ class Grid {
         console.log(grid)
     }
 
-    testing ( nodeid ){
-        this.nodes[nodeid].tested = 1; //weight for testing
+    testing ( nodeid, value ){
+        this.nodes[nodeid].tested = value; //weight for testing
     }
 
     disconnect ( nodeid, value ){
@@ -139,9 +143,13 @@ class Grid {
         return sum;
     }
 
+
+    // if a cell is red, then it continues to stay red
+    // if a cell is orange, then it continues to stay orange, or move to red
+    // if a cell is green, then it turns orange or continues to stay green.
     update (){
 
-        //shouldnt' I be storing it and using the old values
+        //storing it and using the old values
         var temp_nodes = JSON.parse(JSON.stringify(this.nodes));
         var temp_connections = JSON.parse(JSON.stringify(this.connected));
 
@@ -157,22 +165,6 @@ class Grid {
                 //n.node.disconnected==1?0:
             }
 
-            //the edge weights are added here to keep connection and disconnection
-
-            // let spread_across_region = adjacent/16; //to keep sum within 1
-            // let R0 = 2.28; // a corona constant. testing reduces its impact spread
-
-            // let w2 = 1/2;
-            // //let spread_within_region = (w2-value.tested)*R0
-            // let w3 = 0.1; //persistence of each cell to continue its current state
-            // let persistence = (w2-value.tested)*value.state/2; //1/3 if red, 1/6 if orange, and 0 is green
-
-            // let score = spread_across_region + persistence; //
-            // //+ spread_within_region +
-
-            //console.log( value.id + "  " + adjacent)
-            let score = adjacent;
-
             //green to orange
             if( value.color == "green" ){
 
@@ -182,7 +174,7 @@ class Grid {
                 else if(  value.disconnected == 1){
                     //no change
                 }
-                else if( value.color == "green" && score >= 3){
+                else if( value.color == "green" && adjacent >= 3){
                     value.state = 1
                     value.color = "orange"
                 }
@@ -199,7 +191,7 @@ class Grid {
                     value.state = 0
                     value.color = "green"
                 }
-                else if( score >= 3){
+                else if( adjacent >= 3){
                     value.state = 2
                     value.color = "red"
                 }
@@ -264,7 +256,6 @@ function populate_grid ( n ){
     }
 }
 
-
 function iterate( n, iterations, disconnect, testing ){
 
     for( let iter = 0; iter < iterations; iter++){
@@ -274,7 +265,6 @@ function iterate( n, iterations, disconnect, testing ){
         cagrid.gridDisplay()
         //cagrid.display()
         cagrid.update()
-
     }
 }
 
@@ -295,19 +285,32 @@ function addspaces( str ){
 
 //console.log("Type input as : node graphs.js number_cells n_iterations, disconnection%, testing%")
 
-var n = parseFloat(process.argv[2]) || 3;
-var iterations = parseFloat(process.argv[3]) || 3;
-var disconnect = parseFloat(process.argv[4]) || 0;
-var testing = parseFloat(process.argv[5]) || 0;
+
+var n = 3; //parseFloat(process.argv[2]) || 3;
+var iterations = 3; //parseFloat(process.argv[3]) || 3;
+var disconnect = 0; // parseFloat(process.argv[4]) || 0;
+var testing = 0; //parseFloat(process.argv[5]) || 0;
 
 console.log("\nSimulation runs with " + n + "*" + n + "cells for " + iterations + " iterations.");
 console.log("Every time step : " + disconnect + "% of cells are disconnected, and " + testing + "% of cells are tested");
 console.log("Scoring: Score = green cells + adjacent green cells (counted once)");
 
-populate_grid(n);
+//populate_grid(n);
 
-console.log("\nTime Step: 0")
-console.log("Score: " + cagrid.score())
-cagrid.gridDisplay()
+// console.log("\nTime Step: 0")
+// console.log("Score: " + cagrid.score())
+// cagrid.gridDisplay()
+
 //console.log("Inputs start: \n")
-iterate( n, iterations, disconnect, testing);
+//iterate( n, iterations, disconnect, testing);
+
+var iter = 0;
+
+function run_grid( ){
+
+    console.log("Time step " + (iter++) + ":")
+    console.log("Score: " + cagrid.score())
+    cagrid.gridDisplay()
+    //cagrid.display()
+    cagrid.update()
+}
