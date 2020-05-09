@@ -3,7 +3,6 @@
 // interactions that alter the game rules to bring about a dynamic and chaotic
 // state. Otherwise, all the cells will eventually turn red.
 
-
 // To be clear on the rules
 // 1) testing means that it is testing + quarantine: continues to influennce the cells state, until is reconnected
 // 2) disconnect means that the cell does not influence neighbouring cells
@@ -25,12 +24,12 @@ class Grid {
             this.nodes[node.id].state = 2
             this.nodes[node.id].color = "red"
         }
-        else if( r >= 0.3 && r < 0.6){
+        else if( r >= 0.3 && r < 0.5){
             this.nodes[node.id].state = 1
             this.nodes[node.id].color = "orange"
         }
         else{
-            this.nodes[node.id].state = 0
+            this.nodes[node.id].state = -1
             this.nodes[node.id].color = "green"
         }
     }
@@ -179,24 +178,33 @@ class Grid {
                 else if(  value.disconnected == 1){
                     //no change
                 }
-                else if( value.color == "green" && adjacent >= 3){
+                else if( adjacent < 5){
+                    value.state = -1
+                    value.color = "green"
+                    //has more green cells than red
+                }
+                else if( adjacent >= 5){
                     value.state = 1
                     value.color = "orange"
+                }
+                else{
+                    value.state = -1
+                    value.color = "green"
                 }
             }
             else if ( value.color == "orange"){
                 if( value.disconnected == 1 && value.tested == 1){
-                    value.state = 0
+                    value.state = -1
                     value.color = "green"
                 }
                 else if(  value.disconnected == 1){
                     //no change
                 }
                 else if( value.tested == 1){
-                    value.state = 0
+                    value.state = -1
                     value.color = "green"
                 }
-                else if( adjacent >= 3){
+                else if( adjacent >= 10){
                     value.state = 2
                     value.color = "red"
                 }

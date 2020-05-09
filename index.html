@@ -1,4 +1,6 @@
 
+
+
 <!-- This piece of code is to say that the data of the nodes is bound to the -->
 <!-- rectangles on screen. After every update - synchronously the rectangles change -->
 <!-- color based on the current values of the cells. -->
@@ -111,16 +113,17 @@
         })
         .attr("width",25)
         .attr("height", 25)
-        .style("fill",function(d) {
-            return d.color;
-        })
-       .attr("cx",function(d){
+        .style("fill","white")
+        .attr("cx",function(d){
            return d.x
        })
        .attr("cy", function(d){
          return d.y
        })
        .attr("class","dropzone")
+
+      // function(d) {
+      //       return d.color;
 
       document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
 
@@ -297,9 +300,9 @@
         }
     })
 
-      //update();
+      update();
       cagrid.gridDisplay(n1,n2)
-      setInterval(update, 1000);
+      setInterval(update, 5000);
 
     </script>
   </body>
