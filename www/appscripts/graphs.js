@@ -151,15 +151,20 @@ class Grid {
     //
     score ( ){
 
-        var sum = 0;
+        var infected = 0;
+        var safe = 0;
+        var connected_safe = 0;
         for (const value of Object.values(this.nodes)) {
             if( value.color == "green"){
-                sum+= 1;
-                sum += this.connected[value.id].map(n => (n.node.color=="green"&&n.node.disconnected==0)?1:0).reduce((a,b)=> a+b)/2; //because this is counted twice
+                safe+= 1;
+                connected_safe += this.connected[value.id].map(n => (n.node.color=="green"&&n.node.disconnected==0)?1:0).reduce((a,b)=> a+b)/2; //because this is counted twice
 
             }
+            else{
+                infected+=1;
+            }
         }
-        return sum;
+        return ["Infected : " +infected, "Safe:" + safe, "Connected: " + connected_safe];
     }
 
 

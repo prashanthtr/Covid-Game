@@ -9,6 +9,7 @@ var rects = [];
 var svgContainer = {}
 var ts = 0;
 var rafId = null;
+var score = []
 
 var threeCursors = ["url(resources/lock.png), auto", "resources/quarantine.png), auto", "url(resources/unlock.png), auto" ]
 
@@ -85,6 +86,25 @@ function update(){
         var objColor = cagrid.retrieveColor(rects[iter].y + "," + rects[iter].x)
         rects[iter].color = objColor;
     }
+
+    score = cagrid.score();
+    d3.select("#mapdiv").select("svg").selectAll("text").remove();
+
+    d3.select("#mapdiv").select("svg").selectAll("text")
+        .data(score)
+        .enter()
+        .append("text")
+        .attr("x", 0.8*width)
+        .attr("y", function(d,i){
+            return (i+1)*height/4
+        })
+        .text(function(d){
+            return d
+        })
+        .attr("fill","#6B8E23")
+        .attr("font-family", "sans-serif")
+
+
 
     d3.select("body").select("#mapdiv").select("svg")
         .selectAll("rect")
@@ -246,7 +266,7 @@ function screen1( ){
     ];
 
     //intro text to the game, with a next button
-    var svg = d3.select("#mapdiv").append("svg")
+     var svg = d3.select("#mapdiv").append("svg")
         .attr("width", width)
         .attr("height", height)
         .style("background","#6B8E23")
@@ -412,7 +432,7 @@ function screen2(){
         .text(function(d){
             return d.content
         })
-        .attr("fill","#F0E68C")
+         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
 
     //needs a next button and a back button
@@ -423,12 +443,16 @@ function screen2(){
 function screen3(){
 
     d3.select("body").select("#mapdiv").select("svg").selectAll("text").remove()
+    d3.select("body").select("#mapdiv").select("svg").on("click",null)
+
+    d3.select("body").select("#mapdiv").select("svg")
+        .style("background", "#F0E68C")
 
     create_grid()
 
     d3.select("#mapdiv").select("svg").selectAll("rect")
 
-        .on("mouseover", function(e){
+        .on("click", function(e){
 
             if( document.body.style.cursor == "" || document.body.style.cursor == "default" ){
                 //nothing
@@ -461,8 +485,25 @@ function screen3(){
 
         })
 
+    score = cagrid.score();
 
-    rafId = setInterval(update,5000)
+    d3.select("#mapdiv").select("svg").selectAll("text")
+        .data(score)
+        .enter()
+        .append("text")
+        .attr("x", 0.8*width)
+        .attr("y", function(d,i){
+            return (i+1)*height/4
+        })
+        .text(function(d){
+            return d
+        })
+        .attr("fill","#6B8E23")
+        .attr("font-family", "sans-serif")
+
+
+
+    rafId = setInterval(update,2000)
 }
 
 function screen4(){
@@ -482,9 +523,6 @@ function screen4(){
         .text("End of game")
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
-
-
-
 }
 
 document.addEventListener("keypress", function(e){
