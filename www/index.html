@@ -1,0 +1,61 @@
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/appstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"> </script>
+    <script type="text/javascript"
+            src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"> </script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+
+    <script type="module" src="appscripts/main.js"> </script>
+
+  </head>
+
+  <body>
+
+    <div class="example">
+      <header>
+      </header>
+      <main class="main">
+        <nav>
+          <div class="flexcol">
+
+            <button class="button"> <i class="fa fa-step-forward"
+            style="font-size:48px;color:red" id="moveForward"></i> </button>
+            <select id="select_grid" style="max-width:50px;" hidden>
+              <option id="default" selected> </option>
+              <option id="simulate"> Simulate </option>
+              <option id="chennai_wards"> chennai_wards </option>
+              <option id="chennai"> chennai </option>
+              <option id="states"> states </option>
+            </select>
+
+            <img class="time" src="resources/time.png" />
+            <img class="score" src="resources/plot.png"/>
+          </div>
+        </nav>
+
+        <div class="content" id="mapdiv">
+        </div>
+
+        <aside>
+
+          <div class="flexcol">
+            <img class="testing" src="resources/quarantine.png" />
+            <img class="disconnect" src="resources/lock.png" />
+            <img class="connect" src="resources/unlock.png" />
+          </div>
+        </aside>
+
+      </main>
+      <footer>
+      </footer>
+    </div>
+
+  </body>
+
+</html>

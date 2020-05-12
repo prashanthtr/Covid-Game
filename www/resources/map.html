@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- India State Map  -->
+  <title>India Map</title>
+
+  <!--  Styles  -->
+  <link type="text/css" href="zcolorbrewer.css" />
+
+  <style type="text/css">
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    svg {
+      background: #f7f7f7;
+    }
+
+    #india {
+      /*    fill: #00BCD4;
+      opacity: .7; */
+      stroke: #101010;
+      stroke-width: .6;
+    }
+
+    div.tooltip {
+      position: absolute;
+      text-align: center;
+      padding: 0.5em;
+      font-size: 10px;
+      color: #222;
+      background: #FFF;
+      border-radius: 2px;
+      pointer-events: none;
+      box-shadow: 0px 0px 2px 0px #a6a6a6;
+    }
+
+    .key path {
+        display: none;
+    }
+
+    .key line {
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .key text {
+        font-size: 10px;
+    }
+
+    .key rect{
+      stroke-width: .4;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="chart"></div>
+
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"> </script>
+    <script type="text/javascript" src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+
+    <script type="text/javascript">
+
+      var width = 650;
+      var height = 650;
+
+      var color = "#D97031"
+
+      // var proj = d3.geo.mercator()
+      //     .scale(12000)
+      //     .translate([-16702,3200])
+
+      // var path = d3.geo.path().projection(proj);
+
+      var map = d3.select("#chart").append("svg:svg")
+          .attr("width", width)
+          .attr("height", height)
+      //.call(d3.behavior.zoom().on("zoom", redraw))
+
+      var india = map.append("svg:g")
+          .attr("id", "india");
+
+      //to visualize
+      var div = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 1);
+
+
+      //automated scaling
+      function plotMap ( name ){
+
+          india.selectAll("path").remove()
+
+          d3.json("resources/" + name + ".json", function (json) {
+
+              var projection = d3.geoMercator().fitExtent( [[20, 20] ,[width-20, height-20]], json);
+
+              // var center = d3.geo.centroid(json)
+              // var scale  = 200;
+              // var offset = [width/2, height/2];
+              // var projection = d3.geo.mercator().scale(scale).center(center)
+              //     .translate(offset);
+
+              // create the path
+              var path = d3.geo.path().projection(projection);
+              console.log(projection);
+
+              json.features = json.features.map(function(data){
+
+                  var bounds  = d3.geo.bounds(data)
+                  let newData = data
+                  coords1 = projection(bounds[0])
+                  coords2 = projection(bounds[1])
+                  minx = coords1[0]<coords2[0]?coords1[0]:coords2[0]
+                  miny = coords1[1]<coords2[1]?coords1[1]:coords2[1]
+                  newData.x = minx
+                  newData.y = miny
+                  newData.width = Math.abs(coords1[0] - coords2[0])
+                  newData.height = Math.abs(coords1[1] - coords2[1])
+                  //console.log(newData.width + " , " + newData.height)
+                  return newData
+              });
+
+
+              // // using the path determine the bounds of the current map and use
+              // // these to determine better values for the scale and translation
+              // var bounds  = path.bounds(json);
+              // var hscale  = scale*width  / (bounds[1][0] - bounds[0][0]);
+              // var vscale  = scale*height / (bounds[1][1] - bounds[0][1]);
+              // var scale   = (hscale < vscale) ? hscale : vscale;
+              // var offset  = [width - (bounds[0][0] + bounds[1][0])/2,
+              //                height - (bounds[0][1] + bounds[1][1])/2];
+
+              // // new projection
+              // projection = d3.geo.mercator().center(center)
+              //     .scale(scale).translate(offset);
+              // path = path.projection(projection);
+
+              // india.selectAll("path")
+              //     .data(json.features)
+              //     .enter().append("path")
+              //     .attr("d", path)
+              //     .style("fill", color)
+              //     .style("opacity", 0.5)
+
+
+              var chenn = india.selectAll("rect")
+                  .data(json.features)
+                  .enter().append("rect")
+                  .attr("x", function(d,i){
+                          return d.x
+                  })
+                  .attr("y", function(d,i){
+                          return d.y
+                  })
+                  .attr("width", function(d){
+                      return d.width
+                  })
+                  .attr("height", function(d){
+                      return d.height
+                  })
+                  .style("fill", function(){
+
+                      if(Math.random() > 0.5){
+                          return "green"
+                      }
+                      else {
+                          return "red"
+                      }
+                  });
+
+              <!-- var chenn = india.selectAll("path") -->
+              <!--     .data(json.features) -->
+              <!--     .enter().append("path") -->
+              <!--     .attr("d", path) -->
+              <!--     .style("fill", color) -->
+              <!--     .style("opacity", 0.5) -->
+
+              <!-- var sorted = india.selectAll("path") -->
+              <!--     .sort(function(a,b){ -->
+              <!--return d3.ascending(a.latitude+","+a.longitude, b.latitude+","+b.longitude) -->
+              <!--     }) -->
+
+
+              <!-- console.log(sorted) -->
+
+              chenn.on('click', function (d, i) {
+                  d3.select(this).transition().duration(300).style("opacity", 1);
+                  div.transition().duration(300)
+                      .style("opacity", 1)
+                  console.log(d)
+                  div.text(d.id + " : " + d.total)
+                      .style("left", (d3.event.pageX) + "px")
+                      .style("top", (d3.event.pageY - 30) + "px");
+
+                  if( d.id == "Tamil Nadu"){
+                      plotMap(d.id);
+                  }
+
+                  if( d.id == "Chennai"){
+                      plotMap(d.id);
+                  }
+              })
+
+                  .on('mouseleave', function (d, i) {
+                      d3.select(this).transition().duration(300)
+                          .style("opacity", 0.5);
+                      // div.transition().duration(300)
+                      //     .style("opacity", 0);
+                  })
+                  .on('mouseenter', function (d, i) {
+                      d3.select(this).transition().duration(300)
+                          .style("opacity", 0.5);
+                      // div.transition().duration(300)
+                      //     .style("opacity", 0);
+
+                  });
+
+          });
+      }
+
+      plotMap("chennai")
+
+    </script>
+</body>
+
+</html>
