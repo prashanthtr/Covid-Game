@@ -22,10 +22,10 @@ function create_grid(){
     cagrid = populate_grid();
     console.log(cagrid)
 
-    var svgContainer = d3.select("body").select("#mapdiv").append("svg")
+    var svgContainer = d3.select("body").select("#mapdiv").select("svg")
         .attr("width", width)
         .attr("height", height)
-        .attr("id", "theSvg")
+        .style("background","#6B8E23")
         .attr("style","positive:relative;left:10%")
 
     svgContainer.selectAll("rect").remove();
@@ -86,7 +86,7 @@ function update(){
         rects[iter].color = objColor;
     }
 
-    d3.select("body").select("#mapdiv").select("#theSvg")
+    d3.select("body").select("#mapdiv").select("svg")
         .selectAll("rect")
         .transition().duration(200)
         .style("fill", function(d){
@@ -245,13 +245,12 @@ function screen1( ){
 
     ];
 
-
     //intro text to the game, with a next button
     var svg = d3.select("#mapdiv").append("svg")
         .attr("width", width)
         .attr("height", height)
         .style("background","#6B8E23")
-        .on("click", screen2)
+        .on("click", screen2);
 
     svg.selectAll("text")
         .data(text)
@@ -364,16 +363,68 @@ function screen2(){
 
     d3.select("body").select("#mapdiv").select("svg").selectAll("text").remove()
     d3.select("body").select("#mapdiv").select("svg").on("click",null)
+
+    var text = [
+        {
+            x: 2*width/5,
+            y: height/5,
+            content: "Player actions"
+        },
+        {
+            x: width/5,
+            y: height/3,
+            content: "A + Mouse click -> Lock"
+        },
+        {
+            x: width/2,
+            y: height/3,
+            content: "S + Mouse click -> Test"
+        },
+        {
+            x: width/5,
+            y: 2*height/3,
+            content: "D + Mouse click -> Unlock"
+        },
+
+        {
+            x: width/2,
+            y: 2*height/3,
+            content: "F + Mouse click -> Default cursor"
+        },
+
+        {
+            x: 2*width/5,
+            y: 4*height/5,
+            content: "Click to proceed..."
+        },
+    ]
+
+    d3.select("#mapdiv").select("svg").selectAll("text")
+        .data(text)
+        .enter()
+        .append("text")
+        .attr("x", function(d){
+            return d.x
+        })
+        .attr("y", function(d){
+            return d.y
+        })
+        .text(function(d){
+            return d.content
+        })
+        .attr("fill","#F0E68C")
+        .attr("font-family", "sans-serif")
+
+    //needs a next button and a back button
     d3.select("body").select("#mapdiv").select("svg").on("click",screen3)
 
 }
 
 function screen3(){
 
+    d3.select("body").select("#mapdiv").select("svg").selectAll("text").remove()
 
-    d3.select("body").select("#mapdiv").select("svg").remove()
     create_grid()
-
 
     d3.select("#mapdiv").select("svg").selectAll("rect")
 
@@ -411,7 +462,7 @@ function screen3(){
         })
 
 
-    rafId = setInterval(update,200)
+    //rafId = setInterval(update,200)
 }
 
 function screen4(){
