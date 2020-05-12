@@ -462,7 +462,7 @@ function screen3(){
         })
 
 
-    //rafId = setInterval(update,200)
+    rafId = setInterval(update,5000)
 }
 
 function screen4(){
