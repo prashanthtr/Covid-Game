@@ -1,5 +1,6 @@
 
 import {populate_grid} from "./graphs.js"
+import {resources} from "./resources.js"
 
 
 var width = document.getElementById("mapdiv").offsetWidth;
@@ -10,6 +11,10 @@ var svgContainer = {}
 var ts = 0;
 var rafId = null;
 var score = []
+var cursor_style = "default"
+var scoring_text= []
+var resources_text= []
+
 
 var threeCursors = ["url(resources/lock.png), auto", "resources/quarantine.png), auto", "url(resources/unlock.png), auto" ]
 
@@ -89,22 +94,29 @@ function update(){
         rects[iter].color = objColor;
     }
 
-    score = cagrid.score();
-    d3.select("#mapdiv").select("svg").selectAll("text").remove();
+    scoring_text = cagrid.score();
+    //d3.select("#mapdiv").select("svg").selectAll(".scoring").remove();
 
-    d3.select("#mapdiv").select("svg").selectAll("text")
-        .data(score)
-        .enter()
-        .append("text")
-        .attr("x", 0.8*width)
-        .attr("y", function(d,i){
-            return (i+1)*height/4
-        })
+    // scoring_text = scoring_text.map( (s,ind) => {
+    //     s.content = scoring[ind]
+    //     return s;
+    // });
+
+    d3.select("#mapdiv").select("svg").selectAll(".scoring")
         .text(function(d){
             return d
         })
+
+    // .data(score)
+        // .enter()
+        // .append("text")
+        // .attr("x", 0.75*width)
+        // .attr("y", function(d,i){
+        //     return (i+1)*height/4
+        // })
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
+        .attr("class", "scoring")
 
 
     d3.select("body").select("#mapdiv").select("svg")
@@ -113,7 +125,6 @@ function update(){
         .style("fill", function(d){
             return d.color
         })
-
 
 }
 
@@ -246,6 +257,22 @@ document.getElementById("moveForward").addEventListener("click",function(d){
 // });
 
 d3.select(window).on('resize.updatesvg', create_grid);
+
+function resources_update( ){
+
+    //d3.select("body").select("#mapdiv").select("svg").selectAll("text").filter("resources").remove()
+
+    resources_text = resources.getResourceState();
+
+    // resources_text[0].content = "Test Kits: " + state[0]
+    // resources_text[1].content = "Barriers: " + state[1]
+
+    d3.select("body").select("#mapdiv").select("svg").selectAll(".resources")
+        .text(function(d){
+            return d
+        })
+}
+
 
 function screen1( ){
 
@@ -435,7 +462,7 @@ function screen2(){
         .text(function(d){
             return d.content
         })
-         .attr("fill","#F0E68C")
+        .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
 
     //needs a next button and a back button
@@ -506,10 +533,10 @@ function screen3(){
 
         })
 
-    score = cagrid.score();
+    scoring_text = cagrid.score();
 
     d3.select("#mapdiv").select("svg").selectAll("text")
-        .data(score)
+        .data(scoring_text)
         .enter()
         .append("text")
         .attr("x", 0.75*width)
@@ -521,7 +548,25 @@ function screen3(){
         })
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
+        .attr("class", "scoring")
 
+
+    var resources_text = resources.getResourceState();
+
+    d3.select("body").select("#mapdiv").select("svg").selectAll("resources")
+        .data(resources_text)
+        .enter()
+        .append("text")
+        .attr("x",function(d,i){
+            return (i+1)*width/5
+        })
+        .attr("y",0.95*height)
+        .text(function(d){
+            return d
+        })
+        .attr("fill","#F0E68C")
+        .attr("font-family", "sans-serif")
+        .attr("class", "resources")
 
     //rafId = setInterval(update,500)
 }
@@ -545,23 +590,6 @@ function screen4(){
         .attr("font-family", "sans-serif")
 }
 
-function resources_generate(){
-
-        var text = [
-            {
-                x: 2*width/5,
-                y: height/5,
-                content: "Player actions"
-            },
-            {
-                x: width/5,
-                y: height/3,
-                content: "A + Mouse click -> Lock"
-            }
-        ]
-
-
-}
 
 document.addEventListener("keypress", function(e){
 
@@ -569,19 +597,57 @@ document.addEventListener("keypress", function(e){
 
     if( charCode == 97){
         document.body.style.cursor = "url(resources/lock.png), auto";
+
+        if(cursor_style == "quarantine"){
+            resources.unuseTesting(); //
+        }
+
+        if( cursor_style == "lock" ){
+            //no change
+        }
+        else resources.useBarriers();
+        cursor_style = "lock"
     }
     else if( charCode == 115){
         document.body.style.cursor = "url(resources/quarantine.png), auto";
+
+        if( cursor_style == "lock"){
+            resources.unuseBarriers();
+        }
+
+        if( cursor_style == "quarantine" ){
+            //no change
+        }
+        else resources.useTesting();
+        cursor_style = "quarantine"
     }
     else if( charCode == 100){
         document.body.style.cursor = "url(resources/unlock.png), auto";
+        if( cursor_style == "lock"){
+            resources.unuseBarriers();
+        }
+        if( cursor_style == "quarantine"){
+            resources.unuseTesting();
+        }
+        cursor_style = "unlock"
     }
     else if( charCode == 119){
+
+        if( cursor_style == "lock"){
+            resources.unuseBarriers();
+        }
+        else if( cursor_style == "quarantine"){
+            resources.unuseTesting();
+        }
+
+        cursor_style = "default"
         document.body.style.cursor = "default";
     }
     else if( charCode == 32){
         update();
-        resources_generate();
+        resources.replenish();
     }
+
+    resources_update();
 
 });
