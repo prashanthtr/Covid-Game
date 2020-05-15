@@ -17,53 +17,55 @@ var threeCursors = ["url(resources/lock.png), auto", "resources/quarantine.png),
 //     .attr("width", width)
 //     .attr("height", height);
 
-
 function create_grid(){
 
     cagrid = populate_grid();
     console.log(cagrid)
 
-    var svgContainer = d3.select("body").select("#mapdiv").select("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("background","#6B8E23")
-        .attr("style","positive:relative;left:10%")
+    // var svgContainer = d3.select("body").select("#mapdiv").select("svg")
+    //     .attr("width", width)
+    //     .attr("height", height)
+    //     .attr("background","#6B8E23")
+    //     .attr("style","positive:relative;left:10%")
 
-    svgContainer.selectAll("rect").remove();
+    //svgContainer.selectAll("rect").remove();
 
     rects = cagrid.nodesToPlot();
-    var rectangles = svgContainer.selectAll("rect")
+
+    var rectangles = d3.select("body").select("#mapdiv").select("svg").selectAll("circle")
         .data(rects)
         .enter()
-        .append("rect");
+        .append("circle");
 
     // var bbbox = document.getElementById("theSvg").getBoundingClientRect();
     // var width = bbbox.width
     // var height = bbbox.height;
 
     console.log(width + "," + height)
-    var w = width/30;
-    var h = height/25;
+    var w = width/16;
+    var h = height/12;
 
     rectangles
-        .attr('x', function(d) {
+        .attr('cx', function(d) {
             return (d.x+2) * w;
         })
-        .attr('y', function(d) {
+        .attr('cy', function(d) {
             return (d.y+2) * h;
         })
-        .attr("width",0.8*w)
-        .attr("height", 0.9*h)
+        .attr("r", 0.3*w)
+        // .attr("width",0.8*w)
+        // .attr("height", 0.9*h)
         .style("fill",function(d){
             return d.color;
         })
-        .attr("cx",function(d){
+        .attr("x",function(d){
             return d.x
         })
-        .attr("cy", function(d){
+        .attr("y", function(d){
             return d.y
         })
         .attr("class","dropzone")
+        //.attr("class","bordered")
 }
 
 
@@ -72,11 +74,11 @@ function update(){
     //document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
     //var obj = cagrid.orderExport();
 
-    if( ts == 60){
-        screen4();
-        rafId = null
-        return;
-    }
+    // if( ts == 60){
+    //     screen4();
+    //     rafId = null
+    //     return;
+    // }
 
     ts++;//timestep increases
 
@@ -101,17 +103,18 @@ function update(){
         .text(function(d){
             return d
         })
-        .attr("fill","#6B8E23")
+        .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
 
 
-
     d3.select("body").select("#mapdiv").select("svg")
-        .selectAll("rect")
+        .selectAll("circle")
         .transition().duration(200)
         .style("fill", function(d){
             return d.color
         })
+
+
 }
 
 interact('.dropzone')
@@ -132,7 +135,7 @@ interact('.dropzone')
             case "disconnect": {
                 cagrid.disconnect(y+","+x, 1);
                 const item = event.target
-                item.classList.add('bordered')
+                 item.classList.add('bordered')
             } break;
             case "connect": {
                 cagrid.disconnect(y+","+x, 0);
@@ -445,13 +448,28 @@ function screen3(){
     d3.select("body").select("#mapdiv").select("svg").selectAll("text").remove()
     d3.select("body").select("#mapdiv").select("svg").on("click",null)
 
-    d3.select("body").select("#mapdiv").select("svg")
-        .style("background", "#F0E68C")
+    // .attr("background", "#F0E68C")
+
+
+    // d3.select("body").select("#mapdiv").select("svg").append("rect")
+    //     .attr('x', width/(2*rects.length))
+    //     .attr('y', height/(2*rects.length))
+    //     .attr("width", width/2)
+    //     .attr("height", 0.9*height)
+    //     .attr("fill","#CCCC66")
+
+    // d3.select("body").select("#mapdiv").select("svg")
+    //     .attr("width", 0.75*width)
+    //     .attr("height", 0.9*height)
+    //     .style("background","#ceb180")
+
 
     create_grid()
 
-    d3.select("#mapdiv").select("svg").selectAll("rect")
+    d3.select("#mapdiv").select("svg").selectAll("circle")
 
+    //.style("filter", "filter:drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))")
+        //.attr("class", "bordered")
         .on("click", function(e){
 
             if( document.body.style.cursor == "" || document.body.style.cursor == "default" ){
@@ -467,7 +485,8 @@ function screen3(){
                     console.log("lock")
                     console.log(e.x + " , " + e.y)
                     item.classList.add('bordered')
-                    cagrid.testing(e.y+","+e.x, 1);
+                    cagrid.disconnect(e.y+","+e.x, 1);
+                    //update();
                 }
                 else if( cursor == "unlock" ){
                     console.log("connect")
@@ -475,11 +494,13 @@ function screen3(){
                     item.classList.remove('bordered')
                     item.classList.remove('testinprogress')
                     cagrid.testing(e.y+","+e.x, 0);
+                    //update();
                 }
                 else if( cursor == "quarantine" ){
                     console.log("test")
                     cagrid.testing(e.y+","+e.x, 1);
                     item.classList.add('testinprogress')
+                    //update();
                 }
             }
 
@@ -491,19 +512,18 @@ function screen3(){
         .data(score)
         .enter()
         .append("text")
-        .attr("x", 0.8*width)
+        .attr("x", 0.75*width)
         .attr("y", function(d,i){
             return (i+1)*height/4
         })
         .text(function(d){
             return d
         })
-        .attr("fill","#6B8E23")
+        .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
 
 
-
-    rafId = setInterval(update,2000)
+    //rafId = setInterval(update,500)
 }
 
 function screen4(){
@@ -525,6 +545,24 @@ function screen4(){
         .attr("font-family", "sans-serif")
 }
 
+function resources_generate(){
+
+        var text = [
+            {
+                x: 2*width/5,
+                y: height/5,
+                content: "Player actions"
+            },
+            {
+                x: width/5,
+                y: height/3,
+                content: "A + Mouse click -> Lock"
+            }
+        ]
+
+
+}
+
 document.addEventListener("keypress", function(e){
 
     var charCode = e.charCode;
@@ -538,8 +576,12 @@ document.addEventListener("keypress", function(e){
     else if( charCode == 100){
         document.body.style.cursor = "url(resources/unlock.png), auto";
     }
-    else if( charCode == 102){
+    else if( charCode == 119){
         document.body.style.cursor = "default";
+    }
+    else if( charCode == 32){
+        update();
+        resources_generate();
     }
 
 });

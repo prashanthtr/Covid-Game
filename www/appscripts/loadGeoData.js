@@ -243,11 +243,9 @@ export function simulate_data( n1, n2 ){
     var gridArr = []
 
     for(var row=0; row < n1; row++){
-        let n1 = 10
         gridArr[row] = [];
         for( var col=0; col<n2; col++){
 
-            //let n2 = 10;
             gridArr[row][col] = [];
 
             var up1 = (row - 1) < 0?row:gridArr[row][col].push((row-1)+","+col);

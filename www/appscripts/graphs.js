@@ -23,15 +23,15 @@ class Grid {
         this.nodes[node.id].tested = 0;
         var r = Math.random();
         if(r< 0.3 ){
-            this.nodes[node.id].state = 2
-            this.nodes[node.id].color = "red"
+            this.nodes[node.id].state = 0
+            this.nodes[node.id].color = "orange"
         }
-        else if( r >= 0.3 && r < 0.6){
-            this.nodes[node.id].state = 1
+        else if( r >= 0.3 && r < 0.55){
+            this.nodes[node.id].state = 0
             this.nodes[node.id].color = "orange"
         }
         else{
-            this.nodes[node.id].state = -1
+            this.nodes[node.id].state = 1
             this.nodes[node.id].color = "green"
         }
     }
@@ -154,8 +154,11 @@ class Grid {
         var infected = 0;
         var safe = 0;
         var connected_safe = 0;
+
         for (const value of Object.values(this.nodes)) {
             if( value.color == "green"){
+                //console.log(value)
+                //console.log(this.connected[value.id])
                 safe+= 1;
                 connected_safe += this.connected[value.id].map(n => (n.node.color=="green"&&n.node.disconnected==0)?1:0).reduce((a,b)=> a+b)/2; //because this is counted twice
 
@@ -198,52 +201,54 @@ class Grid {
                 else if(  value.disconnected == 1){
                     //no change
                 }
-                else if( adjacent < 5){
-                    value.state = -1
+                else if( adjacent == 2 || adjacent == 3){
+                    value.state = 1
                     value.color = "green"
                     //has more green cells than red
                 }
-                else if( adjacent >= 5){
-                    value.state = 1
+                else {
+                    value.state = 0
                     value.color = "orange"
                 }
-                else{
-                    value.state = -1
-                    value.color = "green"
-                }
+
+                // if( adjacent >= 3 && adjacent % 2 == 0){ //even number of reds and oranges
+                // else{
+                //     value.state = -1
+                //     value.color = "green"
+                // }
             }
             else if ( value.color == "orange"){
                 if( value.disconnected == 1 && value.tested == 1){
-                    value.state = -1
+                    value.state = 1
                     value.color = "green"
                 }
                 else if(  value.disconnected == 1){
                     //no change
                 }
                 else if( value.tested == 1){
-                    value.state = -1
+                    value.state = 1
                     value.color = "green"
                 }
-                else if( adjacent >= 9){
-                    value.state = 2
-                    value.color = "red"
-                }
-                else{
-                    //remains same
-                }
+                // else if( adjacent >= 3 && adjacent % 3 == 0 ){ //even number of reds and oranges
+                //     value.state = 2
+                //     value.color = "red"
+                // }
+                // else{
+                //     //remains same
+                // }
             }
             else{
 
                 if( value.disconnected == 1 && value.tested == 1){
                     value.state = 1
-                    value.color = "orange"
+                    value.color = "green"
                 }
                 else if(  value.disconnected == 1){
                     //no change
                 }
                 else if( value.tested == 1){
                     value.state = 1
-                    value.color = "orange"
+                    value.color = "green"
                 }
                 else{
                     //remains same
@@ -279,7 +284,7 @@ export function populate_grid ( ){
     //     gridArr = build_from_map(document.getElementById("select_grid").value)
     // }
 
-    let gridArr = simulate_data(20, 20);
+    let gridArr = simulate_data(9, 9);
 
     for(var row=0; row < gridArr.length; row++){
         for(var col=0; col < gridArr[row].length; col++){ //adjacent
