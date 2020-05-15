@@ -201,7 +201,7 @@ class Grid {
                 else if(  value.disconnected == 1){
                     //no change
                 }
-                else if( adjacent == 2 || adjacent == 3){
+                else if( adjacent == 2 || adjacent == 3 || adjacent == 4){
                     value.state = 1
                     value.color = "green"
                     //has more green cells than red
@@ -284,7 +284,7 @@ export function populate_grid ( ){
     //     gridArr = build_from_map(document.getElementById("select_grid").value)
     // }
 
-    let gridArr = simulate_data(9, 9);
+    let gridArr = simulate_data(15, 15);
 
     for(var row=0; row < gridArr.length; row++){
         for(var col=0; col < gridArr[row].length; col++){ //adjacent

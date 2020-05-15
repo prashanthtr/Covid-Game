@@ -47,8 +47,8 @@ function create_grid(){
     // var height = bbbox.height;
 
     console.log(width + "," + height)
-    var w = width/16;
-    var h = height/12;
+    var w = width/25;
+    var h = height/18;
 
     rectangles
         .attr('cx', function(d) {
@@ -273,11 +273,17 @@ document.getElementById("moveForward").addEventListener("click",function(d){
 
 d3.select(window).on('resize.updatesvg', create_grid);
 
-function resources_update( ){
+function resources_update( num ){
 
     d3.select("#mapdiv").select("svg").selectAll(".resources").remove();
 
-    resources_text = resources.getResourceState();
+    switch(num){
+    case 1:  resources_text = resources.getTempRes(); break;
+    case 2:  resources_text = resources.getResState(); break;
+    default: resources_text = resources.getResState(); break;
+    }
+
+    console.log(resources_text)
 
     d3.select("#mapdiv").select("svg").selectAll(".resources")
         .data(resources_text)
@@ -291,8 +297,6 @@ function resources_update( ){
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
         .attr("class", "resources")
-
-
 
     // resources_text[0].content = "Test Kits: " + state[0]
     // resources_text[1].content = "Barriers: " + state[1]
@@ -539,14 +543,25 @@ function screen3(){
                 console.log(item.classList)
 
                 if( cursor == "lock"){
-                    console.log("lock")
-                    console.log(e.x + " , " + e.y)
-                    item.classList.add('bordered')
-                    cagrid.disconnect(e.y+","+e.x, 1);
-                    resources_update();
+
+                    if( resources.check_barrier() > 0){
+
+                        console.log("lock")
+                        console.log(e.x + " , " + e.y)
+                        item.classList.add('bordered')
+                        cagrid.disconnect(e.y+","+e.x, 1);
+
+                        resources.useBarrier();
+                        resources.calibrate();
+                        //resources.selBarriers();
+                        resources_update(1);
+                    }
+
                     //update();
                 }
                 else if( cursor == "unlock" ){
+
+
                     console.log("connect")
                     cagrid.disconnect(e.y+","+e.x, 0);
                     item.classList.remove('bordered')
@@ -554,15 +569,27 @@ function screen3(){
                     cagrid.testing(e.y+","+e.x, 0);
                     //update();
                     //resources.unuseBarriers();
-                    resources_update();
+
+                    if( resources.check_barrier() >= 0 && resources.check_barrier() < 5){
+                        resources.unuseBarrier();
+                    }
+                    //dopn't allow carryover
+                    resources.calibrate();
+                    resources_update(1);
                 }
                 else if( cursor == "quarantine" ){
-                    console.log("test")
-                    cagrid.testing(e.y+","+e.x, 1);
-                    item.classList.add('testinprogress')
-                    //update();
-                    //resources.useTesting();
-                    resources_update();
+
+                    if( resources.check_testKits() > 0){
+                        console.log("test")
+                        cagrid.testing(e.y+","+e.x, 1);
+                        item.classList.add('testinprogress')
+                        //update();
+                        //resources.useTesting();
+                        resources.useKit();
+                        resources.calibrate();
+                        //resources.selTesting();
+                        resources_update(1);
+                    }
                 }
             }
 
@@ -585,7 +612,7 @@ function screen3(){
         .attr("font-family", "sans-serif")
         .attr("class", "scoring")
 
-    var resources_text = resources.getResourceState();
+    var resources_text = resources.getResState();
 
     d3.select("body").select("#mapdiv").select("svg").selectAll(".resources")
         .data(resources_text)
@@ -633,15 +660,15 @@ document.addEventListener("keypress", function(e){
         document.body.style.cursor = "url(resources/lock.png), auto";
 
         if(cursor_style == "quarantine"){
-            resources.unuseTesting(); //
-            resources_update();
+            resources.unselTesting(); //
+            resources_update(1);
         }
 
         if( cursor_style == "lock" ){
             //no change
         }
-        else {resources.useBarriers();
-              resources_update();
+        else {resources.selBarriers();
+              resources_update(1);
              }
         cursor_style = "lock"
     }
@@ -649,40 +676,41 @@ document.addEventListener("keypress", function(e){
         document.body.style.cursor = "url(resources/quarantine.png), auto";
 
         if( cursor_style == "lock"){
-            resources.unuseBarriers();
-            resources_update();
+            resources.unselBarriers();
+            resources_update(1);
         }
 
         if( cursor_style == "quarantine" ){
             //no change
         }
-        else {resources.useTesting();
-              resources_update();
+        else {resources.selTesting();
+              resources_update(1);
              }
         cursor_style = "quarantine"
-        resources_update();
+        //resources_update();
     }
     else if( charCode == 100){
         document.body.style.cursor = "url(resources/unlock.png), auto";
+
         if( cursor_style == "lock"){
-            resources.unuseBarriers();
-            resources_update();
+            resources.unselBarriers();
+            resources_update(1);
         }
         if( cursor_style == "quarantine"){
-            resources.unuseTesting();
-            resources_update();
+            resources.unselTesting();
+            resources_update(1);
         }
         cursor_style = "unlock"
     }
     else if( charCode == 119){
 
         if( cursor_style == "lock"){
-            resources.unuseBarriers();
-            resources_update();
+            resources.unselBarriers();
+            resources_update(1);
         }
         else if( cursor_style == "quarantine"){
-            resources.unuseTesting();
-            resources_update();
+            resources.unselTesting();
+            resources_update(1);
         }
 
         cursor_style = "default"
@@ -693,7 +721,7 @@ document.addEventListener("keypress", function(e){
         document.body.style.cursor = "default";
         cursor_style = "default"
         resources.replenish();
-        resources_update();
+        resources_update(2);
     }
 
 });
