@@ -95,7 +95,8 @@ function update(){
     }
 
     scoring_text = cagrid.score();
-    //d3.select("#mapdiv").select("svg").selectAll(".scoring").remove();
+
+    d3.select("#mapdiv").select("svg").selectAll(".scoring").remove();
 
     // scoring_text = scoring_text.map( (s,ind) => {
     //     s.content = scoring[ind]
@@ -103,20 +104,34 @@ function update(){
     // });
 
     d3.select("#mapdiv").select("svg").selectAll(".scoring")
-        .text(function(d){
-            return d
+        .data(scoring_text)
+        .enter()
+        .append("text")
+        .attr("x", 0.75*width)
+        .attr("y", function(d,i){
+            return (i+1)*height/4
         })
-
-    // .data(score)
-        // .enter()
-        // .append("text")
-        // .attr("x", 0.75*width)
-        // .attr("y", function(d,i){
-        //     return (i+1)*height/4
-        // })
+        .text(function(d){return d})
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
         .attr("class", "scoring")
+
+        // // .text(function(d){
+        // //     return d
+        // // })
+
+    // d3.select("#mapdiv").select("svg").selectAll("text")
+    //     .data(scoring_text)
+    //     .enter()
+    //     .append("text")
+    //     .attr("x", 0.75*width)
+    //     .attr("y", function(d,i){
+    //         return (i+1)*height/4
+    //     })
+    //     .text(function(d){return d})
+    //     .attr("fill","#F0E68C")
+    //     .attr("font-family", "sans-serif")
+    //     .attr("class", "scoring")
 
 
     d3.select("body").select("#mapdiv").select("svg")
@@ -260,17 +275,32 @@ d3.select(window).on('resize.updatesvg', create_grid);
 
 function resources_update( ){
 
-    //d3.select("body").select("#mapdiv").select("svg").selectAll("text").filter("resources").remove()
+    d3.select("#mapdiv").select("svg").selectAll(".resources").remove();
 
     resources_text = resources.getResourceState();
+
+    d3.select("#mapdiv").select("svg").selectAll(".resources")
+        .data(resources_text)
+        .enter()
+        .append("text")
+        .attr("y", 0.95*height)
+        .attr("x", function(d,i){
+            return (i+1)*width/5
+        })
+        .text(function(d){return d})
+        .attr("fill","#F0E68C")
+        .attr("font-family", "sans-serif")
+        .attr("class", "resources")
+
+
 
     // resources_text[0].content = "Test Kits: " + state[0]
     // resources_text[1].content = "Barriers: " + state[1]
 
-    d3.select("body").select("#mapdiv").select("svg").selectAll(".resources")
-        .text(function(d){
-            return d
-        })
+    // d3.select("body").select("#mapdiv").select("svg").selectAll(".resources")
+    //     .text(function(d){
+    //         return d
+    //     })
 }
 
 
@@ -513,6 +543,7 @@ function screen3(){
                     console.log(e.x + " , " + e.y)
                     item.classList.add('bordered')
                     cagrid.disconnect(e.y+","+e.x, 1);
+                    resources_update();
                     //update();
                 }
                 else if( cursor == "unlock" ){
@@ -522,12 +553,16 @@ function screen3(){
                     item.classList.remove('testinprogress')
                     cagrid.testing(e.y+","+e.x, 0);
                     //update();
+                    //resources.unuseBarriers();
+                    resources_update();
                 }
                 else if( cursor == "quarantine" ){
                     console.log("test")
                     cagrid.testing(e.y+","+e.x, 1);
                     item.classList.add('testinprogress')
                     //update();
+                    //resources.useTesting();
+                    resources_update();
                 }
             }
 
@@ -535,7 +570,7 @@ function screen3(){
 
     scoring_text = cagrid.score();
 
-    d3.select("#mapdiv").select("svg").selectAll("text")
+    d3.select("#mapdiv").select("svg").selectAll(".scoring")
         .data(scoring_text)
         .enter()
         .append("text")
@@ -550,10 +585,9 @@ function screen3(){
         .attr("font-family", "sans-serif")
         .attr("class", "scoring")
 
-
     var resources_text = resources.getResourceState();
 
-    d3.select("body").select("#mapdiv").select("svg").selectAll("resources")
+    d3.select("body").select("#mapdiv").select("svg").selectAll(".resources")
         .data(resources_text)
         .enter()
         .append("text")
@@ -600,12 +634,15 @@ document.addEventListener("keypress", function(e){
 
         if(cursor_style == "quarantine"){
             resources.unuseTesting(); //
+            resources_update();
         }
 
         if( cursor_style == "lock" ){
             //no change
         }
-        else resources.useBarriers();
+        else {resources.useBarriers();
+              resources_update();
+             }
         cursor_style = "lock"
     }
     else if( charCode == 115){
@@ -613,21 +650,27 @@ document.addEventListener("keypress", function(e){
 
         if( cursor_style == "lock"){
             resources.unuseBarriers();
+            resources_update();
         }
 
         if( cursor_style == "quarantine" ){
             //no change
         }
-        else resources.useTesting();
+        else {resources.useTesting();
+              resources_update();
+             }
         cursor_style = "quarantine"
+        resources_update();
     }
     else if( charCode == 100){
         document.body.style.cursor = "url(resources/unlock.png), auto";
         if( cursor_style == "lock"){
             resources.unuseBarriers();
+            resources_update();
         }
         if( cursor_style == "quarantine"){
             resources.unuseTesting();
+            resources_update();
         }
         cursor_style = "unlock"
     }
@@ -635,9 +678,11 @@ document.addEventListener("keypress", function(e){
 
         if( cursor_style == "lock"){
             resources.unuseBarriers();
+            resources_update();
         }
         else if( cursor_style == "quarantine"){
             resources.unuseTesting();
+            resources_update();
         }
 
         cursor_style = "default"
@@ -645,9 +690,10 @@ document.addEventListener("keypress", function(e){
     }
     else if( charCode == 32){
         update();
+        document.body.style.cursor = "default";
+        cursor_style = "default"
         resources.replenish();
+        resources_update();
     }
-
-    resources_update();
 
 });
