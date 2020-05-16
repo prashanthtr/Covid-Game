@@ -79,11 +79,11 @@ function update(){
     //document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
     //var obj = cagrid.orderExport();
 
-    // if( ts == 60){
-    //     screen4();
-    //     rafId = null
-    //     return;
-    // }
+    if( ts == 60){
+        screen4();
+        rafId = null
+        return;
+    }
 
     ts++;//timestep increases
 
@@ -629,6 +629,81 @@ function screen3(){
         .attr("font-family", "sans-serif")
         .attr("class", "resources")
 
+    document.addEventListener("keypress", function(e){
+
+        var charCode = e.charCode;
+
+        if( charCode == 97){
+            document.body.style.cursor = "url(resources/lock.png), auto";
+
+            if(cursor_style == "quarantine"){
+                resources.unselTesting(); //
+                resources_update(1);
+            }
+
+            if( cursor_style == "lock" ){
+                //no change
+            }
+            else {resources.selBarriers();
+                  resources_update(1);
+                 }
+            cursor_style = "lock"
+        }
+        else if( charCode == 115){
+            document.body.style.cursor = "url(resources/quarantine.png), auto";
+
+            if( cursor_style == "lock"){
+                resources.unselBarriers();
+                resources_update(1);
+            }
+
+            if( cursor_style == "quarantine" ){
+                //no change
+            }
+            else {resources.selTesting();
+                  resources_update(1);
+                 }
+            cursor_style = "quarantine"
+            //resources_update();
+        }
+        else if( charCode == 100){
+            document.body.style.cursor = "url(resources/unlock.png), auto";
+
+            if( cursor_style == "lock"){
+                resources.unselBarriers();
+                resources_update(1);
+            }
+            if( cursor_style == "quarantine"){
+                resources.unselTesting();
+                resources_update(1);
+            }
+            cursor_style = "unlock"
+        }
+        else if( charCode == 119){
+
+            if( cursor_style == "lock"){
+                resources.unselBarriers();
+                resources_update(1);
+            }
+            else if( cursor_style == "quarantine"){
+                resources.unselTesting();
+                resources_update(1);
+            }
+
+            cursor_style = "default"
+            document.body.style.cursor = "default";
+        }
+        else if( charCode == 32){
+            update();
+            document.body.style.cursor = "default";
+            cursor_style = "default"
+            resources.replenish();
+            resources_update(2);
+        }
+
+    });
+
+
     //rafId = setInterval(update,500)
 }
 
@@ -650,78 +725,3 @@ function screen4(){
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
 }
-
-
-document.addEventListener("keypress", function(e){
-
-    var charCode = e.charCode;
-
-    if( charCode == 97){
-        document.body.style.cursor = "url(resources/lock.png), auto";
-
-        if(cursor_style == "quarantine"){
-            resources.unselTesting(); //
-            resources_update(1);
-        }
-
-        if( cursor_style == "lock" ){
-            //no change
-        }
-        else {resources.selBarriers();
-              resources_update(1);
-             }
-        cursor_style = "lock"
-    }
-    else if( charCode == 115){
-        document.body.style.cursor = "url(resources/quarantine.png), auto";
-
-        if( cursor_style == "lock"){
-            resources.unselBarriers();
-            resources_update(1);
-        }
-
-        if( cursor_style == "quarantine" ){
-            //no change
-        }
-        else {resources.selTesting();
-              resources_update(1);
-             }
-        cursor_style = "quarantine"
-        //resources_update();
-    }
-    else if( charCode == 100){
-        document.body.style.cursor = "url(resources/unlock.png), auto";
-
-        if( cursor_style == "lock"){
-            resources.unselBarriers();
-            resources_update(1);
-        }
-        if( cursor_style == "quarantine"){
-            resources.unselTesting();
-            resources_update(1);
-        }
-        cursor_style = "unlock"
-    }
-    else if( charCode == 119){
-
-        if( cursor_style == "lock"){
-            resources.unselBarriers();
-            resources_update(1);
-        }
-        else if( cursor_style == "quarantine"){
-            resources.unselTesting();
-            resources_update(1);
-        }
-
-        cursor_style = "default"
-        document.body.style.cursor = "default";
-    }
-    else if( charCode == 32){
-        update();
-        document.body.style.cursor = "default";
-        cursor_style = "default"
-        resources.replenish();
-        resources_update(2);
-    }
-
-});
