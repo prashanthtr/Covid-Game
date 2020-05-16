@@ -14,6 +14,7 @@ class Grid {
     constructor() {
         this.connected = {};
         this.nodes = {};
+        this.scoreSeries = [];
     }
 
     addNode(node) {
@@ -167,9 +168,17 @@ class Grid {
                 infected+=1;
             }
         }
+        this.update_score(infected, safe, connected_safe)
         return ["Infected : " +infected, "Safe:" + safe, "Connected: " + connected_safe];
     }
 
+    update_score(i, s, cs ){
+        this.scoreSeries.push({i: i, s: s,cs: cs});
+    }
+
+    retrieveScore( ){
+        return this.scoreSeries;
+    }
 
     // if a cell is red, then it continues to stay red
     // if a cell is orange, then it continues to stay orange, or move to red

@@ -14,7 +14,8 @@ var score = []
 var cursor_style = "default"
 var scoring_text= []
 var resources_text= []
-
+var scoreTimeSeries = [];
+var first_score = [];
 
 var threeCursors = ["url(resources/lock.png), auto", "resources/quarantine.png), auto", "url(resources/unlock.png), auto" ]
 
@@ -58,8 +59,8 @@ function create_grid(){
             return (d.y+2) * h;
         })
         .attr("r", 0.3*w)
-        // .attr("width",0.8*w)
-        // .attr("height", 0.9*h)
+    // .attr("width",0.8*w)
+    // .attr("height", 0.9*h)
         .style("fill",function(d){
             return d.color;
         })
@@ -70,7 +71,7 @@ function create_grid(){
             return d.y
         })
         .attr("class","dropzone")
-        //.attr("class","bordered")
+    //.attr("class","bordered")
 }
 
 
@@ -78,12 +79,6 @@ function update(){
 
     //document.getElementById("ts").innerHTML = "Time step: " + (ts++) +  "\n" + "Score:" + cagrid.score();
     //var obj = cagrid.orderExport();
-
-    if( ts == 60){
-        screen4();
-        rafId = null
-        return;
-    }
 
     ts++;//timestep increases
 
@@ -95,6 +90,7 @@ function update(){
     }
 
     scoring_text = cagrid.score();
+
 
     d3.select("#mapdiv").select("svg").selectAll(".scoring").remove();
 
@@ -116,9 +112,9 @@ function update(){
         .attr("font-family", "sans-serif")
         .attr("class", "scoring")
 
-        // // .text(function(d){
-        // //     return d
-        // // })
+    // // .text(function(d){
+    // //     return d
+    // // })
 
     // d3.select("#mapdiv").select("svg").selectAll("text")
     //     .data(scoring_text)
@@ -161,7 +157,7 @@ interact('.dropzone')
             case "disconnect": {
                 cagrid.disconnect(y+","+x, 1);
                 const item = event.target
-                 item.classList.add('bordered')
+                item.classList.add('bordered')
             } break;
             case "connect": {
                 cagrid.disconnect(y+","+x, 0);
@@ -330,7 +326,7 @@ function screen1( ){
     ];
 
     //intro text to the game, with a next button
-     var svg = d3.select("#mapdiv").append("svg")
+    var svg = d3.select("#mapdiv").append("svg")
         .attr("width", width)
         .attr("height", height)
         .style("background","#6B8E23")
@@ -401,18 +397,18 @@ function screen1( ){
     //     .attr("border", "1px solid lightgrey")
 
     // .attr({"x": width/3, "y": height/3})
-        // .style("color","white")
-        // .style("border","1px lightgray solid")
-        // .transition().duration(1500)
-        // .text("A city is in pandemic")
-        // .transition().duration(1500)
-        // .append("text")
-        // .text("Your actions can save the city")
-        // .transition().duration(1500)
-        // .append("text")
-        // .text("Let us proceed")
-        // .transition().duration(1500)
-        // .each("end", screen2)
+    // .style("color","white")
+    // .style("border","1px lightgray solid")
+    // .transition().duration(1500)
+    // .text("A city is in pandemic")
+    // .transition().duration(1500)
+    // .append("text")
+    // .text("Your actions can save the city")
+    // .transition().duration(1500)
+    // .append("text")
+    // .text("Let us proceed")
+    // .transition().duration(1500)
+    // .each("end", screen2)
 
 
     // var parah = document.createElement("p");
@@ -527,10 +523,12 @@ function screen3(){
 
     create_grid()
 
+    first_score = cagrid.score();
+
     d3.select("#mapdiv").select("svg").selectAll("circle")
 
     //.style("filter", "filter:drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))")
-        //.attr("class", "bordered")
+    //.attr("class", "bordered")
         .on("click", function(e){
 
             if( document.body.style.cursor == "" || document.body.style.cursor == "default" ){
@@ -694,34 +692,155 @@ function screen3(){
             document.body.style.cursor = "default";
         }
         else if( charCode == 32){
-            update();
-            document.body.style.cursor = "default";
-            cursor_style = "default"
-            resources.replenish();
-            resources_update(2);
-        }
 
+            if( ts == 10){
+                ts++;
+                rafId = null
+                screen4();
+                return;
+            }
+            else if( ts < 10 ) {
+                update();
+                document.body.style.cursor = "default";
+                cursor_style = "default"
+                resources.replenish();
+                resources_update(2);
+            }
+            else{
+                //nothing
+            }
+        }
     });
 
-
-    //rafId = setInterval(update,500)
+    //rafId = setInterval(update,100)
 }
 
 function screen4(){
 
-    d3.select("body").select("#mapdiv").select("svg")
-        .transition()
-        .duration(100)
-        .style("background-color","#6B8E23")
+
+    // d3.select("body").select("#mapdiv").select("svg")
+    //     .transition()
+    //     .duration(100)
+    //     .style("background-color","#6B8E23")
+
+    document.removeEventListener("keypress", function(){console.log("removed")});
 
     document.body.style.cursor = "default";
 
-    d3.select("body").select("#mapdiv").select("svg").selectAll("rect").remove()
+    d3.select("body").select("#mapdiv").select("svg").selectAll("text").remove()
+    d3.select("body").select("#mapdiv").select("svg").selectAll("circle").remove()
 
-    d3.select("body").select("#mapdiv").select("svg").append("text")
-        .attr("x", width/3)
-        .attr("y", height/2)
-        .text("End of game")
+    // d3.select("body").select("#mapdiv").select("svg").selectAll(".scoring").remove()
+    // d3.select("body").select("#mapdiv").select("svg").selectAll(".resources").remove()
+
+    var series = cagrid.retrieveScore()
+    var infected = [], safe = [], cs = [];
+    var timeSeries = [];
+
+    for(var i=0; i < series.length; i++ ){
+        timeSeries.push(i);
+        infected.push(series[i].i)
+        safe.push(series[i].s)
+        cs.push(series[i].cs)
+    }
+
+    var last_score = cagrid.score();
+
+    plot(width/10, 3*width/10, 2*height/5, height/5, infected);
+
+    plot(4*width/10, 6*width/10, 2*height/5, height/5, safe);
+
+    plot(7*width/10, 9*width/10, 2*height/5, height/5, cs);
+
+    scoring_text = cagrid.score();
+
+    d3.select("body").select("#mapdiv").select("svg").selectAll(".lastScores")
+        .data(scoring_text)
+        .enter()
+        .append("text")
+        .attr("x", function(d,i){
+            return (i*3+1)*width/10
+        })
+        .attr("y", 2*height/5 + height/10)
+        .text(function(d){return d})
         .attr("fill","#F0E68C")
         .attr("font-family", "sans-serif")
+        .attr("class","lastScores")
+
+    let old_score = first_score.map( (s) => {return parseFloat((s.split(":")[1]))})
+    let cur_score = scoring_text.map( (s) => {return parseFloat((s.split(":")[1]))})
+
+    var inf = cur_score[0] - old_score[0];
+    var saf = cur_score[1] - old_score[1];
+    var econ = cur_score[2] - old_score[2];
+
+    if( inf > 0 ){
+        console.log(" You have saved " + inf + "people. The poeple are grateful for you timely actions. The economy can start growing now");
+
+    }
+
+
+}
+
+
+function plot( w1, w2, h1, h2, data ){
+
+    var svg = d3.select("body").select("#mapdiv").select("svg");
+
+    var xscale = d3.scale.linear()
+        .domain([0, data.length])
+        .range([w1, w2]);
+
+    var yscale = d3.scale.linear()
+        .domain([0, d3.max(data)])
+        .range([h1,h2]);
+
+    var x_axis = d3.svg.axis()
+        .scale(xscale)
+        .orient("bottom")
+
+    var y_axis = d3.svg.axis()
+        .scale(yscale)
+        .orient("left")
+
+    svg.append("line")
+        .style("stroke", "Lightblue")
+        .style("stroke-width", 4)
+        .attr("x1", xscale(0))
+        .attr("y1", yscale(0))
+        .attr("x2", xscale(data.length-1))
+        .attr("y2", yscale(0))
+
+    //Lets draw the Y axis
+    svg.append("line")
+        .style("stroke", "Lightblue")
+        .style("stroke-width", 4)
+        .attr("x1", xscale(0))
+        .attr("y1", yscale(0))
+        .attr("x2", xscale(0))
+        .attr("y2", yscale(d3.max(data)))
+
+    var line = d3.svg.line()
+        .x(function(d,i) { return xscale(i); })
+        .y(function(d) { return yscale(d); })
+
+
+    svg.append("path")
+        .transition()
+        .delay(200)
+        .attr("d", line(data))
+        .style("stroke", "#F0E68C")
+        .style("stroke-width", 2)
+        .style("fill", "none")
+
+    // svg.append('g')
+    //     .attr('transform', 'translate(0,' + height + ')')
+    //     .attr('class', 'main axis date')
+    //     .call(x_axis);
+
+    // svg.append('g')
+    //     .attr('transform', 'translate(0,0)')
+    //     .attr('class', 'main axis date')
+    //     .call(y_axis);
+
 }
