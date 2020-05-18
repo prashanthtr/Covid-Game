@@ -54,7 +54,11 @@ nav, aside {
   flex-grow: 0.75;
   border: 1px solid black;
   height:100%;
+
+  position: relative;
   width: 100%;
+  vertical-align: center;
+  overflow: hidden;
 }
 
 
@@ -119,6 +123,13 @@ nav, aside {
   outline: 3px dotted black;
 }
 
+.svg-content {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 
 @media only screen and (max-width: 800px) and (max-height: 800px) {
 
@@ -143,7 +154,13 @@ nav, aside {
     background-color: #f5fcff;
     flex-grow: 0.9;
     border: 1px solid black;
-   }
+    height:100%;
+    position: relative;
+    width: 100%;
+    vertical-align: top;
+    overflow: hidden;
+
+  }
 
   .testing {
   touch-action: none;
