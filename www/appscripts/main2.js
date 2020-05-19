@@ -1082,6 +1082,7 @@ function keyHandler (e){
 
     switch(charCode){
 
+
     case 115: {
         cursor = "quarantine";
         document.body.style.cursor = "copy"
