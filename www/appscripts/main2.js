@@ -550,9 +550,10 @@ function game( id ){
             if( cursor == "unlock" ){
 
                 console.log("connect")
-                cagrid.disconnect(e.y+","+e.x, 0);
+                //cagrid.disconnect(e.y+","+e.x, 0);
                 cagrid.testing(e.y+","+e.x, 0);
-                item.classList.remove('bordered')
+                console.log(item)
+                //item.classList.remove('bordered')
                 item.classList.remove('testinprogress')
 
                 if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
@@ -563,9 +564,8 @@ function game( id ){
             else if( cursor == "quarantine" ){
 
                 if( resources.check_testKits() > 0){
-                    console.log("test")
                     cagrid.testing(e.y+","+e.x, 1);
-                    cagrid.disconnect(e.y+","+e.x, 1);
+                    //cagrid.disconnect(e.y+","+e.x, 1);
                     item.classList.add('testinprogress')
                     resources.selTesting();
                     resources_update(svg, 1);
@@ -810,63 +810,6 @@ function submit(){
     console.log("creating logs")
 }
 
-//     screen4(cagrid, width, height){
-
-
-//         document.removeEventListener("keypress", function(){console.log("removed")});
-
-//         document.body.style.cursor = "default";
-
-//         d3.select("body").select("#mapdiv").select("svg").selectAll("text").remove()
-//         d3.select("body").select("#mapdiv").select("svg").selectAll("circle").remove()
-
-//         var series = cagrid.retrieveScore()
-//         var infected = [], safe = [], cs = [];
-//         var timeSeries = [];
-
-//         for(var i=0; i < series.length; i++ ){
-//             timeSeries.push(i);
-//             infected.push(series[i].i)
-//             safe.push(series[i].s)
-//             cs.push(series[i].cs)
-//         }
-
-//         var last_score = cagrid.score();
-
-//         plot(width/10, 3*width/10, 2*height/5, height/5, infected);
-
-//         plot(4*width/10, 6*width/10, 2*height/5, height/5, safe);
-
-//         plot(7*width/10, 9*width/10, 2*height/5, height/5, cs);
-
-//         scoring_text = cagrid.score();
-
-//         d3.select("body").select("#mapdiv").select("svg").selectAll(".lastScores")
-//             .data(scoring_text)
-//             .enter()
-//             .append("text")
-//             .attr("x", function(d,i){
-//                 return (i*3+1)*width/10
-//             })
-//             .attr("y", 2*height/5 + height/10)
-//             .text(function(d){return d})
-//             .attr("fill","#F0E68C")
-//             .attr("font-family", "sans-serif")
-//             .attr("class","lastScores")
-
-//         let old_score = first_score.map( (s) => {return parseFloat((s.split(":")[1]))})
-//         let cur_score = scoring_text.map( (s) => {return parseFloat((s.split(":")[1]))})
-
-//         var inf = cur_score[0] - old_score[0];
-//         var saf = cur_score[1] - old_score[1];
-//         var econ = cur_score[2] - old_score[2];
-
-//         if( inf > 0 ){
-//             console.log(" You have saved " + inf + "people. The poeple are grateful for you timely actions. The economy can start growing now");
-
-//         }
-
-//     }
 
 function plot( w1, w2, h1, h2, data ){
 
@@ -1080,6 +1023,9 @@ function keyHandler (e){
 
     var charCode = e.charCode;
 
+    //a little bit of a cheat
+    svg = d3.select("#theSvg");
+
     switch(charCode){
 
 
@@ -1104,6 +1050,13 @@ function keyHandler (e){
         }
         else if( ts < maxTime ) {
             console.log(ts + " , " + maxTime);
+
+            svg.selectAll("circle")
+                .each(function(l) {
+                    console.log(this.classList)
+                    this.classList.remove("testinprogress");
+                });
+
             update( svg );
             resources.useKit();
             resources.replenish();
