@@ -25,6 +25,7 @@ export function main( id ){
     d3.select("#"+id).selectAll("line").remove();
     d3.select("#"+id).selectAll("path").remove();
     d3.select("#"+id).selectAll(".submission").remove();
+    d3.select("#"+id).selectAll("foreignObject").remove();
 
     var bbbox = svg.node().getBoundingClientRect();
     var width = bbbox.width
@@ -137,34 +138,35 @@ function intro(id){
     console.log(width + " , " + height)
     svg.selectAll("*").remove();
 
-    //screen elements, specified as D3
-    var text = [
-        {
-            x: width/10,
-            y: height/3,
-            content: "A pandemic has brought your city's operations to a grinding halt.",
-        },
-        {
-            x: width/10,
-            y: 2*height/5,
-            content: "As people are finding livelihood difficult, we have to open up",
-        },
-        {
-            x: width/10,
-            y: 0.47*height,
-            content: "the city whilst risking more infections.",
-        },
-        {
-            x: width/10,
-            y: 3*height/5,
-            content: "Assemble safe zones and minimize overcrowding to enable people",
-        },
-        {
-            x: width/10,
-            y: 0.67*height,
-            content: "find their livelihood in safety.",
-        }
-    ];
+    // //screen elements, specified as D3
+    // var text = [
+    //     {
+    //         x: width/10,
+    //         y: height/3,
+    //         content: "A pandemic has brought your city's operations to a grinding halt.",
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 2*height/5,
+    //         content: "As people are finding livelihood difficult, we have to open up",
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 0.47*height,
+    //         content: "the city whilst risking more infections.",
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 3*height/5,
+    //         content: "Assemble safe zones and minimize overcrowding to enable people",
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 0.67*height,
+    //         content: "find their livelihood in safety.",
+    //     }
+    // ];
+
 
     //intro text to the game, with a next button
     var svg = d3.select("#mapdiv").select("svg")
@@ -177,7 +179,7 @@ function intro(id){
     var color = "#F0E68C"
     var id = svg.node().id
 
-    appendText(id, text, color, className);
+    //appendText(id, text, color, className);
 
     var nav = [
         {
@@ -201,6 +203,18 @@ function intro(id){
             svg.selectAll("*").remove();
             svg.node().prevFn(svg.node().id)
         });
+
+    svg.append('foreignObject')
+        .attr('x', width/15)
+        .attr('y', height/4)
+        .attr('width', 0.9*width)
+        .attr('height', 0.8*height)
+        .attr("fill",color)
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 90%; color:#F0E68C;font-size:1.2vw"> A pandemic has brought your city\'s operations to a grinding halt. As people are finding livelihood difficult, you have to open up the city whilst risking more infections. <br> <br> Your task: Assemble safe (green) zones and enable people find their livelihood in 30 days. <br> <br> Guidelines: <ul> <li> Test infected (orange) zones to make them safe. </li> <li> Reduce the infected zones near safe zones (green). </li> <li> Do not increase overcrowding of safe (green) zones. </li> </div>')
+
 
 }
 
@@ -219,163 +233,162 @@ function instructions(id){
     svg.selectAll("text").remove();
     svg.on("click", null);
 
-    var text = [
-        {
-            x: width/10,
-            y: 3*height/15,
-            content: "Player actions:"
-        },
-        {
-            x: width/10,
-            y: 4*height/15,
-            content: "1) Press S once and Mouse click -> Box and Quarantine"
-        },
-        {
-            x: width/10,
-            y: 5*height/15,
-            content: "2) Press D once + Mouse click -> Remove containment"
-        },
-        {
-            x: width/10,
-            y: 6.5*height/15,
-            content: "Patterns to minimize overcrowding:"
-        },
-        {
-            x: width/10,
-            y: 11.5*height/15,
-            content: "Connecting safe zones:"
-        }
-    ];
+    // var text = [
+    //     {
+    //         x: width/10,
+    //         y: 3*height/15,
+    //         content: "Player actions:"
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 4*height/15,
+    //         content: "1) Press S once and Mouse click -> Box and Quarantine"
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 5*height/15,
+    //         content: "2) Press D once + Mouse click -> Remove containment"
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 6.5*height/15,
+    //         content: "Patterns to minimize overcrowding:"
+    //     },
+    //     {
+    //         x: width/10,
+    //         y: 11.5*height/15,
+    //         content: "Connecting safe zones:"
+    //     }
+    // ];
 
-    appendText(svg.node().id, text, "#F0E68C", "actions");
+    //appendText(svg.node().id, text, "#F0E68C", "actions");
 
-    var imgs = [
-        {
-            x: 1*width/10,
-            y: height/2,
-            src: "./resources/adj1.png"
-        },
-        {
-            x: 2.5*width/10,
-            y: height/2,
-            src: "./resources/adj2.png"
-        },
-        {
-            x: 4*width/10,
-            y: height/2,
-            src: "./resources/adj3.png"
-        },
-        {
-            x: 5.5*width/10,
-            y: height/2,
-            src: "./resources/adj4.png"
-        },
-        {
-            x: 7*width/10,
-            y: height/2,
-            src: "./resources/adj5.png"
-        },
-        {
-            x: 2.5*width/10,
-            y: 0.8*height,
-            src: "./resources/adj3.png"
-        },
-        {
-            x: 3.7*width/10,
-            y: 0.8*height,
-            src: "./resources/adj2.png"
-        },
-        {
-            x: 5.5*width/10,
-            y: 0.8*height,
-            src: "./resources/adj2.png"
-        },
-        {
-            x: 6.7*width/10,
-            y: 0.8*height,
-            src: "./resources/adj3.png"
-        }
+    // var imgs = [
+    //     {
+    //         x: 1*width/10,
+    //         y: height/2,
+    //         src: "./resources/adj1.png"
+    //     },
+    //     {
+    //         x: 2.5*width/10,
+    //         y: height/2,
+    //         src: "./resources/adj2.png"
+    //     },
+    //     {
+    //         x: 4*width/10,
+    //         y: height/2,
+    //         src: "./resources/adj3.png"
+    //     },
+    //     {
+    //         x: 5.5*width/10,
+    //         y: height/2,
+    //         src: "./resources/adj4.png"
+    //     },
+    //     {
+    //         x: 7*width/10,
+    //         y: height/2,
+    //         src: "./resources/adj5.png"
+    //     },
+    //     {
+    //         x: 2.5*width/10,
+    //         y: 0.8*height,
+    //         src: "./resources/adj3.png"
+    //     },
+    //     {
+    //         x: 3.7*width/10,
+    //         y: 0.8*height,
+    //         src: "./resources/adj2.png"
+    //     },
+    //     {
+    //         x: 5.5*width/10,
+    //         y: 0.8*height,
+    //         src: "./resources/adj2.png"
+    //     },
+    //     {
+    //         x: 6.7*width/10,
+    //         y: 0.8*height,
+    //         src: "./resources/adj3.png"
+    //     }
 
-    ];
+    // ];
 
-    svg.selectAll('image')
-        .data(imgs)
-        .enter()
-        .append("image")
-        .attr("x", function(d){return d.x})
-        .attr("y", function(d){return d.y})
-        .attr('xlink:href', (d)=> {return d.src})
-        .attr('width', 75)
-        .attr('height', 75)
+    // svg.selectAll('image')
+    //     .data(imgs)
+    //     .enter()
+    //     .append("image")
+    //     .attr("x", function(d){return d.x})
+    //     .attr("y", function(d){return d.y})
+    //     .attr('xlink:href', (d)=> {return d.src})
+    //     .attr('width', 75)
+    //     .attr('height', 75)
 
-    var imgText = [
-        {
-            x: 1*width/10,
-            y: 0.67*height,
-            content: "Sparse"
-        },
-        {
-            x: 2.5*width/10,
-            y: 0.67*height,
-            content: ""
-        },
-        {
-            x: 4*width/10,
-            y: 0.67*height,
-            content: "Optimal"
-        },
-        {
-            x: 5.5*width/10,
-            y: 0.67*height,
-            content: ""
-        },
-        {
-            x: 7*width/10,
-            y: 0.67*height,
-            content: "Crowded"
-        },
-        {
-            x: 3*width/10,
-            y: 0.97*height,
-            content: "Connected"
-        },
-        {
-            x: 5.5*width/10,
-            y: 0.97*height,
-            content: "Disconnected"
-        }
-    ];
+    // var imgText = [
+    //     {
+    //         x: 1*width/10,
+    //         y: 0.67*height,
+    //         content: "Sparse"
+    //     },
+    //     {
+    //         x: 2.5*width/10,
+    //         y: 0.67*height,
+    //         content: ""
+    //     },
+    //     {
+    //         x: 4*width/10,
+    //         y: 0.67*height,
+    //         content: "Optimal"
+    //     },
+    //     {
+    //         x: 5.5*width/10,
+    //         y: 0.67*height,
+    //         content: ""
+    //     },
+    //     {
+    //         x: 7*width/10,
+    //         y: 0.67*height,
+    //         content: "Crowded"
+    //     },
+    //     {
+    //         x: 3*width/10,
+    //         y: 0.97*height,
+    //         content: "Connected"
+    //     },
+    //     {
+    //         x: 5.5*width/10,
+    //         y: 0.97*height,
+    //         content: "Disconnected"
+    //     }
+    // ];
 
-    appendText(svg.node().id, imgText, "#F0E68C", "crowding");
+    //appendText(svg.node().id, imgText, "#F0E68C", "crowding");
 
-    var connect = [
-        {
-            x: 2.5*width/10,
-            y: 0.8*height,
-            src: "./resources/adj2.png"
-        },
-        {
-            x: 3*width/10,
-            y: 0.8*height,
-            src: "./resources/adj3.png"
-        }
-    ];
+    // var connect = [
+    //     {
+    //         x: 2.5*width/10,
+    //         y: 0.8*height,
+    //         src: "./resources/adj2.png"
+    //     },
+    //     {
+    //         x: 3*width/10,
+    //         y: 0.8*height,
+    //         src: "./resources/adj3.png"
+    //     }
+    // ];
 
-    svg.selectAll('image')
-        .data(connect)
-        .enter()
-        .append("image")
-        .attr("x", function(d){return d.x})
-        .attr("y", function(d){return d.y})
-        .attr('xlink:href', (d)=> {return d.src})
-        .attr('width', 75)
-        .attr('height', 75)
-        .attr("class", "connect")
-
+    // svg.selectAll('image')
+    //     .data(connect)
+    //     .enter()
+    //     .append("image")
+    //     .attr("x", function(d){return d.x})
+    //     .attr("y", function(d){return d.y})
+    //     .attr('xlink:href', (d)=> {return d.src})
+    //     .attr('width', 75)
+    //     .attr('height', 75)
+    //     .attr("class", "connect")
 
     //appendRules();
 
-    svg.on("click",this.screen2);
+    //svg.on("click",this.screen2);
 
     // function(){
     //     this.selectAll("text").remove()
@@ -385,8 +398,8 @@ function instructions(id){
 
     var nav = [
         {
-            x: width/10,
-            y: 0.1*height,
+            x: width/15,
+            y: 0.05*height,
             content: "< Main Screen",
         }
     ];
@@ -405,6 +418,17 @@ function instructions(id){
             //console.log(svg.node().prevFn);
             svg.node().prevFn(svg.node().id)
         });
+
+    svg.append('foreignObject')
+        .attr('x', width/15)
+        .attr('y', height/10)
+        .attr('width', 0.95*width)
+        .attr('height', 0.9*height)
+        .attr("fill","#F0E68C")
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 92%; color:#F0E68C; font-size:1vw"> Game Actions: <br> <ul> <li> Press S + Mouseclick to test a cell. </li> <li> Press D + Mouseclick to undo selection. </li>  <li> Press "Spacebar" to move to the next time step. </li> <li> Test maximum of 4 cells in each step. Remaining test kits are carried over. </li> </ul> <img src="resources/stepwise.png" style="width: 75%; height: 30%; text-align:center" />  <br> Rules: <ul> <li> Orange cell changes to green on testing. </li> Without testing action: <li> Green cell changes to orange with less than 2 adjacent green cells (infection). </li>  <li> Green changes to orange  with more than 4 green cells (overcrowding). </li> <li> Green remains green when number of nearby green Cells is =2,=3 or =4 </li> </ul> </div>')
 
 }
 
@@ -458,7 +482,20 @@ function credits ( id ){
         }
     ]
 
-    appendText(svg.node().id, text, "orange", "credits");
+
+    svg.append('foreignObject')
+        .attr('x', width/15)
+        .attr('y', height/3)
+        .attr('width', 0.95*width)
+        .attr('height', 0.9*height)
+        .attr("fill","#F0E68C")
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 92%; color:#F0E68C; font-size:vw"> <ul> <li> Game development: Prashanth Thattai R <br> Ph.D., National University of Singapore </li> <br> <li> Design and ideation: Adithya Kumar <br> Ph.D., Pennsylvania State University </li> <br> <li> Modeling: Karthik Pushpavanam S <br> Ph.D., Arizona State University </li> </ul> </div>')
+
+
+    //appendText(svg.node().id, text, "orange", "credits");
 
     svg.on("click",this.screen2);
 
@@ -506,6 +543,8 @@ function game( id ){
     cagrid.update();
 
     circles = cagrid.nodesToPlot();
+
+    resources_update(svg)
 
     var circleEl = svg.selectAll("circle")
         .data(circles)
@@ -597,7 +636,9 @@ function game( id ){
         }
     ];
 
-    appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
+    var content = scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
+
+    //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
 
     resources_text = resources.getResState();
 
@@ -610,14 +651,27 @@ function game( id ){
         {
             x: width/3,
             y: 0.05*height,
-            content: "Time Left: " + (maxTime-ts)
+            content: "Time Left: " + (maxTime-ts) + " days"
         }
 
     ];
 
+    var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
+
+    svg.append('foreignObject')
+        .attr('x', 0.75*width)
+        .attr('y', height/4)
+        .attr('width', 0.2*width)
+        .attr('height', 0.7*height)
+        .attr("fill","#F0E68C")
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 92%; color:#F0E68C; font-size:vw">' + content + '</div>')
 
     //console.log(resourcesData)
-    appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    //appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+
     resources_update(svg, 1);
 
     document.addEventListener("keypress", keyHandler);
@@ -631,6 +685,7 @@ function end(svg){
 
     svg.selectAll("text").remove()
     svg.selectAll("circle").remove()
+    svg.selectAll("foreignObject").remove();
 
     var series = cagrid.retrieveScore()
     var infected = [], safe = [], cs = [];
@@ -679,117 +734,152 @@ function end(svg){
     var saf = cur_score[1] - old_score[1];
     var econ = parseInt( (cur_score[2] - old_score[2]) *100/ old_score[2]);
 
-    if(  saf > 0 && econ > 0){
+    var nav = [
+        {
+            x: width/5,
+            y: 0.9*height,
+            content: "Submit"
+        },
+        {
+            x: 2*width/5,
+            y: 0.9*height,
+            content: "New game"
+        }
+    ];
 
-        var nav = [
-            {
-                x: width/10,
-                y: 0.65*height,
-                content: "You have saved " + saf + " infected people and improved mobility by " + econ + "%"
-            },
-            {
-                x: width/10,
-                y: 0.7*height,
-                "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-            },
-            {
-                x: width/10,
-                y: 0.75*height,
-                "content": "Will you allow us to collect and analyze your gameplay strategies"
-            },
-            {
-                x: width/5,
-                y: 0.9*height,
-                content: "Submit"
-            },
-            {
-                x: 3*width/5,
-                y: 0.9*height,
-                content: "New game"
-            }
-        ];
+    if(  saf> 0 && econ > 0){
+
+        var content = "You have saved " + saf + " infected people and improved mobility by " + econ + "% <br> These noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Will you allow us to collect and analyze your gameplay strategies?"
+
+        // var nav = [
+        //     {
+        //         x: width/10,
+        //         y: 0.65*height,
+        //         content: "You have saved " + saf + " infected people and improved mobility by " + econ + "%"
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.7*height,
+        //         "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.75*height,
+        //         "content": "Will you allow us to collect and analyze your gameplay strategies"
+        //     },
+        //     {
+        //         x: width/5,
+        //         y: 0.9*height,
+        //         content: "Submit"
+        //     },
+        //     {
+        //         x: 3*width/5,
+        //         y: 0.9*height,
+        //         content: "New game"
+        //     }
+        // ];
 
     }
     else if ( saf > 0){
 
-        var nav = [
-            {
-                x: width/10,
-                y: 0.65*height,
-                content: "You have saved " + saf + " infected people"
-            },
-            {
-                x: width/10,
-                y: 0.7*height,
-                "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-            },
-            {
-                x: width/10,
-                y: 0.75*height,
-                "content": "Will you allow us to collect and analyze your gameplay strategies"
-            },
-            {
-                x: width/5,
-                y: 0.9*height,
-                content: "Submit"
-            },
-            {
-                x: 3*width/5,
-                y: 0.9*height,
-                content: "New game"
-            }
-        ];
+        var content = "You have saved " + saf + " infected people. <br> These noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Will you allow us to collect and analyze your gameplay strategies?"
+
+
+        // var nav = [
+        //     {
+        //         x: width/10,
+        //         y: 0.65*height,
+        //         content: "You have saved " + saf + " infected people"
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.7*height,
+        //         "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.75*height,
+        //         "content": "Will you allow us to collect and analyze your gameplay strategies"
+        //     },
+        //     {
+        //         x: width/5,
+        //         y: 0.9*height,
+        //         content: "Submit"
+        //     },
+        //     {
+        //         x: 3*width/5,
+        //         y: 0.9*height,
+        //         content: "New game"
+        //     }
+        // ];
 
     }
     else if (econ > 0){
 
-        var nav = [
-            {
-                x: width/10,
-                y: 0.65*height,
-                content: "You have improved mobility by " + econ + "%"
-            },
-            {
-                x: width/10,
-                y: 0.7*height,
-                "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-            },
-            {
-                x: width/10,
-                y: 0.75*height,
-                "content": "Will you allow us to collect and analyze your gameplay strategies"
-            },
-            {
-                x: width/5,
-                y: 0.9*height,
-                content: "Submit"
-            },
-            {
-                x: 3*width/5,
-                y: 0.9*height,
-                content: "New game"
-            }
-        ];
+        var content = "You have improved mobility by " + econ + "% <br> These noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Will you allow us to collect and analyze your gameplay strategies?"
+
+        // var nav = [
+        //     {
+        //         x: width/10,
+        //         y: 0.65*height,
+        //         content: "You have improved mobility by " + econ + "%"
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.7*height,
+        //         "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.75*height,
+        //         "content": "Will you allow us to collect and analyze your gameplay strategies"
+        //     },
+        //     {
+        //         x: width/5,
+        //         y: 0.9*height,
+        //         content: "Submit"
+        //     },
+        //     {
+        //         x: 3*width/5,
+        //         y: 0.9*height,
+        //         content: "New game"
+        //     }
+        // ];
 
     }
     else{
 
-        var nav = [
-            {
-                x: width/10,
-                y: 0.65*height,
-                content: "We encourage you to try again to improve gameplay."
-            },
-            {
-                x: width/10,
-                y: 0.7*height,
-                "content": "Your noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-            },
-            {
-                x: width/10,
-                y: 0.75*height,
-                "content": "Would you give this another try?"
-            },
+        var content = "We encourage you to try again to improve gameplay. <br> Your noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Would you give this another try?"
+
+        // var nav = [
+        //     {
+        //         x: width/10,
+        //         y: 0.65*height,
+        //         content: "We encourage you to try again to improve gameplay."
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.7*height,
+        //         "content": "Your noble actions are potential solutions for safely exiting COVID-19 lockdowns."
+        //     },
+        //     {
+        //         x: width/10,
+        //         y: 0.75*height,
+        //         "content": "Would you give this another try?"
+        //     },
+        //     {
+        //         x: width/5,
+        //         y: 0.9*height,
+        //         content: ""
+        //     },
+        //     {
+        //         x: 2*width/5,
+        //         y: 0.9*height,
+        //         content: "New game"
+        //     }
+        // ];
+
+        nav = [
             {
                 x: width/5,
                 y: 0.9*height,
@@ -801,12 +891,22 @@ function end(svg){
                 content: "New game"
             }
         ];
-
     }
+
+    svg.append('foreignObject')
+        .attr('x', width/10)
+        .attr('y', 0.65*height)
+        .attr('width', 0.9*width)
+        .attr('height', 0.8*height)
+        .attr("fill","#F0E68C")
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 90%; color:#F0E68C;font-size:1vw">' + content + '</div>')
 
 
     appendText(svg.node().id, nav, "#F0E68C", "submission", "pointer");
-    appendTextEvents(svg.node().id, "submission", [end, end, end, submit, main]);
+    appendTextEvents(svg.node().id, "submission", [submit, main]);
 
 }
 
@@ -912,6 +1012,7 @@ function update( svg ){
 
     svg.selectAll(".scoring").remove();
     svg.selectAll(".resources").remove();
+    svg.selectAll("foreignObject").remove();
 
     scoring_text = cagrid.score();
 
@@ -938,9 +1039,23 @@ function update( svg ){
         }
     ];
 
-    appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
-
     resources_text = resources.getResState();
+
+    //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
+
+    var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
+
+    svg.append('foreignObject')
+        .attr('x', 0.75*width)
+        .attr('y', height/4)
+        .attr('width', 0.2*width)
+        .attr('height', 0.7*height)
+        .attr("fill","#F0E68C")
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 92%; color:#F0E68C; font-size:vw">' + content + '</div>')
+
 
     var resourcesData = [
         {
@@ -951,11 +1066,11 @@ function update( svg ){
         {
             x: width/3,
             y: 0.05*height,
-            content: "Time Left: " + (maxTime-ts)
+            content: "Time Left: " + (maxTime-ts) + " days"
         }
     ];
 
-    appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    //appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
 
     svg
         .selectAll("circle")
@@ -969,29 +1084,48 @@ function update( svg ){
 function resources_update( svg ){
 
     svg.selectAll(".resources").remove();
+    svg.selectAll("foreignObject").remove();
 
-    resources_text = resources.getResState();
-
-    console.log(resources_text);
+    //resources_text = resources.getResState();
+    //console.log(resources_text);
     var bbbox = svg.node().getBoundingClientRect();
     var width = bbbox.width
     var height = bbbox.height;
 
-    var resourcesData = [
-        {
-            x: width/3,
-            y: 0.95*height,
-            content: resources_text[0]
-        },
-        {
-            x: width/3,
-            y: 0.05*height,
-            content: "Time Left: " + (maxTime-ts)
-        }
+    // var resourcesData = [
+    //     {
+    //         x: width/3,
+    //         y: 0.95*height,
+    //         content: resources_text[0]
+    //     },
+    //     {
+    //         x: width/3,
+    //         y: 0.05*height,
+    //         content: "Time Left: " + (maxTime-ts) + " days"
+    //     }
 
-    ];
+    // ];
 
-    appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    scoring_text = cagrid.score();
+    resources_text = resources.getResState();
+
+    //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
+
+    var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
+
+    svg.append('foreignObject')
+        .attr('x', 0.75*width)
+        .attr('y', height/4)
+        .attr('width', 0.2*width)
+        .attr('height', 0.7*height)
+        .attr("fill","#F0E68C")
+        .attr("font-family", "Monaco")
+        .attr("class", "intro")
+        .append("xhtml:body")
+        .html('<div style="width: 92%; color:#F0E68C; font-size:vw">' + content + '</div>')
+
+
+    //appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
 
     // svg.selectAll(".resources")
     //     .data(resources_text)
@@ -1008,17 +1142,6 @@ function resources_update( svg ){
 
 }
 
-
-var svg = d3.select("#mapdiv")
-    .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 " + width + " " + height)
-    .attr("class", "svg-content")
-    .attr("id", "theSvg")
-    .style("background","#6B8E23")
-
-
-main(svg.node().id);
 
 function keyHandler (e){
 
@@ -1065,6 +1188,17 @@ function keyHandler (e){
             cagrid.resetTesting();
         }; break;
     }
-    default: document.body.style.cursor = "default"; break;
+    default: {cursor = "default"; document.body.style.cursor = "default"; } break;
     }
 }
+
+var svg = d3.select("#mapdiv")
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 " + width + " " + height)
+    .attr("class", "svg-content")
+    .attr("id", "theSvg")
+    .style("background","#6B8E23")
+
+
+main(svg.node().id);

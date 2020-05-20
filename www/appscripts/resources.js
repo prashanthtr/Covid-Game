@@ -85,9 +85,11 @@ class Resources {
     // }
 
     init(){
-        this.testing = 0;
-        this.unused = this.maxStep;
+
+        this.remaining = 0;
         this.carry = 0;
+        this.last_rem = 0;
+        this.unused = this.maxStep;
     }
 
     replenish(){
