@@ -1,0 +1,30 @@
+{
+  "name": "express",
+  "version": "4.17.1",
+  "description": "express package",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "tone": "^13.8.25"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/prashanthtr/crgsimulator.git"
+  },
+  "keywords": [
+    "covidgame",
+    "cellular",
+    "automaton",
+    "gameoflife"
+  ],
+  "author": "Prashanth, Karthik, Adithya",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://gitlab.com/prashanthtr/crgsimulator/issues"
+  },
+  "homepage": "https://gitlab.com/prashanthtr/crgsimulator#readme"
+}
