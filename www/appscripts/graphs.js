@@ -8,7 +8,7 @@
 // 2) disconnect means that the cell does not influence neighbouring cells
 // 3) connect stops testing, and disconnection and resumes normal activity
 
-import {simulate_data, build_from_map} from "./loadGeodata.js"
+// import {simulate_data} from "./loadGeodata.js"
 
 class Grid {
     constructor() {
@@ -407,4 +407,33 @@ function run_grid(cagrid, n1,n2 ){
     cagrid.gridDisplay(n1,n2)
     //cagrid.display()
     cagrid.update()
+}
+
+
+function simulate_data( n1, n2 ){
+
+    var gridArr = []
+
+    for(var row=0; row < n1; row++){
+        gridArr[row] = [];
+        for( var col=0; col<n2; col++){
+
+            gridArr[row][col] = [];
+
+            var up1 = (row - 1) < 0?row:gridArr[row][col].push((row-1)+","+col);
+
+            var down1 = (row + 1)>= n1?0:gridArr[row][col].push((row+1)+","+col)
+
+            var left1 = (col - 1) < 0? (n2-1):gridArr[row][col].push(row+","+(col-1))
+
+            var right1 = (col + 1) >= n2? 0:gridArr[row][col].push(row+","+(col+1))
+
+            var upleft = ((row - 1 >= 0)&&(col - 1 >= 0))?gridArr[row][col].push((row-1)+","+(col-1)):0
+            var upright = ((row - 1 >= 0)&&(col + 1 < n2))?gridArr[row][col].push((row-1)+","+(col+1)):0
+            var downright = ((row + 1 < n1)&&(col + 1 < n2))?gridArr[row][col].push((row+1)+","+(col+1)):0
+            var downleft = ((row + 1 < n1)&&(col - 1 >= 0))?gridArr[row][col].push((row+1)+","+(col-1)):0;
+
+        }
+    }
+    return gridArr;
 }
