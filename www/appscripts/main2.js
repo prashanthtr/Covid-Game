@@ -1169,6 +1169,14 @@ function keyHandler (e){
             ts++;
             rafId = null
             document.removeEventListener("keypress", keyHandler);
+
+            svg.selectAll("circle")
+                .each(function(l) {
+                    //console.log(this.classList)
+                    this.classList.remove("testinprogress");
+                });
+
+            cagrid.update();
             end( svg );
             return;
         }
