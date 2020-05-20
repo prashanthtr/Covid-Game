@@ -3,6 +3,7 @@
   "version": "4.17.1",
   "description": "express package",
   "main": "index.js",
+  "start": "node index.js",
   "dependencies": {
     "express": "^4.17.1",
     "tone": "^13.8.25"
