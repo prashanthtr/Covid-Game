@@ -3,7 +3,7 @@ const express = require('express')
 var app = express();
 var http = require('http').Server(app);
 
-var kport = process.argv[2] || 3002;
+var kport = process.env.PORT || 3002; //dynamic port
 
 var m_useRoot="/www";
 app.use(express.static(__dirname + m_useRoot));
