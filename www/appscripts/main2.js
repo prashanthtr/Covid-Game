@@ -11,7 +11,7 @@ var scoring_text= []
 var resources_text= []
 var scoreTimeSeries = [];
 var first_score = [];
-var maxTime = 20;
+var maxTime = 30;
 var ts = 0;
 var cursor = "default";
 
@@ -491,7 +491,7 @@ function game( id ){
 
     var svg = d3.select("#"+id);
 
-    maxTime = 20;
+    maxTime = 30;
     ts = 0;
     resources.init(); //for multiple gameplay
 
@@ -503,6 +503,7 @@ function game( id ){
     svg.on("click", null);
 
     cagrid = populate_grid();
+    cagrid.update();
 
     circles = cagrid.nodesToPlot();
 
@@ -552,13 +553,15 @@ function game( id ){
                 console.log("connect")
                 //cagrid.disconnect(e.y+","+e.x, 0);
                 cagrid.testing(e.y+","+e.x, 0);
-                console.log(item)
+                //console.log(item)
                 //item.classList.remove('bordered')
                 item.classList.remove('testinprogress')
 
-                if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
-                    resources.unselTesting();
-                }
+                resources.unselTesting();
+
+                // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
+                // }
+
                 resources_update(svg, 1);
             }
             else if( cursor == "quarantine" ){
@@ -615,6 +618,7 @@ function game( id ){
 
     //console.log(resourcesData)
     appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    resources_update(svg, 1);
 
     document.addEventListener("keypress", keyHandler);
 }
@@ -962,16 +966,13 @@ function update( svg ){
 
 }
 
-function resources_update( svg, num ){
+function resources_update( svg ){
 
     svg.selectAll(".resources").remove();
 
-    switch(num){
-    case 1:  resources_text = resources.getTempRes(); break;
-    case 2:  resources_text = resources.getResState(); break;
-    default: resources_text = resources.getResState(); break;
-    }
+    resources_text = resources.getResState();
 
+    console.log(resources_text);
     var bbbox = svg.node().getBoundingClientRect();
     var width = bbbox.width
     var height = bbbox.height;
@@ -1053,14 +1054,15 @@ function keyHandler (e){
 
             svg.selectAll("circle")
                 .each(function(l) {
-                    console.log(this.classList)
+                    //console.log(this.classList)
                     this.classList.remove("testinprogress");
                 });
 
             update( svg );
             resources.useKit();
             resources.replenish();
-            resources_update(svg, 2);
+            resources_update(svg, 1);
+            cagrid.resetTesting();
         }; break;
     }
     default: document.body.style.cursor = "default"; break;

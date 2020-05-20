@@ -104,6 +104,14 @@ class Grid {
         console.log(grid)
     }
 
+
+    resetTesting (){
+
+        for (const value of Object.values(this.nodes)) {
+            value.tested = 0;
+        }
+    }
+
     testing ( nodeid, value ){
         this.nodes[nodeid].tested = value; //weight for testing
     }

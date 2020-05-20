@@ -1,15 +1,20 @@
 
 class Resources {
     constructor() {
-        this.testing = 0;
-        this.temp_testKits = 5;
-        this.left = 0;
+        this.remaining = 0;
+        this.unused = 4; //max
+        this.carry = 0;
+        this.maxStep = 4;
+        this.last_rem = 0;
     }
 
-
     useKit(){
-        this.left = this.temp_testKits
+        this.carry = this.unused
         //this.temp_testKits = this.testing
+        this.remaining += this.carry;
+        this.last_rem = this.remaining;
+        console.log(this.remaining);
+        //this.used = this.remaining;
     }
 
     // useBarrier(){
@@ -23,11 +28,30 @@ class Resources {
     // }
 
     selTesting(){
-        this.temp_testKits--
+        if( this.unused > 0){
+            this.unused--
+        }
+        else if( this.remaining > 0){
+            this.remaining--
+        }
+        else{
+            //nothing
+        }
+
+        //for a single screen
     }
 
     unselTesting(){
-        this.temp_testKits++
+        console.log(this.last_rem)
+        if( this.unused < 4){
+            this.unused++
+        }
+        else if( this.remaining < this.last_rem){
+            this.remaining++
+        }
+        else{
+            //no change
+        }
     }
 
     // selBarriers(){
@@ -45,46 +69,38 @@ class Resources {
     // }
 
     check_testKits(){
-        if( this.temp_testKits < 0){
+        if( (this.remaining+this.unused) <0){ //used more than the quota for the
             return -1;
         }
-        return this.temp_testKits;
+        return (this.remaining+this.unused);
     }
 
     // unselBarriers(){
     //     this.temp_barriers++
     // }
 
-    calibrate(){
-        this.temp_testKits = this.testing
-        this.temp_barriers= this.barriers;
-    }
+    // calibrate(){
+    //     this.temp_testKits = this.testing
+    //     this.temp_barriers= this.barriers;
+    // }
 
     init(){
         this.testing = 0;
-        this.temp_testKits = 5;
-        this.left = 0;
+        this.unused = this.maxStep;
+        this.carry = 0;
     }
 
     replenish(){
-        this.testing = this.left + 5 // get 5 new test kits
-        console.log(this.testing)
+        this.unused = this.maxStep // get 5 new test kits
         // this.barriers = 5
-        this.temp_testKits = 5;
         //this.temp_barriers = 5;
     }
 
-    getTempRes (){
-        return ["Test kits :" + (this.testing+ this.temp_testKits)]
-        //"Barriers :" + this.temp_barriers]
-    }
-
     getResState(){
-        return ["Test kits :" + this.testing]
+        return ["Test kits :" + (this.remaining+this.unused)]
         //, "Barriers :" + this.barriers]
     }
 
 }
 
-
-export var resources = new Resources();
+export var resources = new Resources()
