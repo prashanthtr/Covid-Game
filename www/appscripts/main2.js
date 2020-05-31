@@ -775,6 +775,7 @@ function end(svg){
 
     document.removeEventListener("keypress", keyHandler);
     document.body.style.cursor = "default";
+    svg.selectAll("path").remove();
 
     svg.selectAll("text").remove()
     svg.selectAll("circle").remove()
@@ -1106,6 +1107,7 @@ function update( svg ){
     svg.selectAll(".scoring").remove();
     svg.selectAll(".resources").remove();
     svg.selectAll("foreignObject").remove();
+    svg.selectAll("path").remove();
 
     scoring_text = cagrid.score();
 
@@ -1132,7 +1134,35 @@ function update( svg ){
         }
     ];
 
+
+    cagrid.getConnectedGreen();
+    var gridAdjacent = cagrid.getConnections();
+
+    console.log(gridAdjacent)
+
+    var w = width/25;
+    var h = height/18;
+
     resources_text = resources.getResState();
+    svg.selectAll('path')
+        .data(gridAdjacent)
+        .enter()
+        .append("path")
+        .attr("stroke-width", 1)
+        .attr("stroke", "black")
+        .attr("fill-opacity", 0)
+        .style("stroke-dasharray", ("2, 3"))  // <== This line here for pixel on and off !!
+        .attr("d", function(d){
+
+            var w = width/25;
+            var h = height/18;
+
+            if(d.length > 1){
+                var pathstring = d.map((n) => {return Math.floor(((n.x+2)*w)) + " " + Math.floor(((n.y+2)*h)) + " L"} ).join("");
+                return "M " +  pathstring.slice(0,pathstring.length-2);
+            }
+            else return ""; //empty path
+        });
 
     //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
 

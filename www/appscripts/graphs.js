@@ -15,6 +15,7 @@ class Grid {
         this.connected = {};
         this.nodes = {};
         this.scoreSeries = [];
+        this.adjacentGreen = [];
     }
 
     addNode(node) {
@@ -38,12 +39,33 @@ class Grid {
     }
 
     addEdge(node1id, node2id, weight = 1) {
-        this.connected[node1id].push({ node: this.nodes[node2id], weight: weight });
+        this.connected[node1id].push({ node: this.nodes[node2id], weight: weight, pathDrawn: null });
         var connectStr = this.connected[node1id].map((n) => JSON.stringify(n.node));
 
         // add only when it is not already in the connected list
         if( connectStr.indexOf( JSON.stringify(this.nodes[node2id])  ) == -1 )
-            this.connected[node2id].push({ node: this.nodes[node1id], weight: weight });
+            this.connected[node2id].push({ node: this.nodes[node1id], weight: weight, pathDrawn: null });
+    }
+
+    getConnectedGreen( nodeid){
+
+        this.adjacentGreen = [];
+        for (const nodes of Object.values(this.nodes)) {
+            let cgarray = [];
+            cgarray.push(nodes);
+            var connectedArr = this.connected[nodes.id]
+            for( let cind = 0; cind < connectedArr.length; cind++){
+                let vertex = connectedArr[cind]; //get node id
+                if( nodes.color == "green" && vertex.node.color == "green"){ //state is 1
+                    cgarray.push(vertex.node);
+                }
+            }
+            this.adjacentGreen.push(cgarray);
+        }
+    }
+
+    getConnections(){
+        return this.adjacentGreen;
     }
 
     display() {
