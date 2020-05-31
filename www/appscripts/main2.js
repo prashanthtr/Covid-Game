@@ -1143,26 +1143,28 @@ function update( svg ){
     var w = width/25;
     var h = height/18;
 
+    for(var iter =0; iter < gridAdjacent.length; iter++){
+
+        var adjacencyList = gridAdjacent[iter]
+        //var rest = adjacencyList.slice(1, adjacencyList.length);
+        //not an elegant solution
+
+        var st = adjacencyList[0];
+        for( let adjIter = 1; adjIter < adjacencyList.length; adjIter++){
+
+            var d = adjacencyList[adjIter]
+            var adjacencyPath = "M" + Math.floor(((st.x+2)*w)) + " " + Math.floor(((st.y+2)*h)) + " L" + Math.floor(((d.x+2)*w)) + " " + Math.floor(((d.y+2)*h));
+
+            svg.append('path')
+                .attr("stroke-width", 1)
+                .attr("stroke", "black")
+                .attr("fill-opacity", 0)
+                .style("stroke-dasharray", ("2, 3"))  // <== This line here for pixel on and off !!
+                .attr("d", adjacencyPath)
+        }
+    }
+
     resources_text = resources.getResState();
-    svg.selectAll('path')
-        .data(gridAdjacent)
-        .enter()
-        .append("path")
-        .attr("stroke-width", 1)
-        .attr("stroke", "black")
-        .attr("fill-opacity", 0)
-        .style("stroke-dasharray", ("2, 3"))  // <== This line here for pixel on and off !!
-        .attr("d", function(d){
-
-            var w = width/25;
-            var h = height/18;
-
-            if(d.length > 1){
-                var pathstring = d.map((n) => {return Math.floor(((n.x+2)*w)) + " " + Math.floor(((n.y+2)*h)) + " L"} ).join("");
-                return "M " +  pathstring.slice(0,pathstring.length-2);
-            }
-            else return ""; //empty path
-        });
 
     //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
 
