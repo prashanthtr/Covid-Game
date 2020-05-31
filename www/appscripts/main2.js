@@ -577,44 +577,137 @@ function game( id ){
 
     first_score = cagrid.score();
 
-    circleEl.on("click", function(e){
+    var event = d3.dispatch('click', 'dblclick');//event dispatcher for
+                                                 //segmenting single and double
+                                                 //clics based on time (same
+                                                 //would be used for single and
+                                                 //double taps on mobile)
 
-        if( cursor == "" || cursor == "default" ){
-            //nothing
-        }
-        else{
+    function getClickDispatcher (){
+        const clickEvent = d3.dispatch('click', 'dblclick')
 
-            //let cursor = document.body.style.cursor.split(",")[0].split("/")[1].split(".png")[0]
-            const item = this;
+        return d3.rebind((selection) => {
+            let waitForDouble = null
 
-            if( cursor == "unlock" ){
+            // Register click handler on selection, that issues click and dblclick as appropriate
+            selection.on('click', (projectProxy) => {
+                d3.event.preventDefault()
+                if (waitForDouble != null) {
+                    clearTimeout(waitForDouble); //dont wait for a double
+                    waitForDouble = null
+                    clickEvent.dblclick(d3.event, projectProxy)
+                } else {
+                    const currentEvent = d3.event;
+                    waitForDouble = setTimeout(() => {
+                        clickEvent.click(currentEvent, projectProxy)
+                        waitForDouble = null
+                    }, 200);
+                }
+            })
+        }, clickEvent, 'on');
+    }
 
-                console.log("connect")
-                //cagrid.disconnect(e.y+","+e.x, 0);
-                cagrid.testing(e.y+","+e.x, 0);
-                //console.log(item)
-                //item.classList.remove('bordered')
-                item.classList.remove('testinprogress')
+    const clickDispatcher = getClickDispatcher();
 
-                resources.unselTesting();
+    console.log(clickDispatcher)
 
-                // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
-                // }
-
-                resources_update(svg, 1);
-            }
-            else if( cursor == "quarantine" ){
-
-                if( resources.check_testKits() > 0){
-                    cagrid.testing(e.y+","+e.x, 1);
+    clickDispatcher
+        .on('click', (e) => {
+            const item = e.target;
+            var x = e.target.getAttribute("x")
+            var y = e.target.getAttribute("y")
+            if( resources.check_testKits() > 0){
+                if( cagrid.alreadyTested(y+","+x) == 0 ){
+                    cagrid.testing(y+","+x, 1);
                     //cagrid.disconnect(e.y+","+e.x, 1);
                     item.classList.add('testinprogress')
                     resources.selTesting();
                     resources_update(svg, 1);
                 }
             }
-        }
-    });
+          })
+          .on('dblclick', (e) => {
+              const item = e.target;
+              var x = e.target.getAttribute("x")
+              var y = e.target.getAttribute("y")
+              console.log("connect")
+              //cagrid.disconnect(e.y+","+e.x, 0);
+              cagrid.testing(y+","+x, 0);
+              //console.log(item)
+              //item.classList.remove('bordered')
+              item.classList.remove('testinprogress')
+              resources.unselTesting();
+              resources_update(svg, 1);
+          });
+
+    circleEl
+        .call(clickDispatcher);
+
+    // circleEl.on("dblclick", function(e){
+
+    //     const item = this;
+    //     console.log("connect")
+    //     //cagrid.disconnect(e.y+","+e.x, 0);
+    //     cagrid.testing(e.y+","+e.x, 0);
+    //     //console.log(item)
+    //     //item.classList.remove('bordered')
+    //     item.classList.remove('testinprogress')
+
+    //     resources.unselTesting();
+
+    //     // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
+    //     // }
+
+    //     resources_update(svg, 1);
+    // })
+
+    // circleEl.on("click", function(e){
+
+    //     const item = this;
+    //     if( resources.check_testKits() > 0){
+    //         cagrid.testing(e.y+","+e.x, 1);
+    //         //cagrid.disconnect(e.y+","+e.x, 1);
+    //         item.classList.add('testinprogress')
+    //         resources.selTesting();
+    //         resources_update(svg, 1);
+    //     }
+
+    //     // if( cursor == "" || cursor == "default" ){
+    //     //     //nothing
+    //     // }
+    //     // else{
+
+    //     //     //let cursor = document.body.style.cursor.split(",")[0].split("/")[1].split(".png")[0]
+    //     //     const item = this;
+
+    //     //     if( cursor == "unlock" ){
+
+    //     //         console.log("connect")
+    //     //         //cagrid.disconnect(e.y+","+e.x, 0);
+    //     //         cagrid.testing(e.y+","+e.x, 0);
+    //     //         //console.log(item)
+    //     //         //item.classList.remove('bordered')
+    //     //         item.classList.remove('testinprogress')
+
+    //     //         resources.unselTesting();
+
+    //     //         // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
+    //     //         // }
+
+    //     //         resources_update(svg, 1);
+    //     //     }
+    //     //     else if( cursor == "quarantine" ){
+
+    //     //         if( resources.check_testKits() > 0){
+    //     //             cagrid.testing(e.y+","+e.x, 1);
+    //     //             //cagrid.disconnect(e.y+","+e.x, 1);
+    //     //             item.classList.add('testinprogress')
+    //     //             resources.selTesting();
+    //     //             resources_update(svg, 1);
+    //     //         }
+    //     //     }
+    //     // }
+    // });
 
     scoring_text = cagrid.score();
 

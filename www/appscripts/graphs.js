@@ -112,6 +112,11 @@ class Grid {
         }
     }
 
+    alreadyTested(nodeid){
+        return this.nodes[nodeid].tested;
+        //if already tested, then do not allow retesting
+    }
+
     testing ( nodeid, value ){
         this.nodes[nodeid].tested = value; //weight for testing
     }
