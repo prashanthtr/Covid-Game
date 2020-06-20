@@ -4,6 +4,8 @@ import {resources} from "./resources.js"
 var width = document.getElementById("mapdiv").offsetWidth;
 var height = document.getElementById("mapdiv").offsetHeight;
 
+// div foreign object in the game
+
 var cagrid = {};
 var circles = [];
 var rafId = null;
