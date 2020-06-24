@@ -26,11 +26,11 @@ class Grid {
         var r = Math.random();
         if(r< 0.3 ){
             this.nodes[node.id].state = 0
-            this.nodes[node.id].color = "orange"
+            this.nodes[node.id].color = "#ffc200"
         }
         else if( r >= 0.3 && r < 0.55){
             this.nodes[node.id].state = 0
-            this.nodes[node.id].color = "orange"
+            this.nodes[node.id].color = "#ffc200"
         }
         else{
             this.nodes[node.id].state = 1
@@ -216,8 +216,8 @@ class Grid {
     }
 
     // if a cell is red, then it continues to stay red
-    // if a cell is orange, then it continues to stay orange, or move to red
-    // if a cell is green, then it turns orange or continues to stay green.
+    // if a cell is #ffc200, then it continues to stay #ffc200, or move to red
+    // if a cell is green, then it turns #ffc200 or continues to stay green.
     update (){
 
         //storing it and using the old values
@@ -236,7 +236,7 @@ class Grid {
                 //n.node.disconnected==1?0:
             }
 
-            //green to orange
+            //green to #ffc200
             if( value.color == "green" ){
 
                 if( value.disconnected == 1 && value.tested == 1){
@@ -252,16 +252,16 @@ class Grid {
                 }
                 else {
                     value.state = 0
-                    value.color = "orange"
+                    value.color = "#ffc200"
                 }
 
-                // if( adjacent >= 3 && adjacent % 2 == 0){ //even number of reds and oranges
+                // if( adjacent >= 3 && adjacent % 2 == 0){ //even number of reds and #ffc200s
                 // else{
                 //     value.state = -1
                 //     value.color = "green"
                 // }
             }
-            else if ( value.color == "orange"){
+            else if ( value.color == "#ffc200"){
                 if( value.disconnected == 1 && value.tested == 1){
                     value.state = 1
                     value.color = "green"
@@ -273,7 +273,7 @@ class Grid {
                     value.state = 1
                     value.color = "green"
                 }
-                // else if( adjacent >= 3 && adjacent % 3 == 0 ){ //even number of reds and oranges
+                // else if( adjacent >= 3 && adjacent % 3 == 0 ){ //even number of reds and #ffc200s
                 //     value.state = 2
                 //     value.color = "red"
                 // }

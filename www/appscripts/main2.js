@@ -17,6 +17,13 @@ var maxTime = 30;
 var ts = 0;
 var cursor = "default";
 
+var bg = "#ffffff"
+var textColor = "#000000"
+var pathColor = "#ffffff"
+var pathWidth = 4;
+var textStyle = "Press Start 2P"
+var bradius = 2;
+
 export function main( id ){
 
     var svg = d3.select("#"+id);
@@ -58,7 +65,7 @@ export function main( id ){
     ];
 
     var className = "main"
-    var color = "#F0E68C";
+    var color = textColor;
 
     svg.node().prevFn = main;
     appendText(svg.node().id, text, color, className, "pointer");
@@ -116,13 +123,13 @@ function intro_animated(){
         .transition()
         .delay(function(d,i){return i*1000})
         .duration(1000)
-        .attr("fill","#F0E68C")
+        .attr("fill",textColor)
 
     svg.select("#clicker")
         .transition()
         .delay(4000)
         .duration(1000)
-        .attr("fill","#F0E68C")
+        .attr("fill",textColor)
 
 
 }
@@ -175,10 +182,10 @@ function intro(id){
         .attr("width", width)
         .attr("height", height)
         .attr("id", "svgDiv")
-        .style("background","#6B8E23")
+        .style("background",bg)
 
     var className = "intro"
-    var color = "#F0E68C"
+    var color = textColor
     var id = svg.node().id
 
     //appendText(id, text, color, className);
@@ -197,8 +204,8 @@ function intro(id){
         .attr("x", nav[0].x)
         .attr("y", nav[0].y )
         .text(nav[0].content)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .style("cursor", "pointer")
         .attr("class", "introNav")
         .on("click", function(){
@@ -212,10 +219,10 @@ function intro(id){
         .attr('width', 0.9*width)
         .attr('height', 0.8*height)
         .attr("fill",color)
-        .attr("font-family", "Monaco")
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 90%; color:#F0E68C;font-size:1.2vw"> A pandemic has brought your city\'s operations to a grinding halt. As people are finding livelihood difficult, you have to open up the city whilst risking more infections. <br> <br> Your task: Assemble safe (green) zones and enable people find their livelihood in 30 days. <br> <br> Guidelines: <ul> <li> Test infected (orange) zones to make them safe. </li> <li> Reduce the infected zones near safe zones (green). </li> <li> Do not increase overcrowding of safe (green) zones. </li> </div>')
+        .html('<div style="width: 90%; color:textColor;font-size:1.2vw"> A pandemic has brought your city\'s operations to a grinding halt. As people are finding livelihood difficult, you have to open up the city whilst risking more infections. <br> <br> Your task: Assemble safe (green) zones and enable people find their livelihood in 30 days. <br> <br> Guidelines: <ul> <li> Test infected (orange) zones to make them safe. </li> <li> Reduce the infected zones near safe zones (green). </li> <li> Do not increase overcrowding of safe (green) zones. </li> </div>')
 
 
 }
@@ -263,7 +270,7 @@ function instructions(id){
     //     }
     // ];
 
-    //appendText(svg.node().id, text, "#F0E68C", "actions");
+    //appendText(svg.node().id, text, textColor, "actions");
 
     // var imgs = [
     //     {
@@ -362,7 +369,7 @@ function instructions(id){
     //     }
     // ];
 
-    //appendText(svg.node().id, imgText, "#F0E68C", "crowding");
+    //appendText(svg.node().id, imgText, textColor, "crowding");
 
     // var connect = [
     //     {
@@ -411,8 +418,8 @@ function instructions(id){
         .attr("x", nav[0].x)
         .attr("y", nav[0].y )
         .text(nav[0].content)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .style("cursor", "pointer")
         .attr("class", "introNav")
         .on("click", function(){
@@ -426,11 +433,11 @@ function instructions(id){
         .attr('y', height/10)
         .attr('width', 0.95*width)
         .attr('height', 0.9*height)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:#F0E68C; font-size:1vw"> Game Actions: <br> <ul> <li> Press S + Mouseclick to test a cell. </li> <li> Press D + Mouseclick to undo selection. </li>  <li> Press "Spacebar" to move to the next time step. </li> <li> Test maximum of 4 cells in each step. Remaining test kits are carried over. </li> </ul> <img src="resources/stepwise.png" style="width: 75%; height: 30%; text-align:center" />  <br> Rules: <ul> <li> Orange cell changes to green on testing. </li> Without testing action: <li> Green cell changes to orange with less than 2 adjacent green cells (infection). </li>  <li> Green changes to orange  with more than 4 green cells (overcrowding). </li> <li> Green remains green when number of nearby green Cells is =2,=3 or =4 </li> </ul> </div>')
+        .html('<div style="width: 92%; color:textColor; font-size:1vw"> Game Actions: <br> <ul> <li> Press S + Mouseclick to test a cell. </li> <li> Press D + Mouseclick to undo selection. </li>  <li> Press "Spacebar" to move to the next time step. </li> <li> Test maximum of 4 cells in each step. Remaining test kits are carried over. </li> </ul> <img src="resources/stepwise.png" style="width: 75%; height: 30%; text-align:center" />  <br> Rules: <ul> <li> Orange cell changes to green on testing. </li> Without testing action: <li> Green cell changes to orange with less than 2 adjacent green cells (infection). </li>  <li> Green changes to orange  with more than 4 green cells (overcrowding). </li> <li> Green remains green when number of nearby green Cells is =2,=3 or =4 </li> </ul> </div>')
 
 }
 
@@ -450,7 +457,7 @@ function credits ( id ){
             x: width/5,
             y: 3*height/10,
             content: "Game development: Prashanth Thattai R",
-            color: "#F0E68C"
+            color: textColor
         },
         {
             x: width/5,
@@ -462,7 +469,7 @@ function credits ( id ){
             x: width/5,
             y: 4.5*height/10,
             content: "Design and ideation: Adithya Kumar",
-            color: "#F0E68C"
+            color: textColor
         },
         {
             x: width/5,
@@ -474,7 +481,7 @@ function credits ( id ){
             x: width/5,
             y: 6*height/10,
             content: "Modeling: Karthik Pushpavanam S",
-            color: "#F0E68C"
+            color: textColor
         },
         {
             x: width/5,
@@ -490,11 +497,11 @@ function credits ( id ){
         .attr('y', height/3)
         .attr('width', 0.95*width)
         .attr('height', 0.9*height)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:#F0E68C; font-size:vw"> <ul> <li> Game development: Prashanth Thattai R <br> Ph.D., National University of Singapore </li> <br> <li> Design and ideation: Adithya Kumar <br> Ph.D., Pennsylvania State University </li> <br> <li> Modeling: Karthik Pushpavanam S <br> Ph.D., Arizona State University </li> </ul> </div>')
+        .html('<div style="width: 92%; color:textColor; font-size:vw"> <ul> <li> Game development: Prashanth Thattai R <br> Ph.D., National University of Singapore </li> <br> <li> Design and ideation: Adithya Kumar <br> Ph.D., Pennsylvania State University </li> <br> <li> Modeling: Karthik Pushpavanam S <br> Ph.D., Arizona State University </li> </ul> </div>')
 
 
     //appendText(svg.node().id, text, "orange", "credits");
@@ -514,8 +521,8 @@ function credits ( id ){
         .attr("x", nav[0].x)
         .attr("y", nav[0].y )
         .text(nav[0].content)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .style("cursor", "pointer")
         .attr("class", "introNav")
         .on("click", function(){
@@ -526,6 +533,7 @@ function credits ( id ){
 }
 
 
+//only changng the colors of game grid
 function game( id ){
 
     var svg = d3.select("#"+id);
@@ -548,34 +556,36 @@ function game( id ){
 
     resources_update(svg)
 
-    var circleEl = svg.selectAll("circle")
+    var circleEl = svg.selectAll("rect")
         .data(circles)
         .enter()
-        .append("circle");
+        .append("rect");
 
     var w = width/25;
-    var h = height/18;
+    var h = height/18; //height/20;
 
     circleEl
-        .attr('cx', function(d) {
-            return (d.x+2) * w;
+        .attr('x', function(d,i) {
+            return (d.x+2) * w
         })
-        .attr('cy', function(d) {
-            return (d.y+2) * h;
+        .attr('y', function(d,i) {
+            return (d.y+2) * h
         })
-        .attr("r", 0.3*w)
-    // .attr("width",0.8*w)
-    // .attr("height", 0.9*h)
+        .attr("width", 0.75*w)
+        .attr("height",0.8*h)
         .style("fill",function(d){
             return d.color;
         })
-        .attr("x",function(d){
+        .attr("rx", bradius)
+        .attr("class","dropzone")
+        .attr("class","connected")
+        .attr("xpos",function(d){
             return d.x
         })
-        .attr("y", function(d){
+        .attr("ypos", function(d){
             return d.y
         })
-        .attr("class","dropzone")
+
 
     first_score = cagrid.score();
 
@@ -601,6 +611,7 @@ function game( id ){
                 } else {
                     const currentEvent = d3.event;
                     waitForDouble = setTimeout(() => {
+                        console.log(currentEvent)
                         clickEvent.click(currentEvent, projectProxy)
                         waitForDouble = null
                     }, 200);
@@ -616,13 +627,14 @@ function game( id ){
     clickDispatcher
         .on('click', (e) => {
             const item = e.target;
-            var x = e.target.getAttribute("x")
-            var y = e.target.getAttribute("y")
+            var x = e.target.getAttribute("xpos")
+            var y = e.target.getAttribute("ypos")
             if( resources.check_testKits() > 0){
                 if( cagrid.alreadyTested(y+","+x) == 0 ){
                     cagrid.testing(y+","+x, 1);
                     //cagrid.disconnect(e.y+","+e.x, 1);
                     item.classList.add('testinprogress')
+                    item.classList.remove('connected')
                     resources.selTesting();
                     resources_update(svg, 1);
                 }
@@ -630,13 +642,14 @@ function game( id ){
           })
           .on('dblclick', (e) => {
               const item = e.target;
-              var x = e.target.getAttribute("x")
-              var y = e.target.getAttribute("y")
+              var x = e.target.getAttribute("xpos")
+              var y = e.target.getAttribute("ypos")
               console.log("connect")
               //cagrid.disconnect(e.y+","+e.x, 0);
               cagrid.testing(y+","+x, 0);
               //console.log(item)
               //item.classList.remove('bordered')
+              item.classList.add('connected')
               item.classList.remove('testinprogress')
               resources.unselTesting();
               resources_update(svg, 1);
@@ -644,6 +657,7 @@ function game( id ){
 
     circleEl
         .call(clickDispatcher);
+
 
     // circleEl.on("dblclick", function(e){
 
@@ -657,11 +671,11 @@ function game( id ){
 
     //     resources.unselTesting();
 
-    //     // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
-    //     // }
+        // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
+        // }
 
     //     resources_update(svg, 1);
-    // })
+    // });
 
     // circleEl.on("click", function(e){
 
@@ -674,42 +688,43 @@ function game( id ){
     //         resources_update(svg, 1);
     //     }
 
-    //     // if( cursor == "" || cursor == "default" ){
-    //     //     //nothing
-    //     // }
-    //     // else{
+        // if( cursor == "" || cursor == "default" ){
+        //     //nothing
+        // }
+        // else{
 
-    //     //     //let cursor = document.body.style.cursor.split(",")[0].split("/")[1].split(".png")[0]
-    //     //     const item = this;
+        //     //let cursor = document.body.style.cursor.split(",")[0].split("/")[1].split(".png")[0]
+        //     const item = this;
 
-    //     //     if( cursor == "unlock" ){
+        //     if( cursor == "unlock" ){
 
-    //     //         console.log("connect")
-    //     //         //cagrid.disconnect(e.y+","+e.x, 0);
-    //     //         cagrid.testing(e.y+","+e.x, 0);
-    //     //         //console.log(item)
-    //     //         //item.classList.remove('bordered')
-    //     //         item.classList.remove('testinprogress')
+        //         console.log("connect")
+        //         //cagrid.disconnect(e.y+","+e.x, 0);
+        //         cagrid.testing(e.y+","+e.x, 0);
+        //         //console.log(item)
+        //         //item.classList.remove('bordered')
+        //         item.classList.remove('testinprogress')
 
-    //     //         resources.unselTesting();
+        //         resources.unselTesting();
 
-    //     //         // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
-    //     //         // }
+        //         // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
+        //         // }
 
-    //     //         resources_update(svg, 1);
-    //     //     }
-    //     //     else if( cursor == "quarantine" ){
+        //         resources_update(svg, 1);
+        //     }
+        //     else if( cursor == "quarantine" ){
 
-    //     //         if( resources.check_testKits() > 0){
-    //     //             cagrid.testing(e.y+","+e.x, 1);
-    //     //             //cagrid.disconnect(e.y+","+e.x, 1);
-    //     //             item.classList.add('testinprogress')
-    //     //             resources.selTesting();
-    //     //             resources_update(svg, 1);
-    //     //         }
-    //     //     }
-    //     // }
+        //         if( resources.check_testKits() > 0){
+        //             cagrid.testing(e.y+","+e.x, 1);
+        //             //cagrid.disconnect(e.y+","+e.x, 1);
+        //             item.classList.add('testinprogress')
+        //             resources.selTesting();
+        //             resources_update(svg, 1);
+        //         }
+        //     }
+        // }
     // });
+
 
     scoring_text = cagrid.score();
 
@@ -733,7 +748,7 @@ function game( id ){
 
     var content = scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
-    //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
+    //appendText(svg.node().id, scoringData, textColor, "scoring");
 
     resources_text = resources.getResState();
 
@@ -758,18 +773,19 @@ function game( id ){
         .attr('y', height/4)
         .attr('width', 0.2*width)
         .attr('height', 0.7*height)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:#F0E68C; font-size:vw">' + content + '</div>')
+        .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
 
     //console.log(resourcesData)
-    //appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    //appendText(svg.node().id, resourcesData, textColor, "resources");
 
     resources_update(svg, 1);
 
     document.addEventListener("keypress", keyHandler);
+
 }
 
 
@@ -780,7 +796,7 @@ function end(svg){
     svg.selectAll("path").remove();
 
     svg.selectAll("text").remove()
-    svg.selectAll("circle").remove()
+    svg.selectAll("rect").remove()
     svg.selectAll("foreignObject").remove();
 
     var series = cagrid.retrieveScore()
@@ -821,7 +837,7 @@ function end(svg){
         }
     ];
 
-    appendText(svg.node().id, lastScores, "#F0E68C", "lastScores");
+    appendText(svg.node().id, lastScores, textColor, "lastScores");
 
     let old_score = first_score.map( (s) => {return parseFloat((s.split(":")[1]))})
     let cur_score = scoring_text.map( (s) => {return parseFloat((s.split(":")[1]))})
@@ -994,14 +1010,14 @@ function end(svg){
         .attr('y', 0.65*height)
         .attr('width', 0.9*width)
         .attr('height', 0.8*height)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 90%; color:#F0E68C;font-size:1vw">' + content + '</div>')
+        .html('<div style="width: 90%; color:textColor;font-size:1vw">' + content + '</div>')
 
 
-    appendText(svg.node().id, nav, "#F0E68C", "submission", "pointer");
+    appendText(svg.node().id, nav, textColor, "submission", "pointer");
     appendTextEvents(svg.node().id, "submission", [submit, main]);
 
 }
@@ -1032,7 +1048,7 @@ function plot( w1, w2, h1, h2, data ){
         .orient("left")
 
     svg.append("line")
-        .style("stroke", "Lightblue")
+        .style("stroke", "black")
         .style("stroke-width", 4)
         .attr("x1", xscale(0))
         .attr("y1", yscale(0))
@@ -1056,8 +1072,8 @@ function plot( w1, w2, h1, h2, data ){
         .transition()
         .delay(200)
         .attr("d", line(data))
-        .style("stroke", "#F0E68C")
-        .style("stroke-width", 2)
+        .style("stroke", "#000000")
+        .style("stroke-width", pathWidth)
         .style("fill", "none")
 
 }
@@ -1079,7 +1095,7 @@ function appendText(id, data, color, className, cursor){
             return d.content
         })
         .attr("fill",color)
-        .attr("font-family", "Monaco")
+        .attr("font-family", textStyle)
         .style("cursor", (cursor||"default"))
         .attr("class", className)
 
@@ -1157,18 +1173,18 @@ function update( svg ){
             var d = adjacencyList[adjIter]
             var adjacencyPath = "M" + Math.floor(((st.x+2)*w)) + " " + Math.floor(((st.y+2)*h)) + " L" + Math.floor(((d.x+2)*w)) + " " + Math.floor(((d.y+2)*h));
 
-            svg.append('path')
-                .attr("stroke-width", 1)
-                .attr("stroke", "black")
-                .attr("fill-opacity", 0)
-                .style("stroke-dasharray", ("2, 3"))  // <== This line here for pixel on and off !!
-                .attr("d", adjacencyPath)
+            // svg.append('path')
+            //     .attr("stroke-width", pathWidth)
+            //     .attr("stroke", pathColor)
+            //     .attr("fill-opacity", 0)
+            //     .style("stroke-dasharray", ("6, 4"))  // <== This line here for pixel on and off !!
+            //     .attr("d", adjacencyPath)
         }
     }
 
     resources_text = resources.getResState();
 
-    //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
+    //appendText(svg.node().id, scoringData, textColor, "scoring");
 
     var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
@@ -1177,11 +1193,11 @@ function update( svg ){
         .attr('y', height/4)
         .attr('width', 0.2*width)
         .attr('height', 0.7*height)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:#F0E68C; font-size:vw">' + content + '</div>')
+        .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
 
 
     var resourcesData = [
@@ -1197,10 +1213,10 @@ function update( svg ){
         }
     ];
 
-    //appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    //appendText(svg.node().id, resourcesData, textColor, "resources");
 
     svg
-        .selectAll("circle")
+        .selectAll("rect")
         .transition().duration(200)
         .style("fill", function(d){
             return d.color
@@ -1236,23 +1252,23 @@ function resources_update( svg ){
     scoring_text = cagrid.score();
     resources_text = resources.getResState();
 
-    //appendText(svg.node().id, scoringData, "#F0E68C", "scoring");
+    //appendText(svg.node().id, scoringData, textColor, "scoring");
 
     var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
     svg.append('foreignObject')
         .attr('x', 0.75*width)
-        .attr('y', height/4)
-        .attr('width', 0.2*width)
+        .attr('y', height/8)
+        .attr('width', 0.25*width)
         .attr('height', 0.7*height)
-        .attr("fill","#F0E68C")
-        .attr("font-family", "Monaco")
+        .attr("fill",textColor)
+        .attr("font-family", textStyle)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:#F0E68C; font-size:vw">' + content + '</div>')
+        .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
 
 
-    //appendText(svg.node().id, resourcesData, "#F0E68C", "resources");
+    //appendText(svg.node().id, resourcesData, textColor, "resources");
 
     // svg.selectAll(".resources")
     //     .data(resources_text)
@@ -1263,7 +1279,7 @@ function resources_update( svg ){
     //         return (i+1)*width/3
     //     })
     //     .text(function(d){return d})
-    //     .attr("fill","#F0E68C")
+    //     .attr("fill",textColor)
     //     .attr("font-family", "sans-serif")
     //     .attr("class", "resources")
 
@@ -1297,7 +1313,7 @@ function keyHandler (e){
             rafId = null
             document.removeEventListener("keypress", keyHandler);
 
-            svg.selectAll("circle")
+            svg.selectAll("rect")
                 .each(function(l) {
                     //console.log(this.classList)
                     this.classList.remove("testinprogress");
@@ -1310,7 +1326,7 @@ function keyHandler (e){
         else if( ts < maxTime ) {
             console.log(ts + " , " + maxTime);
 
-            svg.selectAll("circle")
+            svg.selectAll("rect")
                 .each(function(l) {
                     //console.log(this.classList)
                     this.classList.remove("testinprogress");
@@ -1333,7 +1349,7 @@ var svg = d3.select("#mapdiv")
     .attr("viewBox", "0 0 " + width + " " + height)
     .attr("class", "svg-content")
     .attr("id", "theSvg")
-    .style("background","#6B8E23")
+    .style("background",bg)
 
 
 main(svg.node().id);
