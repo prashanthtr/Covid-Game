@@ -118,11 +118,11 @@ nav, aside {
 }
 
 .bordered{
-  outline: 3px dotted grey;
+  /* outline: 3px dotted white; */
 }
 
 .connected{
-  outline: 3px solid grey;
+  /* outline: 1px solid white; */
 }
 
 

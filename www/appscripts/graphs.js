@@ -10,6 +10,9 @@
 
 // import {simulate_data} from "./loadGeodata.js"
 
+var green = "#c4d62f"
+var orange  = "#be933e"
+
 class Grid {
     constructor() {
         this.connected = {};
@@ -26,15 +29,15 @@ class Grid {
         var r = Math.random();
         if(r< 0.3 ){
             this.nodes[node.id].state = 0
-            this.nodes[node.id].color = "#ffc200"
+            this.nodes[node.id].color = orange
         }
         else if( r >= 0.3 && r < 0.55){
             this.nodes[node.id].state = 0
-            this.nodes[node.id].color = "#ffc200"
+            this.nodes[node.id].color = orange
         }
         else{
             this.nodes[node.id].state = 1
-            this.nodes[node.id].color = "green"
+            this.nodes[node.id].color = green
         }
     }
 
@@ -52,15 +55,29 @@ class Grid {
         this.adjacentGreen = [];
         for (const nodes of Object.values(this.nodes)) {
             let cgarray = [];
+            var nx = nodes.x
+            var ny = nodes.y
             cgarray.push(nodes);
-            var connectedArr = this.connected[nodes.id]
-            for( let cind = 0; cind < connectedArr.length; cind++){
-                let vertex = connectedArr[cind]; //get node id
-                if( nodes.color == "green" && vertex.node.color == "green"){ //state is 1
-                    cgarray.push(vertex.node);
+            if( nodes.color == green ){
+                var connectedArr = this.connected[nodes.id]
+                for( let cind = 0; cind < connectedArr.length; cind++){
+                    let vertex = connectedArr[cind]; //get node id
+                    var cx = vertex.node.x;
+                    var cy = vertex.node.y;
+                    if( vertex.node.color == green
+                        && ( (cx == nx && cy == ny+1) ||
+                             (cx == nx+1 && cy == ny) ||
+                             (cx == nx && cy == ny-1) ||
+                             (cx == nx-1 && cy == ny)
+                           )
+                      ){ //state is 1
+                        //do not push in diagonals to adjacent display
+                        cgarray.push(vertex.node);
+                    }
                 }
+                this.adjacentGreen.push(cgarray);
             }
-            this.adjacentGreen.push(cgarray);
+
         }
     }
 
@@ -192,11 +209,11 @@ class Grid {
         var connected_safe = 0;
 
         for (const value of Object.values(this.nodes)) {
-            if( value.color == "green"){
+            if( value.color == green){
                 //console.log(value)
                 //console.log(this.connected[value.id])
                 safe+= 1;
-                connected_safe += this.connected[value.id].map(n => (n.node.color=="green"&&n.node.disconnected==0)?1:0).reduce((a,b)=> a+b)/2; //because this is counted twice
+                connected_safe += this.connected[value.id].map(n => (n.node.color==green&&n.node.disconnected==0)?1:0).reduce((a,b)=> a+b)/2; //because this is counted twice
 
             }
             else{
@@ -237,7 +254,7 @@ class Grid {
             }
 
             //green to #ffc200
-            if( value.color == "green" ){
+            if( value.color == green ){
 
                 if( value.disconnected == 1 && value.tested == 1){
                     //no change
@@ -247,31 +264,31 @@ class Grid {
                 }
                 else if( adjacent == 2 || adjacent == 3 || adjacent == 4){
                     value.state = 1
-                    value.color = "green"
+                    value.color = green
                     //has more green cells than red
                 }
                 else {
                     value.state = 0
-                    value.color = "#ffc200"
+                    value.color = orange
                 }
 
                 // if( adjacent >= 3 && adjacent % 2 == 0){ //even number of reds and #ffc200s
                 // else{
                 //     value.state = -1
-                //     value.color = "green"
+                //     value.color = green
                 // }
             }
-            else if ( value.color == "#ffc200"){
+            else if ( value.color == orange){
                 if( value.disconnected == 1 && value.tested == 1){
                     value.state = 1
-                    value.color = "green"
+                    value.color = green
                 }
                 else if(  value.disconnected == 1){
                     //no change
                 }
                 else if( value.tested == 1){
                     value.state = 1
-                    value.color = "green"
+                    value.color = green
                 }
                 // else if( adjacent >= 3 && adjacent % 3 == 0 ){ //even number of reds and #ffc200s
                 //     value.state = 2
@@ -285,14 +302,14 @@ class Grid {
 
                 if( value.disconnected == 1 && value.tested == 1){
                     value.state = 1
-                    value.color = "green"
+                    value.color = green
                 }
                 else if(  value.disconnected == 1){
                     //no change
                 }
                 else if( value.tested == 1){
                     value.state = 1
-                    value.color = "green"
+                    value.color = green
                 }
                 else{
                     //remains same

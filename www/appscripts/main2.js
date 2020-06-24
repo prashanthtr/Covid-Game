@@ -22,7 +22,7 @@ var textColor = "#000000"
 var pathColor = "#ffffff"
 var pathWidth = 4;
 var textStyle = "Press Start 2P"
-var bradius = 2;
+var bradius = 1;
 
 export function main( id ){
 
@@ -561,8 +561,10 @@ function game( id ){
         .enter()
         .append("rect");
 
-    var w = width/25;
-    var h = height/18; //height/20;
+    var w = 30; //width/25;
+    var h = 30; //height/18; //height/20;
+
+    console.log(document.getElementById("mainGradient"))
 
     circleEl
         .attr('x', function(d,i) {
@@ -571,8 +573,8 @@ function game( id ){
         .attr('y', function(d,i) {
             return (d.y+2) * h
         })
-        .attr("width", 0.75*w)
-        .attr("height",0.8*h)
+        .attr("width", w)
+        .attr("height", h)
         .style("fill",function(d){
             return d.color;
         })
@@ -1126,6 +1128,7 @@ function update( svg ){
     svg.selectAll(".resources").remove();
     svg.selectAll("foreignObject").remove();
     svg.selectAll("path").remove();
+    svg.selectAll(".road").remove();
 
     scoring_text = cagrid.score();
 
@@ -1158,9 +1161,10 @@ function update( svg ){
 
     console.log(gridAdjacent)
 
-    var w = width/25;
-    var h = height/18;
+    var w = 30; //width/25;
+    var h = 30; //height/18;
 
+    //getting adjacent connected green without diagonals
     for(var iter =0; iter < gridAdjacent.length; iter++){
 
         var adjacencyList = gridAdjacent[iter]
@@ -1171,14 +1175,34 @@ function update( svg ){
         for( let adjIter = 1; adjIter < adjacencyList.length; adjIter++){
 
             var d = adjacencyList[adjIter]
-            var adjacencyPath = "M" + Math.floor(((st.x+2)*w)) + " " + Math.floor(((st.y+2)*h)) + " L" + Math.floor(((d.x+2)*w)) + " " + Math.floor(((d.y+2)*h));
+            var adjacencyPath = "M" + (Math.floor(((st.x+2)*w))+w/2) + " " + Math.floor(((st.y+2)*h+h/2)) + " L" + (Math.floor(((d.x+2)*w))+w/2) + " " + Math.floor(((d.y+2)*h+h/2));
 
-            // svg.append('path')
-            //     .attr("stroke-width", pathWidth)
-            //     .attr("stroke", pathColor)
-            //     .attr("fill-opacity", 0)
-            //     .style("stroke-dasharray", ("6, 4"))  // <== This line here for pixel on and off !!
-            //     .attr("d", adjacencyPath)
+            svg.append("rect")
+                .attr('x', (st.x+2)*w) //center it
+                .attr('y', (st.y+2)*h +  h/4)
+                .attr("width", w)
+                .attr("height", 0.5*h)
+                .style("fill", "grey")
+                .attr("class","road")
+
+            svg.append("rect")
+                .attr('x', (st.x+2)*w + w/4) //center it
+                .attr('y', (st.y+2)*h)
+                .attr("width", 0.5*w)
+                .attr("height", h)
+                .style("fill", "grey")
+                .attr("class","road")
+
+            svg.append('path')
+                .attr("stroke-width", pathWidth)
+                .attr("d", adjacencyPath)
+                .style("stroke", pathColor)
+                .style("fill", "grey")
+                // .style("fill-opacity", 0.5)
+                .style("stroke-dasharray", ("5, 2"))  // <== This line here for pixel on and off !!
+
+
+
         }
     }
 
@@ -1350,6 +1374,22 @@ var svg = d3.select("#mapdiv")
     .attr("class", "svg-content")
     .attr("id", "theSvg")
     .style("background",bg)
+
+// //definitions of gradients
+// var svgDefs = svg.append('svg:defs');
+
+// var mainGradient = svgDefs.append('svg:linearGradient')
+//     .attr('id', 'mainGradient');
+
+// // Create the stops of the main gradient. Each stop will be assigned
+// // a class to style the stop using CSS.
+// mainGradient.append('svg:stop')
+//     .attr('offset', '0%')
+//     .attr("stop-color", "green")
+
+// mainGradient.append('svg:stop')
+//     .attr('offset', '100%')
+//     .attr("stop-color", "orange")
 
 
 main(svg.node().id);
