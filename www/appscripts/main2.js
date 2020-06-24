@@ -19,10 +19,12 @@ var cursor = "default";
 
 var bg = "#ffffff"
 var textColor = "#000000"
-var pathColor = "#ffffff"
-var pathWidth = 4;
+var pathColor = "black"
+var pathWidth = 3;
 var textStyle = "Press Start 2P"
 var bradius = 1;
+
+var setTimer = null;
 
 export function main( id ){
 
@@ -578,16 +580,21 @@ function game( id ){
         .style("fill",function(d){
             return d.color;
         })
+        .style("fill-opacity",function(d){
+            return d.opacity;
+        })
         .attr("rx", bradius)
         .attr("class","dropzone")
         .attr("class","connected")
+        .classed("cells",true)
+        .classed("shadow",true)
         .attr("xpos",function(d){
             return d.x
         })
         .attr("ypos", function(d){
             return d.y
         })
-
+    // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
     first_score = cagrid.score();
 
@@ -786,6 +793,23 @@ function game( id ){
 
     resources_update(svg, 1);
 
+    function changeCol(){
+        //thinking if it needs to be consistent with graph. hmm
+        for(var iter=0; iter<circles.length; iter++){
+            if( circles[iter].color == "#ffcc5c"){
+                circles[iter].opacity += (Math.random()>0.5?-1:1)*0.2*Math.random();
+            }
+        }
+        svg
+            .selectAll(".cells")
+            .transition().duration(200)
+            .style("fill-opacity", function(d){
+                return d.opacity
+            })
+    }
+
+    setTimer = setInterval(changeCol, 5000);
+
     document.addEventListener("keypress", keyHandler);
 
 }
@@ -796,6 +820,9 @@ function end(svg){
     document.removeEventListener("keypress", keyHandler);
     document.body.style.cursor = "default";
     svg.selectAll("path").remove();
+    svg.selectAll("end").remove();
+
+    setTimer = null;
 
     svg.selectAll("text").remove()
     svg.selectAll("rect").remove()
@@ -1121,7 +1148,9 @@ function update( svg ){
 
     for(var iter=0; iter<circles.length; iter++){
         var objColor = cagrid.retrieveColor(circles[iter].y + "," + circles[iter].x)
+        var opacity = cagrid.retrieveOpacity(circles[iter].y + "," + circles[iter].x)
         circles[iter].color = objColor;
+        circles[iter].opacity = opacity;
     }
 
     svg.selectAll(".scoring").remove();
@@ -1172,39 +1201,59 @@ function update( svg ){
         //not an elegant solution
 
         var st = adjacencyList[0];
-        for( let adjIter = 1; adjIter < adjacencyList.length; adjIter++){
+        for( let adjIter = 0; adjIter < adjacencyList.length; adjIter++){
+
+            //probably selectively add horizontal and vertical
+            svg.append("rect")
+                .attr('x', (st.x+2)*w + 0.3*w) //center it
+                .attr('y', (st.y+2)*h +  0.3*h)
+                .attr("width", 0.4*w)
+                .attr("height", 0.4*h)
+                .style("fill", "#78a490")
+                .attr("class","dropzone")
+                .classed("road", true)
+
+
+            // svg.append("rect")
+            //     .attr('x', (st.x+2)*w + 0.2*w) //center it
+            //     .attr('y', (st.y+2)*h + 0.3*h)
+            //     .attr("width", 0.2*w)
+            //     .attr("height", 0.2*h)
+            //     .style("fill", "wheat")
+            //     .attr("class","road")
+            //     .attr("class","dropzone")
+            //     .classed("road", true)
+                //.style("stroke-dasharray", ("1, 3"))  // <== This line here for pixel on and off !!
+
+            // //.style("fill", "grey")
+            // // .style("fill-opacity", 0.5)
+         }
+    }
+
+    //getting adjacent connected green without diagonals
+    for(var iter =0; iter < gridAdjacent.length; iter++){
+
+        var adjacencyList = gridAdjacent[iter]
+        //var rest = adjacencyList.slice(1, adjacencyList.length);
+        //not an elegant solution
+
+        var st = adjacencyList[0];
+        for( let adjIter = 0; adjIter < adjacencyList.length; adjIter++){
 
             var d = adjacencyList[adjIter]
             var adjacencyPath = "M" + (Math.floor(((st.x+2)*w))+w/2) + " " + Math.floor(((st.y+2)*h+h/2)) + " L" + (Math.floor(((d.x+2)*w))+w/2) + " " + Math.floor(((d.y+2)*h+h/2));
-
-            svg.append("rect")
-                .attr('x', (st.x+2)*w) //center it
-                .attr('y', (st.y+2)*h +  h/4)
-                .attr("width", w)
-                .attr("height", 0.5*h)
-                .style("fill", "grey")
-                .attr("class","road")
-
-            svg.append("rect")
-                .attr('x', (st.x+2)*w + w/4) //center it
-                .attr('y', (st.y+2)*h)
-                .attr("width", 0.5*w)
-                .attr("height", h)
-                .style("fill", "grey")
-                .attr("class","road")
 
             svg.append('path')
                 .attr("stroke-width", pathWidth)
                 .attr("d", adjacencyPath)
                 .style("stroke", pathColor)
-                .style("fill", "grey")
-                // .style("fill-opacity", 0.5)
-                .style("stroke-dasharray", ("5, 2"))  // <== This line here for pixel on and off !!
-
-
+                .style("stroke-width", 5)
+                .style("stroke-dasharray", ("5, 3"))
 
         }
     }
+
+
 
     resources_text = resources.getResState();
 
@@ -1239,11 +1288,16 @@ function update( svg ){
 
     //appendText(svg.node().id, resourcesData, textColor, "resources");
 
+    console.log(svg.selectAll(".cells"))
+
     svg
-        .selectAll("rect")
+        .selectAll(".cells")
         .transition().duration(200)
         .style("fill", function(d){
             return d.color
+        })
+        .style("fill-opacity", function(d){
+            return d.opacity
         })
 
 }
@@ -1390,6 +1444,44 @@ var svg = d3.select("#mapdiv")
 // mainGradient.append('svg:stop')
 //     .attr('offset', '100%')
 //     .attr("stop-color", "orange")
+
+
+//picking filters for the game
+
+
+// filters go in defs element
+var defs = svg.append("defs");
+
+// create filter with id #drop-shadow
+// height=130% so that the shadow is not clipped
+var filter = defs.append("filter")
+    .attr("id", "drop-shadow")
+    .attr("height", "130%");
+
+// SourceAlpha refers to opacity of graphic that this filter will be applied to
+// convolve that with a Gaussian with standard deviation 3 and store result
+// in blur
+filter.append("feGaussianBlur")
+    .attr("in", "SourceAlpha")
+    .attr("stdDeviation", 5)
+    .attr("result", "blur");
+
+// translate output of Gaussian blur to the right and downwards with 2px
+// store result in offsetBlur
+filter.append("feOffset")
+    .attr("in", "blur")
+    .attr("dx", 5)
+    .attr("dy", 5)
+    .attr("result", "offsetBlur");
+
+// overlay original SourceGraphic over translated blurred opacity by using
+// feMerge filter. Order of specifying inputs is important!
+var feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode")
+    .attr("in", "offsetBlur")
+feMerge.append("feMergeNode")
+    .attr("in", "SourceGraphic");
 
 
 main(svg.node().id);

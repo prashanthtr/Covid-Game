@@ -10,8 +10,11 @@
 
 // import {simulate_data} from "./loadGeodata.js"
 
-var green = "#c4d62f"
-var orange  = "#be933e"
+var green = "#a2c829"
+var orange  = "#ffcc5c" //"#c25529"
+var low_opacity = function(){
+    return 0.6 + 0.3*Math.random();
+}
 
 class Grid {
     constructor() {
@@ -30,14 +33,17 @@ class Grid {
         if(r< 0.3 ){
             this.nodes[node.id].state = 0
             this.nodes[node.id].color = orange
+            this.nodes[node.id].opacity = low_opacity()
         }
         else if( r >= 0.3 && r < 0.55){
             this.nodes[node.id].state = 0
             this.nodes[node.id].color = orange
+            this.nodes[node.id].opacity = low_opacity()
         }
         else{
             this.nodes[node.id].state = 1
             this.nodes[node.id].color = green
+            this.nodes[node.id].opacity = 1
         }
     }
 
@@ -104,6 +110,18 @@ class Grid {
         return this.nodes[nodeid].color;
     }
 
+    retrieveOpacity ( nodeid ){
+        // var order = {};
+        // Object.keys(this.nodes).sort().forEach(function(key) {
+        //     order[key] = this.nodes[key];
+        // });
+        // return order;
+        //console.log(this.nodes[nodeid])
+        //console.log(nodeid + " " + this.nodes[nodeid].color)
+        return this.nodes[nodeid].opacity;
+    }
+
+
     //retrieves information for plotting on screen
     nodesToPlot (  ){
 
@@ -111,7 +129,14 @@ class Grid {
         for (const value of Object.values(this.nodes)) {
             var xy = value.id.split(",").map(parseFloat)
             var color = value.color
-            nodesArr.push({x: xy[0], y: xy[1], "color": color})
+            var opacity = value.opacity
+            if( color == orange){
+                nodesArr.push({x: xy[0], y: xy[1], "color": color, "opacity": opacity})
+            }
+            else{
+                nodesArr.push({x: xy[0], y: xy[1], "color": color, "opacity": opacity})
+            }
+
         }
 
         return nodesArr;
@@ -265,11 +290,13 @@ class Grid {
                 else if( adjacent == 2 || adjacent == 3 || adjacent == 4){
                     value.state = 1
                     value.color = green
+                    value.opacity = 1
                     //has more green cells than red
                 }
                 else {
                     value.state = 0
                     value.color = orange
+                    value.opacity = low_opacity()
                 }
 
                 // if( adjacent >= 3 && adjacent % 2 == 0){ //even number of reds and #ffc200s
@@ -282,6 +309,7 @@ class Grid {
                 if( value.disconnected == 1 && value.tested == 1){
                     value.state = 1
                     value.color = green
+                    value.opacity = 1
                 }
                 else if(  value.disconnected == 1){
                     //no change
@@ -289,6 +317,7 @@ class Grid {
                 else if( value.tested == 1){
                     value.state = 1
                     value.color = green
+                    value.opacity = 1
                 }
                 // else if( adjacent >= 3 && adjacent % 3 == 0 ){ //even number of reds and #ffc200s
                 //     value.state = 2
@@ -303,6 +332,7 @@ class Grid {
                 if( value.disconnected == 1 && value.tested == 1){
                     value.state = 1
                     value.color = green
+                    value.opacity = 1
                 }
                 else if(  value.disconnected == 1){
                     //no change
@@ -310,6 +340,7 @@ class Grid {
                 else if( value.tested == 1){
                     value.state = 1
                     value.color = green
+                    value.opacity = 1
                 }
                 else{
                     //remains same
@@ -320,6 +351,7 @@ class Grid {
         for (const value of Object.values(temp_nodes)) {
             this.nodes[value.id].state = value.state
             this.nodes[value.id].color = value.color
+            this.nodes[value.id].opacity = value.opacity
         }
         //repaste
         //this.nodes = JSON.parse(JSON.stringify(temp_nodes))
