@@ -10,10 +10,10 @@
 
 // import {simulate_data} from "./loadGeodata.js"
 
-var green = "#a2c829"
-var orange  = "#ffcc5c" //"#c25529"
+var green = "#a2c829" //#a2c829
+var orange  = "black" // "#858585" //"#c25529"
 var low_opacity = function(){
-    return 0.6 + 0.3*Math.random();
+    return 0.4 + 0.3*Math.random();
 }
 
 class Grid {

@@ -19,7 +19,7 @@ var cursor = "default";
 
 var bg = "#ffffff"
 var textColor = "#000000"
-var pathColor = "black"
+var pathColor = "#654321"
 var pathWidth = 3;
 var textStyle = "Press Start 2P"
 var bradius = 1;
@@ -796,8 +796,8 @@ function game( id ){
     function changeCol(){
         //thinking if it needs to be consistent with graph. hmm
         for(var iter=0; iter<circles.length; iter++){
-            if( circles[iter].color == "#ffcc5c"){
-                circles[iter].opacity += (Math.random()>0.5?-1:1)*0.2*Math.random();
+            if( circles[iter].color == "black"){
+                circles[iter].opacity += (Math.random()>0.5?-1:1)*0.1*Math.random();
             }
         }
         svg
@@ -1204,12 +1204,13 @@ function update( svg ){
         for( let adjIter = 0; adjIter < adjacencyList.length; adjIter++){
 
             //probably selectively add horizontal and vertical
-            svg.append("rect")
-                .attr('x', (st.x+2)*w + 0.3*w) //center it
-                .attr('y', (st.y+2)*h +  0.3*h)
-                .attr("width", 0.4*w)
-                .attr("height", 0.4*h)
-                .style("fill", "#78a490")
+            svg.append("circle")
+                .attr('cx', (st.x+2)*w + 0.5*w) //center it
+                .attr('cy', (st.y+2)*h +  0.5*h)
+                // .attr("width", 0.4*w)
+            // .attr("height", 0.4*h)
+                .attr("r", 7)
+                .style("fill", "wheat") //#006994
                 .attr("class","dropzone")
                 .classed("road", true)
 
