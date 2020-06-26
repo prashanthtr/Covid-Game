@@ -26,9 +26,10 @@ var bradius = 1;
 
 var setTimer = null;
 
-export function main( id ){
+export function main( id, id2 ){
 
     var svg = d3.select("#"+id);
+
 
     d3.select("#"+id).select("*").remove();
     d3.select("#"+id).selectAll("text").remove();
@@ -433,10 +434,11 @@ function instructions(id){
     svg.append('foreignObject')
         .attr('x', width/15)
         .attr('y', height/10)
-        .attr('width', 0.95*width)
+        .attr('width', 4/3*width)
         .attr('height', 0.9*height)
         .attr("fill",textColor)
         .attr("font-family", textStyle)
+        .attr("font-size", 12)
         .attr("class", "intro")
         .append("xhtml:body")
         .html('<div style="width: 92%; color:textColor; font-size:1vw"> Game Actions: <br> <ul> <li> Press S + Mouseclick to test a cell. </li> <li> Press D + Mouseclick to undo selection. </li>  <li> Press "Spacebar" to move to the next time step. </li> <li> Test maximum of 4 cells in each step. Remaining test kits are carried over. </li> </ul> <img src="resources/stepwise.png" style="width: 75%; height: 30%; text-align:center" />  <br> Rules: <ul> <li> Orange cell changes to green on testing. </li> Without testing action: <li> Green cell changes to orange with less than 2 adjacent green cells (infection). </li>  <li> Green changes to orange  with more than 4 green cells (overcrowding). </li> <li> Green remains green when number of nearby green Cells is =2,=3 or =4 </li> </ul> </div>')
@@ -497,10 +499,11 @@ function credits ( id ){
     svg.append('foreignObject')
         .attr('x', width/15)
         .attr('y', height/3)
-        .attr('width', 0.95*width)
+        .attr('width', 4*width/3)
         .attr('height', 0.9*height)
         .attr("fill",textColor)
         .attr("font-family", textStyle)
+        .attr("font-size", 12)
         .attr("class", "intro")
         .append("xhtml:body")
         .html('<div style="width: 92%; color:textColor; font-size:vw"> <ul> <li> Game development: Prashanth Thattai R <br> Ph.D., National University of Singapore </li> <br> <li> Design and ideation: Adithya Kumar <br> Ph.D., Pennsylvania State University </li> <br> <li> Modeling: Karthik Pushpavanam S <br> Ph.D., Arizona State University </li> </ul> </div>')
@@ -539,6 +542,7 @@ function credits ( id ){
 function game( id ){
 
     var svg = d3.select("#"+id);
+    var textsvg = d3.select("#theSvgText");
 
     maxTime = 30;
     ts = 0;
@@ -556,15 +560,15 @@ function game( id ){
 
     circles = cagrid.nodesToPlot();
 
-    resources_update(svg)
+    resources_update(textsvg)
 
     var circleEl = svg.selectAll("rect")
         .data(circles)
         .enter()
         .append("rect");
 
-    var w = 30; //width/25;
-    var h = 30; //height/18; //height/20;
+    var w = width/18;
+    var h = height/18; //height/20;
 
     console.log(document.getElementById("mainGradient"))
 
@@ -638,6 +642,7 @@ function game( id ){
             const item = e.target;
             var x = e.target.getAttribute("xpos")
             var y = e.target.getAttribute("ypos")
+
             if( resources.check_testKits() > 0){
                 if( cagrid.alreadyTested(y+","+x) == 0 ){
                     cagrid.testing(y+","+x, 1);
@@ -645,7 +650,7 @@ function game( id ){
                     item.classList.add('testinprogress')
                     item.classList.remove('connected')
                     resources.selTesting();
-                    resources_update(svg, 1);
+                    resources_update(textsvg, 1);
                 }
             }
           })
@@ -661,7 +666,7 @@ function game( id ){
               item.classList.add('connected')
               item.classList.remove('testinprogress')
               resources.unselTesting();
-              resources_update(svg, 1);
+              resources_update(textsvg, 1);
           });
 
     circleEl
@@ -737,61 +742,30 @@ function game( id ){
 
     scoring_text = cagrid.score();
 
-    var scoringData = [
-        {
-            x: 0.75*width,
-            y: height/4,
-            content: scoring_text[0],
-        },
-        {
-            x: 0.75*width,
-            y: 2*height/4,
-            content: scoring_text[1],
-        },
-        {
-            x: 0.75*width,
-            y: 3*height/4,
-            content: scoring_text[2],
-        }
-    ];
-
     var content = scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
     //appendText(svg.node().id, scoringData, textColor, "scoring");
 
     resources_text = resources.getResState();
 
-    var resourcesData = [
-        {
-            x: width/3,
-            y: 0.95*height,
-            content: resources_text[0]
-        },
-        {
-            x: width/3,
-            y: 0.05*height,
-            content: "Time Left: " + (maxTime-ts) + " days"
-        }
-
-    ];
-
     var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
-    svg.append('foreignObject')
-        .attr('x', 0.75*width)
-        .attr('y', height/4)
-        .attr('width', 0.2*width)
-        .attr('height', 0.7*height)
+    textsvg.append('foreignObject')
+        .attr('x', width)
+        .attr('y', height/8)
+        .attr('width', width/3)
+        .attr('height', height)
         .attr("fill",textColor)
         .attr("font-family", textStyle)
+        .attr("font-size", 10)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
+        .html('<div style="width: 92%; color:black; font-size:vw">' + content + '</div>')
 
     //console.log(resourcesData)
     //appendText(svg.node().id, resourcesData, textColor, "resources");
 
-    resources_update(svg, 1);
+    resources_update(textsvg, 1);
 
     function changeCol(){
         //thinking if it needs to be consistent with graph. hmm
@@ -815,12 +789,17 @@ function game( id ){
 }
 
 
-function end(svg){
+function end(svgold){
 
     document.removeEventListener("keypress", keyHandler);
     document.body.style.cursor = "default";
-    svg.selectAll("path").remove();
-    svg.selectAll("end").remove();
+    svgold.selectAll("path").remove();
+    svgold.selectAll(".road").remove();
+    svgold.selectAll("end").remove();
+
+    d3.select("#theSvgText").selectAll("*").remove()
+    d3.select("mapdiv").remove("#theSvg")
+    d3.select("mapdiv").remove("#theSvgText")
 
     setTimer = null;
 
@@ -1140,7 +1119,7 @@ function appendTextEvents ( id, className, fns){
         });
 }
 
-function update( svg ){
+function update( svg , textsvg ){
 
     ts++;//timestep increases
 
@@ -1156,6 +1135,7 @@ function update( svg ){
     svg.selectAll(".scoring").remove();
     svg.selectAll(".resources").remove();
     svg.selectAll("foreignObject").remove();
+    textsvg.selectAll("foreignObject").remove();
     svg.selectAll("path").remove();
     svg.selectAll(".road").remove();
 
@@ -1164,7 +1144,6 @@ function update( svg ){
     var bbbox = svg.node().getBoundingClientRect();
     var width = bbbox.width
     var height = bbbox.height;
-
 
     var scoringData = [
         {
@@ -1190,8 +1169,8 @@ function update( svg ){
 
     console.log(gridAdjacent)
 
-    var w = 30; //width/25;
-    var h = 30; //height/18;
+    var w = width/18;
+    var h = height/18;
 
     //getting adjacent connected green without diagonals
     for(var iter =0; iter < gridAdjacent.length; iter++){
@@ -1255,37 +1234,23 @@ function update( svg ){
     }
 
 
-
     resources_text = resources.getResState();
 
     //appendText(svg.node().id, scoringData, textColor, "scoring");
 
     var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
-    svg.append('foreignObject')
-        .attr('x', 0.75*width)
-        .attr('y', height/4)
-        .attr('width', 0.2*width)
-        .attr('height', 0.7*height)
+    textsvg.append('foreignObject')
+        .attr('x', 0)
+        .attr('y', height/8)
+        .attr('width', width/3)
+        .attr('height', height)
         .attr("fill",textColor)
         .attr("font-family", textStyle)
+        .attr("font-size", 10)
         .attr("class", "intro")
         .append("xhtml:body")
-        .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
-
-
-    var resourcesData = [
-        {
-            x: width/3,
-            y: 0.95*height,
-            content: resources_text[0]
-        },
-        {
-            x: width/3,
-            y: 0.05*height,
-            content: "Time Left: " + (maxTime-ts) + " days"
-        }
-    ];
+        .html('<div style="width: 92%; color:black; font-size:vw">' + content + '</div>')
 
     //appendText(svg.node().id, resourcesData, textColor, "resources");
 
@@ -1336,31 +1301,16 @@ function resources_update( svg ){
     var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
     svg.append('foreignObject')
-        .attr('x', 0.75*width)
+        .attr('x', 0)
         .attr('y', height/8)
-        .attr('width', 0.25*width)
-        .attr('height', 0.7*height)
+        .attr('width', 0.6*width)
+        .attr('height', 6*height/8)
         .attr("fill",textColor)
         .attr("font-family", textStyle)
+        .attr("font-size", 10)
         .attr("class", "intro")
         .append("xhtml:body")
         .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
-
-
-    //appendText(svg.node().id, resourcesData, textColor, "resources");
-
-    // svg.selectAll(".resources")
-    //     .data(resources_text)
-    //     .enter()
-    //     .append("text")
-    //     .attr("y", 0.95*height)
-    //     .attr("x", function(d,i){
-    //         return (i+1)*width/3
-    //     })
-    //     .text(function(d){return d})
-    //     .attr("fill",textColor)
-    //     .attr("font-family", "sans-serif")
-    //     .attr("class", "resources")
 
 }
 
@@ -1370,7 +1320,9 @@ function keyHandler (e){
     var charCode = e.charCode;
 
     //a little bit of a cheat
-    svg = d3.select("#theSvg");
+    var svg = d3.select("#theSvg");
+    var textsvg = d3.select("#theSvgText");
+    //textsvg.selectAll("*").remove();
 
     switch(charCode){
 
@@ -1411,10 +1363,12 @@ function keyHandler (e){
                     this.classList.remove("testinprogress");
                 });
 
-            update( svg );
+            update( svg, textsvg );
             resources.useKit();
             resources.replenish();
-            resources_update(svg, 1);
+            console.log(textsvg)
+            console.log(svg)
+            resources_update(textsvg, 1);
             cagrid.resetTesting();
         }; break;
     }
@@ -1428,6 +1382,14 @@ var svg = d3.select("#mapdiv")
     .attr("viewBox", "0 0 " + width + " " + height)
     .attr("class", "svg-content")
     .attr("id", "theSvg")
+    .style("background",bg)
+
+var svg2 = d3.select("#textdiv")
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 " + width/3 + " " + height)
+    .attr("class", "svg-content")
+    .attr("id", "theSvgText")
     .style("background",bg)
 
 // //definitions of gradients
@@ -1485,4 +1447,4 @@ feMerge.append("feMergeNode")
     .attr("in", "SourceGraphic");
 
 
-main(svg.node().id);
+main(svg.node().id, svg2.node().id);

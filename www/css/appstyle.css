@@ -54,14 +54,27 @@ nav, aside {
 .content {
   background-color: #F5FCFF;
   flex-grow: 0.75;
-  border: 1px solid black;
+  border: 1px solid #F5FCFF;
   height:100%;
 
   position: relative;
-  width: 100%;
+  width: 70%;
   vertical-align: center;
   overflow: hidden;
 }
+
+.content1 {
+  background-color: #F5FCFF;
+  flex-grow: 0.75;
+  border: 1px solid #F5FCFF;
+  height:100%;
+
+  position: relative;
+  width: 30%;
+  vertical-align: center;
+  overflow: hidden;
+}
+
 
 
 .flexcol {
