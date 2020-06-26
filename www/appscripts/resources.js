@@ -69,7 +69,7 @@ class Resources {
     // }
 
     check_testKits(){
-        if( (this.remaining+this.unused) <0){ //used more than the quota for the
+        if( (this.remaining+this.unused) <= 0){ //used more than the quota for the
             return -1;
         }
         return (this.remaining+this.unused);

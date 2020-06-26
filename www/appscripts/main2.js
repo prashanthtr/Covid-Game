@@ -768,12 +768,14 @@ function game( id ){
     resources_update(textsvg, 1);
 
     function changeCol(){
+        cagrid.setOpacity();
         //thinking if it needs to be consistent with graph. hmm
         for(var iter=0; iter<circles.length; iter++){
             if( circles[iter].color == "black"){
-                circles[iter].opacity += (Math.random()>0.5?-1:1)*0.1*Math.random();
+                circles[iter].opacity = cagrid.retrieveOpacity(circles[iter].y + "," + circles[iter].x);
             }
         }
+
         svg
             .selectAll(".cells")
             .transition().duration(200)
@@ -782,7 +784,7 @@ function game( id ){
             })
     }
 
-    setTimer = setInterval(changeCol, 5000);
+    setTimer = setInterval(changeCol, 4000);
 
     document.addEventListener("keypress", keyHandler);
 

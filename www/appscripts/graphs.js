@@ -121,6 +121,16 @@ class Grid {
         return this.nodes[nodeid].opacity;
     }
 
+    setOpacity (){
+        //randomly change opacity
+        for (const value of Object.values(this.nodes)) {
+            if( value.color == "black"){
+                value.opacity += (Math.random()>0.5?-1:1)*0.1*Math.random();
+            }
+
+        }
+    }
+
 
     //retrieves information for plotting on screen
     nodesToPlot (  ){
