@@ -11,9 +11,10 @@
 // import {simulate_data} from "./loadGeodata.js"
 
 var green = "#a2c829" //#a2c829
-var orange  = "black" // "#858585" //"#c25529"
+var orange  = "grey" // "#858585" //"#c25529"
+
 var low_opacity = function(){
-    return 0.4 + 0.3*Math.random();
+    return 0.8; // 0.4 + 0.3*Math.random();
 }
 
 class Grid {
@@ -124,8 +125,8 @@ class Grid {
     setOpacity (){
         //randomly change opacity
         for (const value of Object.values(this.nodes)) {
-            if( value.color == "black"){
-                value.opacity += (Math.random()>0.5?-1:1)*0.1*Math.random();
+            if( value.color == "grey"){
+                value.opacity = 0.8; //+= (Math.random()>0.5?-1:1)*0.1*Math.random();
             }
 
         }

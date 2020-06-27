@@ -767,24 +767,25 @@ function game( id ){
 
     resources_update(textsvg, 1);
 
-    function changeCol(){
-        cagrid.setOpacity();
-        //thinking if it needs to be consistent with graph. hmm
-        for(var iter=0; iter<circles.length; iter++){
-            if( circles[iter].color == "black"){
-                circles[iter].opacity = cagrid.retrieveOpacity(circles[iter].y + "," + circles[iter].x);
-            }
-        }
+    // function changeCol(){
 
-        svg
-            .selectAll(".cells")
-            .transition().duration(200)
-            .style("fill-opacity", function(d){
-                return d.opacity
-            })
-    }
+    //     cagrid.setOpacity();
+    //     //thinking if it needs to be consistent with graph. hmm
+    //     for(var iter=0; iter<circles.length; iter++){
+    //         if( circles[iter].color == "grey"){
+    //             circles[iter].opacity = cagrid.retrieveOpacity(circles[iter].y + "," + circles[iter].x);
+    //         }
+    //     }
 
-    setTimer = setInterval(changeCol, 4000);
+    //     svg
+    //         .selectAll(".cells")
+    //         .transition().duration(200)
+    //         .style("fill-opacity", function(d){
+    //             return d.opacity
+    //         })
+    // }
+
+    //setTimer = setInterval(changeCol, 4000);
 
     document.addEventListener("keypress", keyHandler);
 
