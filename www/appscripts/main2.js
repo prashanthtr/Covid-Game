@@ -98,7 +98,6 @@ export function main( ){
         document.getElementById('creditsText').style.display='none'
     });
 
-
     window.addEventListener("click", function(e){
         if( e.target == document.getElementById('introText') ){
             document.getElementById('introText').style.display='none'
@@ -218,8 +217,8 @@ function game( resources ){
         .enter()
         .append("rect");
 
-    var w = width/18;
-    var h = height/18; //height/20;
+    var w = width/15;
+    var h = height/15; //height/20;
 
     circleEl
         .attr('x', function(d,i) {
@@ -404,16 +403,24 @@ function end(svgold){
     else{
 
         feedbackinfo.innerHTML =  "We are sorry that you couldn't save the city. We encourage you to try again to improve gameplay. Would you give this another try?"
-
     }
 
-    var game = document.createElement("p")
+    var startgame = document.createElement("p")
+    startgame.classList.add("pboxed")
     var submit = document.createElement("p")
-    game.innerHTML = "New game"
-    submit.innerHTML = "Submit"
-    newgamediv.appendChild(game)
-    newgamediv.appendChild(submit)
+    submit.classList.add("pboxed")
 
+    startgame.innerHTML = "New game"
+    submit.innerHTML = "Submit"
+    newgamediv.appendChild(submit)
+    newgamediv.appendChild(startgame)
+
+    startgame.addEventListener("click", function(){
+        var mapdiv = document.getElementById("mapdiv")
+        mapdiv.querySelectorAll('*').forEach(n => n.remove());
+        mapdiv.classList.remove("graphDiv");
+        main();
+    })
 
     // svg.append('foreignObject')
     //     .attr('x', width/10)
@@ -448,9 +455,9 @@ function plot( id, data ){
         .attr("fill", "white")
 
     var w1 = width/5;
-    var w2 = 9*height/10;
-    var h1 = height/10;
-    var h2 = 4*width/5;
+    var w2 = 4*width/5;
+    var h1 = height/5;
+    var h2 = 4*height/5;
 
     console.log(w2 + " , " + h2)
     console.log(data)
@@ -460,7 +467,7 @@ function plot( id, data ){
         .range([w1, w2]);
 
     var yscale = d3.scale.linear()
-        .domain([d3.max(data), d3.min(data) ])
+        .domain([d3.max(data), 10]) // reverse mapping to height
         .range([h1,h2]);
 
     var x_axis = d3.svg.axis()
@@ -471,22 +478,23 @@ function plot( id, data ){
         .scale(yscale)
         .orient("left")
 
+    //x axis
     svg.append("line")
         .style("stroke", "Lightblue")
         .style("stroke-width", 4)
         .attr("x1", xscale(0))
-        .attr("y1", yscale(0))
+        .attr("y1", yscale(10))
         .attr("x2", xscale(data.length-1))
-        .attr("y2", yscale(0))
+        .attr("y2", yscale(10))
 
     //Lets draw the Y axis
     svg.append("line")
         .style("stroke", "Lightblue")
         .style("stroke-width", 4)
         .attr("x1", xscale(0))
-        .attr("y1", yscale(0))
+        .attr("y1", yscale(10))
         .attr("x2", xscale(0))
-        .attr("y2", yscale(d3.max(data)))
+        .attr("y2", yscale(d3.max(data)));
 
     var line = d3.svg.line()
         .x(function(d,i) { return xscale(i); })
@@ -496,7 +504,7 @@ function plot( id, data ){
         .transition()
         .delay(200)
         .attr("d", line(data))
-        .style("stroke", "#000000")
+        .style("stroke", "#5c4033")
         .style("stroke-width", pathWidth)
         .style("fill", "none")
 
@@ -537,8 +545,8 @@ function update( svg ){
     cagrid.getConnectedGreen();
     var gridAdjacent = cagrid.getConnections();
 
-    var w = width/18;
-    var h = height/18;
+    var w = width/15;
+    var h = height/15;
 
     //getting adjacent connected green without diagonals
     for(var iter =0; iter < gridAdjacent.length; iter++){
