@@ -484,7 +484,7 @@ function plot( id, data ){
         .style("stroke-width", 4)
         .attr("x1", xscale(0))
         .attr("y1", yscale(10))
-        .attr("x2", xscale(data.length-1))
+        .attr("x2", xscale(data.length))
         .attr("y2", yscale(10))
 
     //Lets draw the Y axis
