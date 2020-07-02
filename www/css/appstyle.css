@@ -179,6 +179,15 @@ nav, aside {
   color: #654321;
 }
 
+.infoContent {
+  max-height: 10%;
+  max-width: 10%;
+  color: #654321;
+  border: 1px solid #888;
+  text-align: center;
+
+}
+
 
 
 /* The Modal (background) */

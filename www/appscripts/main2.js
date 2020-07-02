@@ -187,11 +187,34 @@ function game( resources ){
     scoring3.classList.add("scoreContent")
     scoring3.id = "connected"
 
+    var infoIcon = document.createElement("div");
+    infoIcon.innerHTML = '<i class="fa fa-info-circle" aria-hidden="true"></i>';
+    infoIcon.classList.add("infoContent")
+    infoIcon.id = "infoIcon"
+
+
+    var spaninstructions = document.getElementsByClassName("close")[1];
+
+    infoIcon.addEventListener("click",function(){
+        document.getElementById('instructionsText').style.display='block'
+    });
+
+    spaninstructions.addEventListener("click",function(){
+        document.getElementById('instructionsText').style.display='none'
+    })
+
+    window.addEventListener("click", function(e){
+        if( e.target == document.getElementById('instructionsText') ){
+            document.getElementById('instructionsText').style.display='none'
+        }
+    })
+
     scorediv.appendChild(timeleft);
     scorediv.appendChild(resources);
     scorediv.appendChild(scoring1);
     scorediv.appendChild(scoring2);
     scorediv.appendChild(scoring3);
+    scorediv.appendChild(infoIcon);
 
     var gamewidth = gamediv.offsetWidth;
     var gameHeight = gamediv.offsetHeight;
