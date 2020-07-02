@@ -93,6 +93,7 @@ nav, aside {
   position: relative;
   width: 70%;
   overflow: hidden;
+  border-radius: 20px;
 }
 
 .scoreScreen {
