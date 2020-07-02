@@ -99,10 +99,11 @@ class Resources {
     }
 
     getResState(){
-        return ["Test kits :" + (this.remaining+this.unused)]
+        return this.remaining+this.unused;
+        //return ["Test kits :" + (this.remaining+this.unused)]
         //, "Barriers :" + this.barriers]
     }
 
 }
 
-export var resources = new Resources()
+export var resources = new Resources();

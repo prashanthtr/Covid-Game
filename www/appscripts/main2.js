@@ -44,12 +44,11 @@ export function main( ){
 
     //adds elements on to the screen
 
-
     var mainmenu = document.createElement("div");
     mainmenu.classList.add("centerElDiv");
 
     var title = document.createElement("div");
-    title.innerHTML = "<h2> <i> ---- COVID-Life ---- <i> </h2>"
+    title.innerHTML = "<h2> <i> -- COVID-Life -- <i> </h2>"
     title.classList.add("mainTitle");
 
     var newgame = document.createElement("div");
@@ -71,7 +70,9 @@ export function main( ){
     instructions.classList.add("mainmenuItem")
     credits.classList.add("mainmenuItem")
 
-    newgame.addEventListener("click",game)
+    newgame.addEventListener("click",function(){
+        game(resources);
+    })
 
     gameintro.addEventListener("click",function(){
         document.getElementById('introText').style.display='block'
@@ -131,491 +132,86 @@ export function main( ){
 
 }
 
-function intro_animated(){
-
-    this.screeNum = 1;
-    this.nextFn = this.screen1; //invoke this on redraw
-
-    var svg = d3.select("#"+id);
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
-
-    console.log(width + " , " + height)
-    svg.selectAll("*").remove();
-
-    //screen elements, specified as D3
-    var text = [
-        {
-            x: width/3,
-            y: height/3,
-            content: "Your city is in a pandemic."
-        },
-        {
-            x: width/3,
-            y: height/2,
-            content: "Your actions can save the city."
-        },
-        {
-            x: width/3,
-            y: 2*height/3,
-            content: "Click to proceed..."
-        }
-    ];
-
-    //intro text to the game, with a next button
-    var svg = d3.select("#mapdiv").select("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("id", "svgDiv")
-
-    // .style("background","#6B8E23")
-
-    var className = "intro"
-    var color = "#6B8E23";
-    var id = svg.node().id
-
-    appendText(id, text, color, className);
-
-    svg.selectAll("text")
-        .transition()
-        .delay(function(d,i){return i*1000})
-        .duration(1000)
-        .attr("fill",textColor)
-
-    svg.select("#clicker")
-        .transition()
-        .delay(4000)
-        .duration(1000)
-        .attr("fill",textColor)
-
-
-}
-
-function intro(id){
-
-    this.screeNum = 1;
-    this.nextFn = this.screen1; //invoke this on redraw
-
-    var svg = d3.select("#"+id);
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
-
-    console.log(width + " , " + height)
-    svg.selectAll("*").remove();
-
-    // //screen elements, specified as D3
-    // var text = [
-    //     {
-    //         x: width/10,
-    //         y: height/3,
-    //         content: "A pandemic has brought your city's operations to a grinding halt.",
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 2*height/5,
-    //         content: "As people are finding livelihood difficult, we have to open up",
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 0.47*height,
-    //         content: "the city whilst risking more infections.",
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 3*height/5,
-    //         content: "Assemble safe zones and minimize overcrowding to enable people",
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 0.67*height,
-    //         content: "find their livelihood in safety.",
-    //     }
-    // ];
-
-
-    //intro text to the game, with a next button
-    var svg = d3.select("#mapdiv").select("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("id", "svgDiv")
-        .style("background",bg)
-
-    var className = "intro"
-    var color = textColor
-    var id = svg.node().id
-
-    //appendText(id, text, color, className);
-
-    var nav = [
-        {
-            x: width/10,
-            y: 0.1*height,
-            content: "< Main Screen",
-        }
-    ];
-
-
-    d3.select("#"+id)
-        .append("text")
-        .attr("x", nav[0].x)
-        .attr("y", nav[0].y )
-        .text(nav[0].content)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .style("cursor", "pointer")
-        .attr("class", "introNav")
-        .on("click", function(){
-            svg.selectAll("*").remove();
-            svg.node().prevFn(svg.node().id)
-        });
-
-    svg.append('foreignObject')
-        .attr('x', width/15)
-        .attr('y', height/4)
-        .attr('width', 0.9*width)
-        .attr('height', 0.8*height)
-        .attr("fill",color)
-        .attr("font-family", textStyle)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 90%; color:textColor;font-size:1.2vw"> A pandemic has brought your city\'s operations to a grinding halt. As people are finding livelihood difficult, you have to open up the city whilst risking more infections. <br> <br> Your task: Assemble safe (green) zones and enable people find their livelihood in 30 days. <br> <br> Guidelines: <ul> <li> Test infected (orange) zones to make them safe. </li> <li> Reduce the infected zones near safe zones (green). </li> <li> Do not increase overcrowding of safe (green) zones. </li> </div>')
-
-
-}
-
-
-function instructions(id){
-
-    var svg = d3.select("#"+id);
-
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
-
-    // this.nextFn = this.screen2; //screen currently in
-    // this.prevFn = this.screen1; //screen currently in
-
-    svg.selectAll("text").remove();
-    svg.on("click", null);
-
-    // var text = [
-    //     {
-    //         x: width/10,
-    //         y: 3*height/15,
-    //         content: "Player actions:"
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 4*height/15,
-    //         content: "1) Press S once and Mouse click -> Box and Quarantine"
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 5*height/15,
-    //         content: "2) Press D once + Mouse click -> Remove containment"
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 6.5*height/15,
-    //         content: "Patterns to minimize overcrowding:"
-    //     },
-    //     {
-    //         x: width/10,
-    //         y: 11.5*height/15,
-    //         content: "Connecting safe zones:"
-    //     }
-    // ];
-
-    //appendText(svg.node().id, text, textColor, "actions");
-
-    // var imgs = [
-    //     {
-    //         x: 1*width/10,
-    //         y: height/2,
-    //         src: "./resources/adj1.png"
-    //     },
-    //     {
-    //         x: 2.5*width/10,
-    //         y: height/2,
-    //         src: "./resources/adj2.png"
-    //     },
-    //     {
-    //         x: 4*width/10,
-    //         y: height/2,
-    //         src: "./resources/adj3.png"
-    //     },
-    //     {
-    //         x: 5.5*width/10,
-    //         y: height/2,
-    //         src: "./resources/adj4.png"
-    //     },
-    //     {
-    //         x: 7*width/10,
-    //         y: height/2,
-    //         src: "./resources/adj5.png"
-    //     },
-    //     {
-    //         x: 2.5*width/10,
-    //         y: 0.8*height,
-    //         src: "./resources/adj3.png"
-    //     },
-    //     {
-    //         x: 3.7*width/10,
-    //         y: 0.8*height,
-    //         src: "./resources/adj2.png"
-    //     },
-    //     {
-    //         x: 5.5*width/10,
-    //         y: 0.8*height,
-    //         src: "./resources/adj2.png"
-    //     },
-    //     {
-    //         x: 6.7*width/10,
-    //         y: 0.8*height,
-    //         src: "./resources/adj3.png"
-    //     }
-
-    // ];
-
-    // svg.selectAll('image')
-    //     .data(imgs)
-    //     .enter()
-    //     .append("image")
-    //     .attr("x", function(d){return d.x})
-    //     .attr("y", function(d){return d.y})
-    //     .attr('xlink:href', (d)=> {return d.src})
-    //     .attr('width', 75)
-    //     .attr('height', 75)
-
-    // var imgText = [
-    //     {
-    //         x: 1*width/10,
-    //         y: 0.67*height,
-    //         content: "Sparse"
-    //     },
-    //     {
-    //         x: 2.5*width/10,
-    //         y: 0.67*height,
-    //         content: ""
-    //     },
-    //     {
-    //         x: 4*width/10,
-    //         y: 0.67*height,
-    //         content: "Optimal"
-    //     },
-    //     {
-    //         x: 5.5*width/10,
-    //         y: 0.67*height,
-    //         content: ""
-    //     },
-    //     {
-    //         x: 7*width/10,
-    //         y: 0.67*height,
-    //         content: "Crowded"
-    //     },
-    //     {
-    //         x: 3*width/10,
-    //         y: 0.97*height,
-    //         content: "Connected"
-    //     },
-    //     {
-    //         x: 5.5*width/10,
-    //         y: 0.97*height,
-    //         content: "Disconnected"
-    //     }
-    // ];
-
-    //appendText(svg.node().id, imgText, textColor, "crowding");
-
-    // var connect = [
-    //     {
-    //         x: 2.5*width/10,
-    //         y: 0.8*height,
-    //         src: "./resources/adj2.png"
-    //     },
-    //     {
-    //         x: 3*width/10,
-    //         y: 0.8*height,
-    //         src: "./resources/adj3.png"
-    //     }
-    // ];
-
-    // svg.selectAll('image')
-    //     .data(connect)
-    //     .enter()
-    //     .append("image")
-    //     .attr("x", function(d){return d.x})
-    //     .attr("y", function(d){return d.y})
-    //     .attr('xlink:href', (d)=> {return d.src})
-    //     .attr('width', 75)
-    //     .attr('height', 75)
-    //     .attr("class", "connect")
-
-    //appendRules();
-
-    //svg.on("click",this.screen2);
-
-    // function(){
-    //     this.selectAll("text").remove()
-    //     this.on("click", null);
-    //     this.screen3();
-    // });
-
-    var nav = [
-        {
-            x: width/15,
-            y: 0.05*height,
-            content: "< Main Screen",
-        }
-    ];
-
-    d3.select("#"+id)
-        .append("text")
-        .attr("x", nav[0].x)
-        .attr("y", nav[0].y )
-        .text(nav[0].content)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .style("cursor", "pointer")
-        .attr("class", "introNav")
-        .on("click", function(){
-            svg.selectAll("*").remove();
-            //console.log(svg.node().prevFn);
-            svg.node().prevFn(svg.node().id)
-        });
-
-    svg.append('foreignObject')
-        .attr('x', width/15)
-        .attr('y', height/10)
-        .attr('width', 4/3*width)
-        .attr('height', 0.9*height)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .attr("font-size", 12)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 92%; color:textColor; font-size:1vw"> Game Actions: <br> <ul> <li> Press S + Mouseclick to test a cell. </li> <li> Press D + Mouseclick to undo selection. </li>  <li> Press "Spacebar" to move to the next time step. </li> <li> Test maximum of 4 cells in each step. Remaining test kits are carried over. </li> </ul> <img src="resources/stepwise.png" style="width: 75%; height: 30%; text-align:center" />  <br> Rules: <ul> <li> Orange cell changes to green on testing. </li> Without testing action: <li> Green cell changes to orange with less than 2 adjacent green cells (infection). </li>  <li> Green changes to orange  with more than 4 green cells (overcrowding). </li> <li> Green remains green when number of nearby green Cells is =2,=3 or =4 </li> </ul> </div>')
-
-}
-
-function credits ( id ){
-
-    var svg = d3.select("#"+id);
-
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
-
-    svg.selectAll("text").remove();
-    svg.on("click", null);
-
-    var text = [
-        {
-            x: width/5,
-            y: 3*height/10,
-            content: "Game development: Prashanth Thattai R",
-            color: textColor
-        },
-        {
-            x: width/5,
-            y: 3.5*height/10,
-            content: "(Ph.D., National University of Singapore)",
-            color: "orange"
-        },
-        {
-            x: width/5,
-            y: 4.5*height/10,
-            content: "Design and ideation: Adithya Kumar",
-            color: textColor
-        },
-        {
-            x: width/5,
-            y: 5*height/10,
-            content: "(Ph.D., Pennsylvania State University)",
-            color: "orange"
-        },
-        {
-            x: width/5,
-            y: 6*height/10,
-            content: "Modeling: Karthik Pushpavanam S",
-            color: textColor
-        },
-        {
-            x: width/5,
-            y: 6.5*height/10,
-            content: "(Ph.D., Arizona State University)",
-            color: "orange"
-        }
-    ]
-
-
-    svg.append('foreignObject')
-        .attr('x', width/15)
-        .attr('y', height/3)
-        .attr('width', 4*width/3)
-        .attr('height', 0.9*height)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .attr("font-size", 12)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 92%; color:textColor; font-size:vw"> <ul> <li> Game development: Prashanth Thattai R <br> Ph.D., National University of Singapore </li> <br> <li> Design and ideation: Adithya Kumar <br> Ph.D., Pennsylvania State University </li> <br> <li> Modeling: Karthik Pushpavanam S <br> Ph.D., Arizona State University </li> </ul> </div>')
-
-
-    //appendText(svg.node().id, text, "orange", "credits");
-
-    svg.on("click",this.screen2);
-
-    var nav = [
-        {
-            x: width/10,
-            y: 0.1*height,
-            content: "< Main Screen",
-        }
-    ];
-
-    d3.select("#"+id)
-        .append("text")
-        .attr("x", nav[0].x)
-        .attr("y", nav[0].y )
-        .text(nav[0].content)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .style("cursor", "pointer")
-        .attr("class", "introNav")
-        .on("click", function(){
-            svg.selectAll("*").remove();
-            svg.node().prevFn(svg.node().id)
-        });
-
-}
-
 
 //only changng the colors of game grid
-function game( id ){
+function game( resources ){
 
-    var svg = d3.select("#"+id);
-    var textsvg = d3.select("#theSvgText");
-
+    //init time and resources
     maxTime = 30;
     ts = 0;
-    resources.init(); //for multiple gameplay
-
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
-
-    svg.selectAll("text").remove();
-    svg.on("click", null);
 
     cagrid = populate_grid();
     cagrid.update();
 
+    resources.init(); //for multiple gameplay
+    scoring_text = cagrid.score();
+    resources_text = resources.getResState();
+
+    var mapdiv = document.getElementById("mapdiv")
+    mapdiv.querySelectorAll('*').forEach(n => n.remove());
+
+    mapdiv.classList.remove("centerElDiv");
+    mapdiv.classList.add("gameDiv");
+
+    var gamediv = document.createElement("div");
+    var scorediv = document.createElement("div");
+    gamediv.classList.add("gameScreen");
+    scorediv.classList.add("scoreScreen");
+
+    mapdiv.appendChild(gamediv)
+    mapdiv.appendChild(scorediv)
+
+    var timeleft = document.createElement("div");
+    timeleft.innerHTML = "Time Left: " + (maxTime-ts) + " days"
+    timeleft.classList.add("scoreContent")
+    timeleft.id = "timeleft"
+
+    var resources = document.createElement("div");
+    resources.innerHTML = "Test kits: " + resources_text
+    resources.classList.add("scoreContent")
+    resources.id = "resources";
+
+    var scoring1 = document.createElement("div");
+    scoring1.innerHTML = scoring_text[0];
+    scoring1.classList.add("scoreContent")
+    scoring1.id = "infected"
+
+    var scoring2 = document.createElement("div");
+    scoring2.innerHTML = scoring_text[1];
+    scoring2.classList.add("scoreContent")
+    scoring2.id = "safe"
+
+    var scoring3 = document.createElement("div");
+    scoring3.innerHTML = scoring_text[2];
+    scoring3.classList.add("scoreContent")
+    scoring3.id = "connected"
+
+    scorediv.appendChild(timeleft);
+    scorediv.appendChild(resources);
+    scorediv.appendChild(scoring1);
+    scorediv.appendChild(scoring2);
+    scorediv.appendChild(scoring3);
+
+    var gamewidth = gamediv.offsetWidth;
+    var gameHeight = gamediv.offsetHeight;
+
+    var svg = d3.select(".gameScreen")
+        .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + gamewidth + " " + gameHeight)
+        .attr("id", "theSvg")
+        .style("background",bg)
+
+    var bbbox = svg.node().getBoundingClientRect();
+    var width = bbbox.width
+    var height = bbbox.height;
+
+    svg.selectAll("text").remove();
+    svg.on("click", null);
+
     circles = cagrid.nodesToPlot();
 
-    resources_update(textsvg)
+    //resources_update(textsvg)
 
     var circleEl = svg.selectAll("rect")
         .data(circles)
@@ -625,14 +221,12 @@ function game( id ){
     var w = width/18;
     var h = height/18; //height/20;
 
-    console.log(document.getElementById("mainGradient"))
-
     circleEl
         .attr('x', function(d,i) {
-            return (d.x+2) * w
+            return (d.x) * w
         })
         .attr('y', function(d,i) {
-            return (d.y+2) * h
+            return (d.y) * h
         })
         .attr("width", w)
         .attr("height", h)
@@ -657,143 +251,8 @@ function game( id ){
 
     first_score = cagrid.score();
 
-    var event = d3.dispatch('click', 'dblclick');//event dispatcher for
-                                                 //segmenting single and double
-                                                 //clics based on time (same
-                                                 //would be used for single and
-                                                 //double taps on mobile)
-
-    function getClickDispatcher (){
-        const clickEvent = d3.dispatch('click', 'dblclick')
-
-        return d3.rebind((selection) => {
-            let waitForDouble = null
-
-            // Register click handler on selection, that issues click and dblclick as appropriate
-            selection.on('click', (projectProxy) => {
-                d3.event.preventDefault()
-                if (waitForDouble != null) {
-                    clearTimeout(waitForDouble); //dont wait for a double
-                    waitForDouble = null
-                    clickEvent.dblclick(d3.event, projectProxy)
-                } else {
-                    const currentEvent = d3.event;
-                    waitForDouble = setTimeout(() => {
-                        console.log(currentEvent)
-                        clickEvent.click(currentEvent, projectProxy)
-                        waitForDouble = null
-                    }, 200);
-                }
-            })
-        }, clickEvent, 'on');
-    }
-
-    const clickDispatcher = getClickDispatcher();
-
-    console.log(clickDispatcher)
-
-    clickDispatcher
-        .on('click', (e) => {
-            const item = e.target;
-            var x = e.target.getAttribute("xpos")
-            var y = e.target.getAttribute("ypos")
-
-            if( resources.check_testKits() > 0){
-                if( cagrid.alreadyTested(y+","+x) == 0 ){
-                    cagrid.testing(y+","+x, 1);
-                    //cagrid.disconnect(e.y+","+e.x, 1);
-                    item.classList.add('testinprogress')
-                    item.classList.remove('connected')
-                    resources.selTesting();
-                    resources_update(textsvg, 1);
-                }
-            }
-          })
-          .on('dblclick', (e) => {
-              const item = e.target;
-              var x = e.target.getAttribute("xpos")
-              var y = e.target.getAttribute("ypos")
-              console.log("connect")
-              //cagrid.disconnect(e.y+","+e.x, 0);
-              cagrid.testing(y+","+x, 0);
-              //console.log(item)
-              //item.classList.remove('bordered')
-              item.classList.add('connected')
-              item.classList.remove('testinprogress')
-              resources.unselTesting();
-              resources_update(textsvg, 1);
-          });
-
     circleEl
         .call(clickDispatcher);
-
-
-    // circleEl.on("dblclick", function(e){
-
-    //     const item = this;
-    //     console.log("connect")
-    //     //cagrid.disconnect(e.y+","+e.x, 0);
-    //     cagrid.testing(e.y+","+e.x, 0);
-    //     //console.log(item)
-    //     //item.classList.remove('bordered')
-    //     item.classList.remove('testinprogress')
-
-    //     resources.unselTesting();
-
-        // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
-        // }
-
-    //     resources_update(svg, 1);
-    // });
-
-    // circleEl.on("click", function(e){
-
-    //     const item = this;
-    //     if( resources.check_testKits() > 0){
-    //         cagrid.testing(e.y+","+e.x, 1);
-    //         //cagrid.disconnect(e.y+","+e.x, 1);
-    //         item.classList.add('testinprogress')
-    //         resources.selTesting();
-    //         resources_update(svg, 1);
-    //     }
-
-        // if( cursor == "" || cursor == "default" ){
-        //     //nothing
-        // }
-        // else{
-
-        //     //let cursor = document.body.style.cursor.split(",")[0].split("/")[1].split(".png")[0]
-        //     const item = this;
-
-        //     if( cursor == "unlock" ){
-
-        //         console.log("connect")
-        //         //cagrid.disconnect(e.y+","+e.x, 0);
-        //         cagrid.testing(e.y+","+e.x, 0);
-        //         //console.log(item)
-        //         //item.classList.remove('bordered')
-        //         item.classList.remove('testinprogress')
-
-        //         resources.unselTesting();
-
-        //         // if( resources.check_testKits() >= 0 && resources.check_testKits() < 5){
-        //         // }
-
-        //         resources_update(svg, 1);
-        //     }
-        //     else if( cursor == "quarantine" ){
-
-        //         if( resources.check_testKits() > 0){
-        //             cagrid.testing(e.y+","+e.x, 1);
-        //             //cagrid.disconnect(e.y+","+e.x, 1);
-        //             item.classList.add('testinprogress')
-        //             resources.selTesting();
-        //             resources_update(svg, 1);
-        //         }
-        //     }
-        // }
-    // });
-
 
     scoring_text = cagrid.score();
 
@@ -801,26 +260,26 @@ function game( id ){
 
     //appendText(svg.node().id, scoringData, textColor, "scoring");
 
-    resources_text = resources.getResState();
+    //resources_text = resources.getResState();
 
     var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
-    textsvg.append('foreignObject')
-        .attr('x', width)
-        .attr('y', height/8)
-        .attr('width', width/3)
-        .attr('height', height)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .attr("font-size", 10)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 92%; color:black; font-size:vw">' + content + '</div>')
+    // textsvg.append('foreignObject')
+    //     .attr('x', width)
+    //     .attr('y', height/8)
+    //     .attr('width', width/3)
+    //     .attr('height', height)
+    //     .attr("fill",textColor)
+    //     .attr("font-family", textStyle)
+    //     .attr("font-size", 10)
+    //     .attr("class", "intro")
+    //     .append("xhtml:body")
+    //     .html('<div style="width: 92%; color:black; font-size:vw">' + content + '</div>')
 
     //console.log(resourcesData)
     //appendText(svg.node().id, resourcesData, textColor, "resources");
 
-    resources_update(textsvg, 1);
+    //resources_update(textsvg, 1);
 
     // function changeCol(){
 
@@ -1145,39 +604,7 @@ function plot( w1, w2, h1, h2, data ){
 }
 
 
-function appendText(id, data, color, className, cursor){
-
-    d3.select("#"+id).selectAll("."+className)
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("x", function(d){
-            return d.x
-        })
-        .attr("y", function(d){
-            return d.y
-        })
-        .text(function(d){
-            return d.content
-        })
-        .attr("fill",color)
-        .attr("font-family", textStyle)
-        .style("cursor", (cursor||"default"))
-        .attr("class", className)
-
-}
-
-//bind data to functions
-function appendTextEvents ( id, className, fns){
-
-    d3.select("#"+id).selectAll("."+className)
-        .on("click", function(d,i){
-            console.log(fns[i])
-            fns[i](id);
-        });
-}
-
-function update( svg , textsvg ){
+function update( svg ){
 
     ts++;//timestep increases
 
@@ -1190,42 +617,26 @@ function update( svg , textsvg ){
         circles[iter].opacity = opacity;
     }
 
-    svg.selectAll(".scoring").remove();
-    svg.selectAll(".resources").remove();
-    svg.selectAll("foreignObject").remove();
-    textsvg.selectAll("foreignObject").remove();
     svg.selectAll("path").remove();
     svg.selectAll(".road").remove();
 
+    //update scores
     scoring_text = cagrid.score();
+    resources_text = resources.getResState();
 
+    document.getElementById("timeleft").innerHTML = "Time Left: " + (maxTime-ts) + " days"
+    document.getElementById("resources").innerHTML = "Test kits: " + resources_text
+    document.getElementById("infected").innerHTML = scoring_text[0];
+    document.getElementById("safe").innerHTML = scoring_text[1];
+    document.getElementById("connected").innerHTML = scoring_text[2];
+
+    //draw paths
     var bbbox = svg.node().getBoundingClientRect();
     var width = bbbox.width
     var height = bbbox.height;
 
-    var scoringData = [
-        {
-            x: 0.75*width,
-            y: height/4,
-            content: scoring_text[0],
-        },
-        {
-            x: 0.75*width,
-            y: 2*height/4,
-            content: scoring_text[1],
-        },
-        {
-            x: 0.75*width,
-            y: 3*height/4,
-            content: scoring_text[2],
-        }
-    ];
-
-
     cagrid.getConnectedGreen();
     var gridAdjacent = cagrid.getConnections();
-
-    console.log(gridAdjacent)
 
     var w = width/18;
     var h = height/18;
@@ -1291,29 +702,6 @@ function update( svg , textsvg ){
         }
     }
 
-
-    resources_text = resources.getResState();
-
-    //appendText(svg.node().id, scoringData, textColor, "scoring");
-
-    var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
-
-    textsvg.append('foreignObject')
-        .attr('x', 0)
-        .attr('y', height/8)
-        .attr('width', width/3)
-        .attr('height', height)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .attr("font-size", 10)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 92%; color:black; font-size:vw">' + content + '</div>')
-
-    //appendText(svg.node().id, resourcesData, textColor, "resources");
-
-    console.log(svg.selectAll(".cells"))
-
     svg
         .selectAll(".cells")
         .transition().duration(200)
@@ -1322,54 +710,14 @@ function update( svg , textsvg ){
         })
         .style("fill-opacity", function(d){
             return d.opacity
-        })
-
+        });
 }
 
 function resources_update( svg ){
 
-    svg.selectAll(".resources").remove();
-    svg.selectAll("foreignObject").remove();
 
-    //resources_text = resources.getResState();
-    //console.log(resources_text);
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
-
-    // var resourcesData = [
-    //     {
-    //         x: width/3,
-    //         y: 0.95*height,
-    //         content: resources_text[0]
-    //     },
-    //     {
-    //         x: width/3,
-    //         y: 0.05*height,
-    //         content: "Time Left: " + (maxTime-ts) + " days"
-    //     }
-
-    // ];
-
-    scoring_text = cagrid.score();
     resources_text = resources.getResState();
-
-    //appendText(svg.node().id, scoringData, textColor, "scoring");
-
-    var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
-
-    svg.append('foreignObject')
-        .attr('x', 0)
-        .attr('y', height/8)
-        .attr('width', 0.6*width)
-        .attr('height', 6*height/8)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .attr("font-size", 10)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 92%; color:textColor; font-size:vw">' + content + '</div>')
-
+    document.getElementById("resources").innerHTML = "Test kits: " + resources_text;
 }
 
 
@@ -1379,8 +727,6 @@ function keyHandler (e){
 
     //a little bit of a cheat
     var svg = d3.select("#theSvg");
-    var textsvg = d3.select("#theSvgText");
-    //textsvg.selectAll("*").remove();
 
     switch(charCode){
 
@@ -1401,6 +747,8 @@ function keyHandler (e){
             ts++;
             rafId = null
             document.removeEventListener("keypress", keyHandler);
+            var mapdiv = document.getElementById("mapdiv")
+            mapdiv.querySelectorAll('*').forEach(n => n.remove());
 
             svg.selectAll("rect")
                 .each(function(l) {
@@ -1421,12 +769,10 @@ function keyHandler (e){
                     this.classList.remove("testinprogress");
                 });
 
-            update( svg, textsvg );
+            update( svg );
             resources.useKit();
             resources.replenish();
-            console.log(textsvg)
-            console.log(svg)
-            resources_update(textsvg, 1);
+            resources_update();
             cagrid.resetTesting();
         }; break;
     }
@@ -1449,6 +795,75 @@ function keyHandler (e){
 //     .attr("class", "svg-content")
 //     .attr("id", "theSvgText")
 //     .style("background",bg)
+
+
+
+
+var event = d3.dispatch('click', 'dblclick');//event dispatcher for
+                                                 //segmenting single and double
+                                                 //clics based on time (same
+                                                 //would be used for single and
+                                                 //double taps on mobile)
+
+function getClickDispatcher (){
+
+    const clickEvent = d3.dispatch('click', 'dblclick')
+
+    return d3.rebind((selection) => {
+        let waitForDouble = null
+
+        // Register click handler on selection, that issues click and dblclick as appropriate
+        selection.on('click', (projectProxy) => {
+            d3.event.preventDefault()
+            if (waitForDouble != null) {
+                clearTimeout(waitForDouble); //dont wait for a double
+                waitForDouble = null
+                clickEvent.dblclick(d3.event, projectProxy)
+            } else {
+                const currentEvent = d3.event;
+                waitForDouble = setTimeout(() => {
+                    console.log(currentEvent)
+                    clickEvent.click(currentEvent, projectProxy)
+                    waitForDouble = null
+                }, 200);
+            }
+        })
+    }, clickEvent, 'on');
+}
+
+const clickDispatcher = getClickDispatcher();
+
+clickDispatcher
+    .on('click', (e) => {
+        const item = e.target;
+        var x = e.target.getAttribute("xpos")
+        var y = e.target.getAttribute("ypos")
+
+        if( resources.check_testKits() > 0){
+            if( cagrid.alreadyTested(y+","+x) == 0 ){
+                cagrid.testing(y+","+x, 1);
+                //cagrid.disconnect(e.y+","+e.x, 1);
+                item.classList.add('testinprogress')
+                item.classList.remove('connected')
+                resources.selTesting();
+                resources_update();
+            }
+        }
+    })
+    .on('dblclick', (e) => {
+        const item = e.target;
+        var x = e.target.getAttribute("xpos")
+        var y = e.target.getAttribute("ypos")
+        console.log("connect")
+        //cagrid.disconnect(e.y+","+e.x, 0);
+        cagrid.testing(y+","+x, 0);
+        //console.log(item)
+        //item.classList.remove('bordered')
+        item.classList.add('connected')
+        item.classList.remove('testinprogress')
+        resources.unselTesting();
+        resources_update();
+    });
 
 
 main();
