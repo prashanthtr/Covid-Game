@@ -26,53 +26,108 @@ var bradius = 1;
 
 var setTimer = null;
 
-export function main( id, id2 ){
+export function main( ){
 
-    var svg = d3.select("#"+id);
+    //removes elements from previous gameplay if any
+
+    // d3.select("#"+id).select("*").remove();
+    // d3.select("#"+id).selectAll("text").remove();
+    // d3.select("#"+id).selectAll(".lastscores").remove();
+    // d3.select("#"+id).selectAll("line").remove();
+    // d3.select("#"+id).selectAll("path").remove();
+    // d3.select("#"+id).selectAll(".submission").remove();
+    // d3.select("#"+id).selectAll("foreignObject").remove();
+
+    // var bbbox = svg.node().getBoundingClientRect();
+    // var width = bbbox.width
+    // var height = bbbox.height;
+
+    //adds elements on to the screen
 
 
-    d3.select("#"+id).select("*").remove();
-    d3.select("#"+id).selectAll("text").remove();
-    d3.select("#"+id).selectAll(".lastscores").remove();
-    d3.select("#"+id).selectAll("line").remove();
-    d3.select("#"+id).selectAll("path").remove();
-    d3.select("#"+id).selectAll(".submission").remove();
-    d3.select("#"+id).selectAll("foreignObject").remove();
+    var mainmenu = document.createElement("div");
+    mainmenu.classList.add("centerElDiv");
 
-    var bbbox = svg.node().getBoundingClientRect();
-    var width = bbbox.width
-    var height = bbbox.height;
+    var title = document.createElement("div");
+    title.innerHTML = "<h2> <i> ---- COVID-Life ---- <i> </h2>"
+    title.classList.add("mainTitle");
+
+    var newgame = document.createElement("div");
+    var gameintro = document.createElement("div");
+    var instructions = document.createElement("div");
+    var credits = document.createElement("div");
+
+    var spanintro = document.getElementsByClassName("close")[0];
+    var spaninstructions = document.getElementsByClassName("close")[1];
+    var spancredits = document.getElementsByClassName("close")[2];
+
+    newgame.innerHTML = "Start game"
+    gameintro.innerHTML = "Introduction"
+    instructions.innerHTML = "Instructions"
+    credits.innerHTML = "Credits"
+
+    newgame.classList.add("mainmenuItem")
+    gameintro.classList.add("mainmenuItem")
+    instructions.classList.add("mainmenuItem")
+    credits.classList.add("mainmenuItem")
+
+    newgame.addEventListener("click",game)
+
+    gameintro.addEventListener("click",function(){
+        document.getElementById('introText').style.display='block'
+    });
+
+    instructions.addEventListener("click",function(){
+        document.getElementById('instructionsText').style.display='block'
+    });
+
+    credits.addEventListener("click",function(){
+        document.getElementById('creditsText').style.display='block'
+    });
+
+    spanintro.addEventListener("click",function(){
+        document.getElementById('introText').style.display='none'
+    })
+
+    spaninstructions.addEventListener("click",function(){
+        document.getElementById('instructionsText').style.display='none'
+    })
+
+    spancredits.addEventListener("click",function(){
+        document.getElementById('creditsText').style.display='none'
+    });
+
+
+    window.addEventListener("click", function(e){
+        if( e.target == document.getElementById('introText') ){
+            document.getElementById('introText').style.display='none'
+        }
+        else if( e.target == document.getElementById('instructionsText') ){
+            document.getElementById('instructionsText').style.display='none'
+        }
+        else if( e.target == document.getElementById('creditsText') ){
+            document.getElementById('creditsText').style.display='none'
+        }
+    })
+
+    instructions.addEventListener("click",instructions)
+    credits.addEventListener("click",end)
+
+    mainmenu.appendChild(title)
+    mainmenu.appendChild(newgame)
+    mainmenu.appendChild(gameintro)
+    mainmenu.appendChild(instructions)
+    mainmenu.appendChild(credits)
+
+    document.getElementById("mapdiv").appendChild(mainmenu);
 
     //screen elements, specified as D3
-    var text = [
-        {
-            x: 2*width/5,
-            y: 4*height/10,
-            content: "Start game"
-        },
-        {
-            x: 2*width/5,
-            y: 5*height/10,
-            content: "Introduction"
-        },
-        {
-            x: 2*width/5,
-            y: 6*height/10,
-            content: "Instructions"
-        },
-        {
-            x: 2*width/5,
-            y: 7*height/10,
-            content: "Credits"
-        }
-    ];
+    // var className = "main"
+    // var color = textColor;
 
-    var className = "main"
-    var color = textColor;
-
-    svg.node().prevFn = main;
-    appendText(svg.node().id, text, color, className, "pointer");
-    appendTextEvents(svg.node().id, className, [game, intro,instructions, credits]);
+    // svg.node().prevFn = main;
+    // appendText(svg.node().id, text, color, className, "pointer");
+    // appendTextEvents(svg.node().id, className, [game, intro,instructions, credits]);
 
 }
 
@@ -1379,75 +1434,22 @@ function keyHandler (e){
     }
 }
 
-var svg = d3.select("#mapdiv")
-    .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 " + width + " " + height)
-    .attr("class", "svg-content")
-    .attr("id", "theSvg")
-    .style("background",bg)
+// var svg = d3.select("#mapdiv")
+//     .append("svg")
+//     .attr("preserveAspectRatio", "xMinYMin meet")
+//     .attr("viewBox", "0 0 " + width + " " + height)
+//     .attr("class", "svg-content")
+//     .attr("id", "theSvg")
+//     .style("background",bg)
 
-var svg2 = d3.select("#textdiv")
-    .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 " + width/3 + " " + height)
-    .attr("class", "svg-content")
-    .attr("id", "theSvgText")
-    .style("background",bg)
-
-// //definitions of gradients
-// var svgDefs = svg.append('svg:defs');
-
-// var mainGradient = svgDefs.append('svg:linearGradient')
-//     .attr('id', 'mainGradient');
-
-// // Create the stops of the main gradient. Each stop will be assigned
-// // a class to style the stop using CSS.
-// mainGradient.append('svg:stop')
-//     .attr('offset', '0%')
-//     .attr("stop-color", "green")
-
-// mainGradient.append('svg:stop')
-//     .attr('offset', '100%')
-//     .attr("stop-color", "orange")
+// var svg2 = d3.select("#textdiv")
+//     .append("svg")
+//     .attr("preserveAspectRatio", "xMinYMin meet")
+//     .attr("viewBox", "0 0 " + width/3 + " " + height)
+//     .attr("class", "svg-content")
+//     .attr("id", "theSvgText")
+//     .style("background",bg)
 
 
-//picking filters for the game
-
-
-// filters go in defs element
-var defs = svg.append("defs");
-
-// create filter with id #drop-shadow
-// height=130% so that the shadow is not clipped
-var filter = defs.append("filter")
-    .attr("id", "drop-shadow")
-    .attr("height", "130%");
-
-// SourceAlpha refers to opacity of graphic that this filter will be applied to
-// convolve that with a Gaussian with standard deviation 3 and store result
-// in blur
-filter.append("feGaussianBlur")
-    .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 5)
-    .attr("result", "blur");
-
-// translate output of Gaussian blur to the right and downwards with 2px
-// store result in offsetBlur
-filter.append("feOffset")
-    .attr("in", "blur")
-    .attr("dx", 5)
-    .attr("dy", 5)
-    .attr("result", "offsetBlur");
-
-// overlay original SourceGraphic over translated blurred opacity by using
-// feMerge filter. Order of specifying inputs is important!
-var feMerge = filter.append("feMerge");
-
-feMerge.append("feMergeNode")
-    .attr("in", "offsetBlur")
-feMerge.append("feMergeNode")
-    .attr("in", "SourceGraphic");
-
-
-main(svg.node().id, svg2.node().id);
+main();
+//svg.node().id, svg2.node().id);
