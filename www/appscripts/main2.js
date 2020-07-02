@@ -487,7 +487,7 @@ function plot( id, data ){
         .range([w1, w2]);
 
     var yscale = d3.scale.linear()
-        .domain([d3.max(data), 10]) // reverse mapping to height
+        .domain([d3.max(data), Math.min(10, d3.min(data))]) // reverse mapping to height
         .range([h1,h2]);
 
     var x_axis = d3.svg.axis()
