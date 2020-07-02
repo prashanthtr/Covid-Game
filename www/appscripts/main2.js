@@ -143,7 +143,9 @@ function game( resources ){
     cagrid.update();
 
     resources.init(); //for multiple gameplay
-    scoring_text = cagrid.score();
+    scoring_text = cagrid.score(); //store the initial score
+    first_score = scoring_text;
+
     resources_text = resources.getResState();
 
     var mapdiv = document.getElementById("mapdiv")
@@ -248,14 +250,9 @@ function game( resources ){
         })
     // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-    first_score = cagrid.score();
 
     circleEl
         .call(clickDispatcher);
-
-    scoring_text = cagrid.score();
-
-    var content = scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
     //for a gradually changing background
     // function changeCol(){
@@ -298,6 +295,8 @@ function end(svgold){
 
     //one more update to ensure that no 30th step full change can take effect.
     cagrid.update()
+    //create divs for graphs, feedback and new game
+    var last_score = cagrid.score(); //store the last score
 
     var series = cagrid.retrieveScore()
 
@@ -312,8 +311,6 @@ function end(svgold){
         cs.push(series[i].cs)
     }
 
-    //create divs for graphs, feedback and new game
-    var last_score = cagrid.score();
 
     mapdiv.classList.remove("gameDiv");
     mapdiv.classList.add("graphDiv");
@@ -378,7 +375,7 @@ function end(svgold){
     plot( "connected", cs);
 
     //provide feedback
-    scoring_text = cagrid.score();
+    scoring_text = last_score
 
     let old_score = first_score.map( (s) => {return parseFloat((s.split(":")[1]))})
     let cur_score = scoring_text.map( (s) => {return parseFloat((s.split(":")[1]))})
@@ -527,7 +524,7 @@ function update( svg ){
     svg.selectAll("path").remove();
     svg.selectAll(".road").remove();
 
-    //update scores
+    //update and store scores every time step
     scoring_text = cagrid.score();
     resources_text = resources.getResState();
 
@@ -661,7 +658,9 @@ function keyHandler (e){
                     this.classList.remove("testinprogress");
                 });
 
+            cagrid.score(); //store this score before the running of the simulations
             cagrid.update();
+            cagrid.score(); //storing one step after the simulation (if there is testing at last step)
             end( svg );
             return;
         }

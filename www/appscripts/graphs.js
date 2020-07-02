@@ -237,9 +237,8 @@ class Grid {
     }
 
     //counts number of green and connected green
-    //
+    // scores and stores the score
     score ( ){
-
         var infected = 0;
         var safe = 0;
         var connected_safe = 0;
