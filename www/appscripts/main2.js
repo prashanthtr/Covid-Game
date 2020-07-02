@@ -407,6 +407,14 @@ function end(svgold){
 
     }
 
+    var game = document.createElement("p")
+    var submit = document.createElement("p")
+    game.innerHTML = "New game"
+    submit.innerHTML = "Submit"
+    newgamediv.appendChild(game)
+    newgamediv.appendChild(submit)
+
+
     // svg.append('foreignObject')
     //     .attr('x', width/10)
     //     .attr('y', 0.65*height)
