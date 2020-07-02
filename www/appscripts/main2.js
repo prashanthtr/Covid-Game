@@ -17,6 +17,8 @@ var maxTime = 30;
 var ts = 0;
 var cursor = "default";
 
+var store_ca_state = [];
+
 var bg = "#ffffff"
 var textColor = "#000000"
 var pathColor = "#654321"
@@ -141,6 +143,7 @@ function game( resources ){
 
     cagrid = populate_grid();
     cagrid.update();
+    storeSolution()
 
     resources.init(); //for multiple gameplay
     scoring_text = cagrid.score(); //store the initial score
@@ -234,6 +237,7 @@ function game( resources ){
     svg.on("click", null);
 
     circles = cagrid.nodesToPlot();
+    store_ca_state.push({time: ts, state: circles});
 
     //resources_update(textsvg)
 
@@ -442,6 +446,27 @@ function end(svgold){
         main();
     })
 
+    var spaninstructions = document.getElementsByClassName("close")[3];
+
+    submit.addEventListener("click",function(){
+        document.getElementById('email').style.display='block'
+    });
+
+    spaninstructions.addEventListener("click",function(){
+        document.getElementById('email').style.display='none'
+    })
+
+    window.addEventListener("click", function(e){
+        if( e.target == document.getElementById('email') ){
+            document.getElementById('email').style.display='none'
+        }
+    })
+
+    document.getElementById("download").addEventListener("click",function(){
+        download("gameplay.txt",JSON.stringify(store_ca_state));
+        localStorage.setItem('gameplay', JSON.stringify(store_ca_state));
+    })
+
     // svg.append('foreignObject')
     //     .attr('x', width/10)
     //     .attr('y', 0.65*height)
@@ -536,13 +561,7 @@ function update( svg ){
     ts++;//timestep increases
 
     cagrid.update();
-
-    for(var iter=0; iter<circles.length; iter++){
-        var objColor = cagrid.retrieveColor(circles[iter].y + "," + circles[iter].x)
-        var opacity = cagrid.retrieveOpacity(circles[iter].y + "," + circles[iter].x)
-        circles[iter].color = objColor;
-        circles[iter].opacity = opacity;
-    }
+    storeSolution();
 
     svg.selectAll("path").remove();
     svg.selectAll(".road").remove();
@@ -684,6 +703,8 @@ function keyHandler (e){
             cagrid.score(); //store this score before the running of the simulations
             cagrid.update();
             cagrid.score(); //storing one step after the simulation (if there is testing at last step)
+            storeSolution();
+
             end( svg );
             return;
         }
@@ -791,6 +812,34 @@ clickDispatcher
         resources.unselTesting();
         resources_update();
     });
+
+function storeSolution(){
+
+    //store
+    for(var iter=0; iter<circles.length; iter++){
+        var objColor = cagrid.retrieveColor(circles[iter].y + "," + circles[iter].x)
+        var opacity = cagrid.retrieveOpacity(circles[iter].y + "," + circles[iter].x)
+        circles[iter].color = objColor;
+        circles[iter].opacity = opacity;
+    }
+    store_ca_state.push({time: ts, state: circles});
+
+}
+
+
+function download(filename, text) {
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+// Start file download.
+
 
 
 main();
