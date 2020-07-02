@@ -258,29 +258,7 @@ function game( resources ){
 
     var content = scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
 
-    //appendText(svg.node().id, scoringData, textColor, "scoring");
-
-    //resources_text = resources.getResState();
-
-    var content = "Time Left: " + (maxTime-ts) + " days" + "<br> <br> <br>" + resources_text[0] + "<br> ------- <br> " + scoring_text[0] + "<br> <br> <br> " + scoring_text[1] + "<br> <br> <br>"  + scoring_text[2];
-
-    // textsvg.append('foreignObject')
-    //     .attr('x', width)
-    //     .attr('y', height/8)
-    //     .attr('width', width/3)
-    //     .attr('height', height)
-    //     .attr("fill",textColor)
-    //     .attr("font-family", textStyle)
-    //     .attr("font-size", 10)
-    //     .attr("class", "intro")
-    //     .append("xhtml:body")
-    //     .html('<div style="width: 92%; color:black; font-size:vw">' + content + '</div>')
-
-    //console.log(resourcesData)
-    //appendText(svg.node().id, resourcesData, textColor, "resources");
-
-    //resources_update(textsvg, 1);
-
+    //for a gradually changing background
     // function changeCol(){
 
     //     cagrid.setOpacity();
@@ -314,55 +292,94 @@ function end(svgold){
     svgold.selectAll(".road").remove();
     svgold.selectAll("end").remove();
 
-    d3.select("#theSvgText").selectAll("*").remove()
-    d3.select("mapdiv").remove("#theSvg")
-    d3.select("mapdiv").remove("#theSvgText")
+    var mapdiv = document.getElementById("mapdiv")
+    mapdiv.querySelectorAll('*').forEach(n => n.remove());
 
     setTimer = null;
 
-    svg.selectAll("text").remove()
-    svg.selectAll("rect").remove()
-    svg.selectAll("foreignObject").remove();
+    //one more update to ensure that no 30th step full change can take effect.
+    cagrid.update()
 
     var series = cagrid.retrieveScore()
-    var infected = [], safe = [], cs = [];
+
+    // get the data for visualization
+    var infectedarr = [], safearr = [], cs = [];
     var timeSeries = [];
 
     for(var i=0; i < series.length; i++ ){
         timeSeries.push(i);
-        infected.push(series[i].i)
-        safe.push(series[i].s)
+        infectedarr.push(series[i].i)
+        safearr.push(series[i].s)
         cs.push(series[i].cs)
     }
 
-
+    //create divs for graphs, feedback and new game
     var last_score = cagrid.score();
 
-    plot(width/10, 3*width/10, 2*height/5, height/5, infected);
-    plot(4*width/10, 6*width/10, 2*height/5, height/5, safe);
-    plot(7*width/10, 9*width/10, 2*height/5, height/5, cs);
+    mapdiv.classList.remove("gameDiv");
+    mapdiv.classList.add("graphDiv");
 
+    //graphDiv COl -> graphscreen ROW -> graphs COL -> title + plot
+
+    var graphsdiv = document.createElement("div");
+    var spacediv = document.createElement("div");
+    var feedbackdiv = document.createElement("div");
+    var newgamediv = document.createElement("div");
+
+    graphsdiv.classList.add("graphScreen");
+    spacediv.classList.add("spacediv");
+    feedbackdiv.classList.add("feedback");
+    newgamediv.classList.add("newgame");
+
+    mapdiv.appendChild(spacediv)
+    mapdiv.appendChild(graphsdiv)
+    mapdiv.appendChild(feedbackdiv)
+    mapdiv.appendChild(newgamediv)
+
+    var feedbackinfo = document.createElement("p");
+    feedbackdiv.appendChild(feedbackinfo);
+
+    //3 graphs - infected, safe, and connected with
+    //Append 3 graph titles and 3 plots
+
+    var infected = document.createElement("div");
+    infected.classList.add("graphs")
+    infected.id = "infected"
+
+    var safe = document.createElement("div");
+    safe.classList.add("graphs")
+    safe.id = "safe"
+
+    var connected = document.createElement("div");
+    connected.classList.add("graphs")
+    connected.id = "connected"
+
+    graphsdiv.appendChild(infected)
+    graphsdiv.appendChild(safe)
+    graphsdiv.appendChild(connected)
+
+    var infectedtitle = document.createElement("p");
+    infectedtitle.innerHTML = "Infected"
+    infectedtitle.classList.add("graphtitle")
+    infected.appendChild(infectedtitle);
+    plot( "infected", infectedarr);
+
+
+    var safetitle = document.createElement("p");
+    safetitle.innerHTML = "Safe"
+    safetitle.classList.add("graphtitle")
+    safe.appendChild(safetitle);
+    plot( "safe", safearr);
+
+    var cstitle = document.createElement("p");
+    cstitle.innerHTML = "Connected"
+    cstitle.classList.add("graphtitle")
+    connected.appendChild(cstitle)
+
+    plot( "connected", cs);
+
+    //provide feedback
     scoring_text = cagrid.score();
-
-    var lastScores = [
-        {
-            x: width/10,
-            y: height/2,
-            content: scoring_text[0]
-        },
-        {
-            x: 4*width/10,
-            y: height/2,
-            content: scoring_text[1]
-        },
-        {
-            x: 7*width/10,
-            y: height/2,
-            content: scoring_text[2]
-        }
-    ];
-
-    appendText(svg.node().id, lastScores, textColor, "lastScores");
 
     let old_score = first_score.map( (s) => {return parseFloat((s.split(":")[1]))})
     let cur_score = scoring_text.map( (s) => {return parseFloat((s.split(":")[1]))})
@@ -371,179 +388,38 @@ function end(svgold){
     var saf = cur_score[1] - old_score[1];
     var econ = parseInt( (cur_score[2] - old_score[2]) *100/ old_score[2]);
 
-    var nav = [
-        {
-            x: width/5,
-            y: 0.9*height,
-            content: "Submit"
-        },
-        {
-            x: 2*width/5,
-            y: 0.9*height,
-            content: "New game"
-        }
-    ];
-
     if(  saf> 0 && econ > 0){
 
-        var content = "You have saved " + saf + " infected people and improved mobility by " + econ + "% <br> These noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Will you allow us to collect and analyze your gameplay strategies?"
-
-        // var nav = [
-        //     {
-        //         x: width/10,
-        //         y: 0.65*height,
-        //         content: "You have saved " + saf + " infected people and improved mobility by " + econ + "%"
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.7*height,
-        //         "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.75*height,
-        //         "content": "Will you allow us to collect and analyze your gameplay strategies"
-        //     },
-        //     {
-        //         x: width/5,
-        //         y: 0.9*height,
-        //         content: "Submit"
-        //     },
-        //     {
-        //         x: 3*width/5,
-        //         y: 0.9*height,
-        //         content: "New game"
-        //     }
-        // ];
-
+        feedbackinfo.innerHTML = "You have saved " + saf + " infected people and improved connectivity by " + econ + "%. This is quite a good soltuion for the game. Can we analyze your gameplay?"
     }
     else if ( saf > 0){
 
-        var content = "You have saved " + saf + " infected people. <br> These noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Will you allow us to collect and analyze your gameplay strategies?"
-
-
-        // var nav = [
-        //     {
-        //         x: width/10,
-        //         y: 0.65*height,
-        //         content: "You have saved " + saf + " infected people"
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.7*height,
-        //         "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.75*height,
-        //         "content": "Will you allow us to collect and analyze your gameplay strategies"
-        //     },
-        //     {
-        //         x: width/5,
-        //         y: 0.9*height,
-        //         content: "Submit"
-        //     },
-        //     {
-        //         x: 3*width/5,
-        //         y: 0.9*height,
-        //         content: "New game"
-        //     }
-        // ];
-
+        feedbackinfo.innerHTML =  "You have saved " + saf + " infected people. This could be potential solution for safely exiting COVID-19 lockdowns. Will you allow us to collect and analyze your gameplay strategies?"
     }
     else if (econ > 0){
 
-        var content = "You have improved mobility by " + econ + "% <br> These noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Will you allow us to collect and analyze your gameplay strategies?"
-
-        // var nav = [
-        //     {
-        //         x: width/10,
-        //         y: 0.65*height,
-        //         content: "You have improved mobility by " + econ + "%"
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.7*height,
-        //         "content": "These noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.75*height,
-        //         "content": "Will you allow us to collect and analyze your gameplay strategies"
-        //     },
-        //     {
-        //         x: width/5,
-        //         y: 0.9*height,
-        //         content: "Submit"
-        //     },
-        //     {
-        //         x: 3*width/5,
-        //         y: 0.9*height,
-        //         content: "New game"
-        //     }
-        // ];
+        feedbackinfo.innerHTML =  "You have improved connectivity by " + econ + "% <br> This is quite a good solution for improving human mobility. Will you allow us to collect and analyze your gameplay strategies?"
 
     }
     else{
 
-        var content = "We encourage you to try again to improve gameplay. <br> Your noble actions are potential solutions for safely exiting COVID-19 lockdowns. <br> Would you give this another try?"
+        feedbackinfo.innerHTML =  "We are sorry that you couldn't save the city. We encourage you to try again to improve gameplay. Would you give this another try?"
 
-        // var nav = [
-        //     {
-        //         x: width/10,
-        //         y: 0.65*height,
-        //         content: "We encourage you to try again to improve gameplay."
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.7*height,
-        //         "content": "Your noble actions are potential solutions for safely exiting COVID-19 lockdowns."
-        //     },
-        //     {
-        //         x: width/10,
-        //         y: 0.75*height,
-        //         "content": "Would you give this another try?"
-        //     },
-        //     {
-        //         x: width/5,
-        //         y: 0.9*height,
-        //         content: ""
-        //     },
-        //     {
-        //         x: 2*width/5,
-        //         y: 0.9*height,
-        //         content: "New game"
-        //     }
-        // ];
-
-        nav = [
-            {
-                x: width/5,
-                y: 0.9*height,
-                content: ""
-            },
-            {
-                x: 2*width/5,
-                y: 0.9*height,
-                content: "New game"
-            }
-        ];
     }
 
-    svg.append('foreignObject')
-        .attr('x', width/10)
-        .attr('y', 0.65*height)
-        .attr('width', 0.9*width)
-        .attr('height', 0.8*height)
-        .attr("fill",textColor)
-        .attr("font-family", textStyle)
-        .attr("class", "intro")
-        .append("xhtml:body")
-        .html('<div style="width: 90%; color:textColor;font-size:1vw">' + content + '</div>')
+    // svg.append('foreignObject')
+    //     .attr('x', width/10)
+    //     .attr('y', 0.65*height)
+    //     .attr('width', 0.9*width)
+    //     .attr('height', 0.8*height)
+    //     .attr("fill",textColor)
+    //     .attr("font-family", textStyle)
+    //     .attr("class", "intro")
+    //     .append("xhtml:body")
+    //     .html('<div style="width: 90%; color:textColor;font-size:1vw">' + content + '</div>')
 
-
-    appendText(svg.node().id, nav, textColor, "submission", "pointer");
-    appendTextEvents(svg.node().id, "submission", [submit, main]);
+    // appendText(svg.node().id, nav, textColor, "submission", "pointer");
+    // appendTextEvents(svg.node().id, "submission", [submit, main]);
 
 }
 
@@ -552,16 +428,31 @@ function submit(){
 }
 
 
-function plot( w1, w2, h1, h2, data ){
+function plot( id, data ){
 
-    var svg = d3.select("body").select("#mapdiv").select("svg");
+    var width = document.getElementById(id).offsetWidth
+    var height = document.getElementById(id).offsetHeight
+
+    var svg = d3.select("#"+id)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "white")
+
+    var w1 = width/5;
+    var w2 = 9*height/10;
+    var h1 = height/10;
+    var h2 = 4*width/5;
+
+    console.log(w2 + " , " + h2)
+    console.log(data)
 
     var xscale = d3.scale.linear()
         .domain([0, data.length])
         .range([w1, w2]);
 
     var yscale = d3.scale.linear()
-        .domain([0, d3.max(data)])
+        .domain([d3.max(data), d3.min(data) ])
         .range([h1,h2]);
 
     var x_axis = d3.svg.axis()
@@ -573,7 +464,7 @@ function plot( w1, w2, h1, h2, data ){
         .orient("left")
 
     svg.append("line")
-        .style("stroke", "black")
+        .style("stroke", "Lightblue")
         .style("stroke-width", 4)
         .attr("x1", xscale(0))
         .attr("y1", yscale(0))
@@ -653,8 +544,8 @@ function update( svg ){
 
             //probably selectively add horizontal and vertical
             svg.append("circle")
-                .attr('cx', (st.x+2)*w + 0.5*w) //center it
-                .attr('cy', (st.y+2)*h +  0.5*h)
+                .attr('cx', (st.x)*w + 0.5*w) //center it
+                .attr('cy', (st.y)*h +  0.5*h)
                 // .attr("width", 0.4*w)
             // .attr("height", 0.4*h)
                 .attr("r", 7)
@@ -690,7 +581,7 @@ function update( svg ){
         for( let adjIter = 0; adjIter < adjacencyList.length; adjIter++){
 
             var d = adjacencyList[adjIter]
-            var adjacencyPath = "M" + (Math.floor(((st.x+2)*w))+w/2) + " " + Math.floor(((st.y+2)*h+h/2)) + " L" + (Math.floor(((d.x+2)*w))+w/2) + " " + Math.floor(((d.y+2)*h+h/2));
+            var adjacencyPath = "M" + (Math.floor(((st.x)*w))+w/2) + " " + Math.floor(((st.y)*h+h/2)) + " L" + (Math.floor(((d.x)*w))+w/2) + " " + Math.floor(((d.y)*h+h/2));
 
             svg.append('path')
                 .attr("stroke-width", pathWidth)
@@ -747,8 +638,6 @@ function keyHandler (e){
             ts++;
             rafId = null
             document.removeEventListener("keypress", keyHandler);
-            var mapdiv = document.getElementById("mapdiv")
-            mapdiv.querySelectorAll('*').forEach(n => n.remove());
 
             svg.selectAll("rect")
                 .each(function(l) {
