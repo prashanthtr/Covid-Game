@@ -50,7 +50,7 @@ export function main( ){
     mainmenu.classList.add("centerElDiv");
 
     var title = document.createElement("div");
-    title.innerHTML = "<h2> <i> -- COVID-Life -- <i> </h2>"
+    title.innerHTML = "<h3> <i> -COVID-Life- <i> </h3>"
     title.classList.add("mainTitle");
 
     var newgame = document.createElement("div");
@@ -498,11 +498,14 @@ function plot( id, data ){
         .attr("width", width)
         .attr("height", height)
         .attr("fill", "white")
+        .attr("class", "plot")
+
+    //
 
     var w1 = width/5;
     var w2 = 4*width/5;
     var h1 = height/5;
-    var h2 = 4*height/5;
+    var h2 = 3*height/4;
 
     console.log(w2 + " , " + h2)
     console.log(data)
