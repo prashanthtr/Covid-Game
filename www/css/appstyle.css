@@ -10,6 +10,7 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
   font-size: 100%;
   line-height: 1.5;
   font-family: 'Press Start 2P';
@@ -18,12 +19,12 @@ body {
 }
 
 .example {
-  width: 80%;
-  max-height: 95%;
-  max-width: 1200px;
-  height: 700px;
+  max-width: 98%;
+  max-height: 98%;
+  /* max-width: 1200px; */
+  /* height: 700px; */
   margin: 0 auto;
-  background: black;
+  background: #ffffff;
   border-radius: 20px;
 }
 
@@ -40,7 +41,7 @@ header, footer {
 .main {
   display: flex;
   width: 100%;
-  height: 96%;
+  height: 94%;
   flex-direction: row;
   justify-content: center;
 }
@@ -328,28 +329,51 @@ nav, aside {
 
 @media only screen and (max-width: 640px) and (max-height: 850px) {
 
+
+  * {
+    box-sizing: content-box;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    font-size: 100%;
+    line-height: 1.5;
+    font-family: 'Press Start 2P';
+    background: white;
+  }
+
+  .example {
+    max-width: 98%;
+    max-height: 98%;
+    margin: 0 auto;
+    background: #ffffff;
+  }
+
   .main {
     display: flex;
-    width: 100%;
-    height: 96%;
+    max-width: 96%;
+    max-height: 94%;
     flex-direction: row;
-    justify-content: center;
+    align-items: center;
   }
 
   nav, aside {
     background-color:	#5cb85c;
-    max-width: 3%;
+    min-width: 2%;
+    height: 100%;
+    border-radius: 10px;
   }
 
   header, footer {
-    width: 100%;
-    height: 2%;
-    text-align: center;
-    vertical-align: text-top;
-    font-size: 1rem;
+    width: 96%;
+    min-height: 2%;
     background-color:	#5cb85c;
     border-radius: 10px;
   }
+
 
   .centerElDiv{
     background-color: #ffffff;
@@ -358,7 +382,7 @@ nav, aside {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    width: 100%;
+    max-width: 100%;
     height: 100%;
   }
 
