@@ -139,11 +139,15 @@ function game( resources ){
 
     //init time and resources
     maxTime = 30;
-    ts = 0;
+    ts = -1;
 
     cagrid = populate_grid();
-    cagrid.update();
-    storeSolution()
+    storeSolution();
+
+    // for(var num=0;num<6;num++){
+    //     cagrid.update();
+    // }
+    //run for a few times
 
     resources.init(); //for multiple gameplay
     var scoring = cagrid.score(); //store the initial score
@@ -166,22 +170,22 @@ function game( resources ){
     scorediv.classList.add("scoreScreen");
 
     mapdiv.appendChild(gamediv)
-    mapdiv.appendChild(spacebardiv)
+    //mapdiv.appendChild(spacebardiv)
     mapdiv.appendChild(scorediv)
 
-    spacebardiv.innerHTML = "Start/Next step"
+    spacebardiv.innerHTML = '<i class="fa fa-play-circle fa-2x" aria-hidden="true"> Start </i> / <i class="fa fa-arrow-circle-o-right fa-2x" aria-hidden="true"> Forward </i> ';
 
     spacebardiv.addEventListener("click", function(){
         gamestateupdate();
     });
 
     var timeleft = document.createElement("div");
-    timeleft.innerHTML = "Time Left: " + (maxTime-ts) + " days"
+    timeleft.innerHTML = "Time Left: " + "--- days";
     timeleft.classList.add("scoreContent")
     timeleft.id = "timeleft"
 
     var resources = document.createElement("div");
-    resources.innerHTML = "Clicks left: " + resources_text
+    resources.innerHTML = "Clicks left: --- ";
     resources.classList.add("scoreContent")
     resources.id = "resources";
 
@@ -194,12 +198,12 @@ function game( resources ){
     // scoring1.id = "infected"
 
     var scoring2 = document.createElement("div");
-    scoring2.innerHTML = "Green cells  : " + Math.round(percentgreen) + "%";
+    scoring2.innerHTML = "Green cells  : " +  "--- %";
     scoring2.classList.add("scoreContent")
     scoring2.id = "safe"
 
     var scoring3 = document.createElement("div");
-    scoring3.innerHTML = "Green connected: " + Math.round(percentconnectivity) + "%" ;
+    scoring3.innerHTML = "Green connected: " + "--- %" ;
     scoring3.classList.add("scoreContent")
     scoring3.id = "connected"
 
@@ -225,6 +229,7 @@ function game( resources ){
         }
     })
 
+    scorediv.appendChild(spacebardiv);
     scorediv.appendChild(timeleft);
     scorediv.appendChild(resources);
     //scorediv.appendChild(scoring1);
@@ -272,7 +277,7 @@ function game( resources ){
         .attr("width", w)
         .attr("height", h)
         .style("fill",function(d){
-            return d.color;
+            return "grey";
         })
         .style("fill-opacity",function(d){
             return d.opacity;
@@ -288,6 +293,9 @@ function game( resources ){
         .attr("ypos", function(d){
             return d.y
         })
+
+
+    //draw the paths atbeginnin
     // .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
 
@@ -595,6 +603,7 @@ function update( svg ){
     document.getElementById("connected").innerHTML = "Green connected : " + Math.ceil(percentconnectivity) + "%";
 
     //draw paths
+    var svg = d3.select("#theSvg");
     var bbbox = svg.node().getBoundingClientRect();
     var width = bbbox.width
     var height = bbbox.height;

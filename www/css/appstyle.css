@@ -90,9 +90,9 @@ nav, aside {
 .gameScreen {
   background-color: #F5FCFF;
   border: 1px solid #F5FCFF;
-  height:90%;
+  height: 100%;
   position: relative;
-  width: 70%;
+  width: 65%;
   overflow: hidden;
   border-radius: 20px;
 }
@@ -101,10 +101,11 @@ nav, aside {
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
   border: 1px solid #F5FCFF;
   height:100%;
-  width: 30%;
+  width: 35%;
   overflow: hidden;
 }
 
@@ -138,8 +139,21 @@ nav, aside {
 }
 
 /* Space for the game progress */
+/* .spacebar{ */
+/*   display: table-cell; */
+/* } */
+
 .spacebar{
-  display: none;
+  display: table-cell;
+  background: #a2c829;
+  min-height: 7%;
+  width: 60%;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #654321;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
 }
 
 
@@ -182,16 +196,19 @@ nav, aside {
 }
 
 .scoreContent {
-  min-height: 10%;
+  min-height: 7%;
   color: #654321;
 }
 
 .infoContent {
-  max-height: 10%;
+  min-height: 7%;
   max-width: 60%;
   color: #654321;
   border: 1px solid #888;
   text-align: center;
+  background: #BEBEBE;
+  cursor: pointer;
+  border-radius: 10px;
 
 }
 
@@ -439,7 +456,7 @@ nav, aside {
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
     color: #654321;
-    font-size: 30px;
+    font-size: 14px;
   }
 
   /* The Close Button */
@@ -592,11 +609,11 @@ nav, aside {
 
   .spacebar{
     display: table-cell;
-    background: #BEBEBE;
-    min-height: 3%;
+    background: #a2c829;
+    min-height: 7%;
     min-width: 70%;
     border-radius: 4px;
-    font-size: 30px;
+    font-size: 15px;
     color: #654321;
     vertical-align: middle;
     text-align: center;
@@ -705,7 +722,7 @@ nav, aside {
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
     color: #654321;
-    font-size: 10px;
+    font-size: 9px;
   }
 
   /* The Close Button */
@@ -857,7 +874,7 @@ nav, aside {
 
   .spacebar{
     display: table-cell;
-    background: #BEBEBE;
+    background: #a2c829;
     min-height: 3%;
     min-width: 70%;
     border-radius: 4px;

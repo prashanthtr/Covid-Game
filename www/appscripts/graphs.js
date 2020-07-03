@@ -44,7 +44,7 @@ class Grid {
         else{
             this.nodes[node.id].state = 1
             this.nodes[node.id].color = green
-            this.nodes[node.id].opacity = 1
+            this.nodes[node.id].opacity = 0.8
         }
     }
 
