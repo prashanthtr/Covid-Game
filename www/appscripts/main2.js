@@ -144,12 +144,13 @@ function game( resources ){
     cagrid = populate_grid();
     storeSolution();
 
-    // for(var num=0;num<6;num++){
-    //     cagrid.update();
-    // }
+    for(var num=0;num<2;num++){
+        cagrid.update();
+    }
     //run for a few times
 
     resources.init(); //for multiple gameplay
+    storeSolution();
     var scoring = cagrid.score(); //store the initial score
     first_score = scoring;
 

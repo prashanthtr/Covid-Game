@@ -36,7 +36,7 @@ class Grid {
             this.nodes[node.id].color = orange
             this.nodes[node.id].opacity = low_opacity()
         }
-        else if( r >= 0.3 && r < 0.6){
+        else if( r >= 0.3 && r < 0.72){
             this.nodes[node.id].state = 0
             this.nodes[node.id].color = orange
             this.nodes[node.id].opacity = low_opacity()
