@@ -805,14 +805,17 @@ clickDispatcher
         const item = e.target;
         var x = e.target.getAttribute("xpos")
         var y = e.target.getAttribute("ypos")
-        console.log("connect")
         //cagrid.disconnect(e.y+","+e.x, 0);
         cagrid.testing(y+","+x, 0);
+
         //console.log(item)
         //item.classList.remove('bordered')
-        item.classList.add('connected')
-        item.classList.remove('testinprogress')
-        resources.unselTesting();
+
+        if( item.classList.contains("testinprogress") ){
+            item.classList.add('connected')
+            item.classList.remove('testinprogress')
+            resources.unselTesting();
+        }
         resources_update();
     });
 
