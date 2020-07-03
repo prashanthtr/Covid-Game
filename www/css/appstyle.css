@@ -277,7 +277,7 @@ nav, aside {
 }
 
 .connect {
-  touch-action: none;
+  touch-action: manipulate;
   user-select: none;
   width: 40px;
   height: 40px;
@@ -313,11 +313,13 @@ nav, aside {
 
 .connected{
   /* outline: 1px solid white; */
+  touch-action: manipulation;
 }
 
 
 .testinprogress{
   outline: 3px solid #a2c829;
+  touch-action: manipulation;
 }
 
 .svg-content {
@@ -343,6 +345,7 @@ nav, aside {
     line-height: 1.5;
     font-family: 'Press Start 2P';
     background: white;
+    touch-action: manipulation;
   }
 
   .example {
@@ -350,6 +353,7 @@ nav, aside {
     max-height: 98%;
     margin: 0 auto;
     background: #ffffff;
+    touch-action: manipulation;
   }
 
   .main {
@@ -559,6 +563,16 @@ nav, aside {
     font-size: 10px;
   }
 
+  .connected{
+    /* outline: 1px solid white; */
+    touch-action: manipulation;
+  }
+
+
+  .testinprogress{
+    outline: 3px solid #a2c829;
+    touch-action: manipulation;
+  }
 
 
 
