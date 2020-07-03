@@ -169,7 +169,7 @@ function game( resources ){
     mapdiv.appendChild(spacebardiv)
     mapdiv.appendChild(scorediv)
 
-    spacebardiv.innerHTML = "Press start/Next step"
+    spacebardiv.innerHTML = "Start/Next step"
 
     spacebardiv.addEventListener("click", function(){
         gamestateupdate();
@@ -201,7 +201,7 @@ function game( resources ){
     scoring3.id = "connected"
 
     var infoIcon = document.createElement("div");
-    infoIcon.innerHTML = '<i class="fa fa-info-circle" aria-hidden="true"></i>';
+    infoIcon.innerHTML = '<i class="fa fa-info-circle fa-2x" aria-hidden="true"> Instructions </i>';
     infoIcon.classList.add("infoContent")
     infoIcon.id = "infoIcon"
 
@@ -584,7 +584,7 @@ function update( svg ){
     resources_text = resources.getResState();
 
     document.getElementById("timeleft").innerHTML = "Time Left: " + (maxTime-ts) + " days"
-    document.getElementById("resources").innerHTML = "Test kits: " + resources_text
+    document.getElementById("resources").innerHTML = "Resources left: " + resources_text
     document.getElementById("infected").innerHTML = scoring_text[0];
     document.getElementById("safe").innerHTML = scoring_text[1];
     document.getElementById("connected").innerHTML = scoring_text[2];
@@ -752,7 +752,7 @@ function getClickDispatcher (){
                     console.log(currentEvent)
                     clickEvent.click(currentEvent, projectProxy)
                     waitForDouble = null
-                }, 200);
+                }, 400);
             }
         })
     }, clickEvent, 'on');
