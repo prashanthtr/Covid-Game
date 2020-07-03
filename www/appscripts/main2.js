@@ -181,7 +181,7 @@ function game( resources ){
     timeleft.id = "timeleft"
 
     var resources = document.createElement("div");
-    resources.innerHTML = "Test kits: " + resources_text
+    resources.innerHTML = "Actions left: " + resources_text
     resources.classList.add("scoreContent")
     resources.id = "resources";
 
@@ -681,7 +681,7 @@ function resources_update( svg ){
 
 
     resources_text = resources.getResState();
-    document.getElementById("resources").innerHTML = "Test kits: " + resources_text;
+    document.getElementById("resources").innerHTML = "Actions left: " + resources_text;
 }
 
 

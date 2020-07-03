@@ -672,12 +672,14 @@ nav, aside {
     min-width: 10%;
     cursor: pointer;
     color: #654321;
+    font-size: 16px;
   }
 
   .mainTitle {
     min-height: 12%;
     min-width: 30%;
     color: #5c4033;
+    font-size: 20px;
   }
 
   /* The Modal (background) */
@@ -754,7 +756,7 @@ nav, aside {
 
   .scoreContent {
     color: #654321;
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .infoContent {
