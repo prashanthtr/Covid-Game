@@ -157,13 +157,23 @@ function game( resources ){
     mapdiv.classList.remove("centerElDiv");
     mapdiv.classList.add("gameDiv");
 
+    var spacebardiv = document.createElement("div");
     var gamediv = document.createElement("div");
     var scorediv = document.createElement("div");
+
+    spacebardiv.classList.add("spacebar")
     gamediv.classList.add("gameScreen");
     scorediv.classList.add("scoreScreen");
 
     mapdiv.appendChild(gamediv)
+    mapdiv.appendChild(spacebardiv)
     mapdiv.appendChild(scorediv)
+
+    spacebardiv.innerHTML = "Press start/Next step"
+
+    spacebardiv.addEventListener("click", function(){
+        gamestateupdate();
+    });
 
     var timeleft = document.createElement("div");
     timeleft.innerHTML = "Time Left: " + (maxTime-ts) + " days"
@@ -679,7 +689,6 @@ function keyHandler (e){
 
     switch(charCode){
 
-
     case 115: {
         cursor = "quarantine";
         document.body.style.cursor = "copy"
@@ -692,41 +701,8 @@ function keyHandler (e){
         //document.body.style.cursor = "url(resources/unlock.png), auto";
     case 119: cursor = "default"; break;
     case 32: {
-        if( ts == maxTime){
-            ts++;
-            rafId = null
-            document.removeEventListener("keypress", keyHandler);
-
-            svg.selectAll("rect")
-                .each(function(l) {
-                    //console.log(this.classList)
-                    this.classList.remove("testinprogress");
-                });
-
-            cagrid.score(); //store this score before the running of the simulations
-            cagrid.update();
-            cagrid.score(); //storing one step after the simulation (if there is testing at last step)
-            storeSolution();
-
-            end( svg );
-            return;
-        }
-        else if( ts < maxTime ) {
-            console.log(ts + " , " + maxTime);
-
-            svg.selectAll("rect")
-                .each(function(l) {
-                    //console.log(this.classList)
-                    this.classList.remove("testinprogress");
-                });
-
-            update( svg );
-            resources.useKit();
-            resources.replenish();
-            resources_update();
-            cagrid.resetTesting();
-        }; break;
-    }
+        gamestateupdate();
+    }; break;
     default: {cursor = "default"; document.body.style.cursor = "default"; } break;
     }
 }
@@ -846,6 +822,44 @@ function download(filename, text) {
 
 // Start file download.
 
+function gamestateupdate(){
+
+    var svg = d3.select("#theSvg");
+    if( ts == maxTime){
+        ts++;
+        rafId = null
+        document.removeEventListener("keypress", keyHandler);
+
+        svg.selectAll("rect")
+            .each(function(l) {
+                //console.log(this.classList)
+                this.classList.remove("testinprogress");
+            });
+
+        cagrid.score(); //store this score before the running of the simulations
+        cagrid.update();
+        cagrid.score(); //storing one step after the simulation (if there is testing at last step)
+        storeSolution();
+
+        end( svg );
+        return;
+    }
+    else if( ts < maxTime ) {
+        console.log(ts + " , " + maxTime);
+
+        svg.selectAll("rect")
+            .each(function(l) {
+                //console.log(this.classList)
+                this.classList.remove("testinprogress");
+            });
+
+        update( svg );
+        resources.useKit();
+        resources.replenish();
+        resources_update();
+        cagrid.resetTesting();
+    }
+}
 
 
 main();
