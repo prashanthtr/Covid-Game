@@ -256,7 +256,7 @@ class Grid {
             }
         }
         this.update_score(infected, safe, connected_safe)
-        return ["Infected : " +infected, "Safe:" + safe, "Connected: " + connected_safe];
+        return [infected, safe, connected_safe];
     }
 
     update_score(i, s, cs ){

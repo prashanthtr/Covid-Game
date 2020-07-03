@@ -146,8 +146,8 @@ function game( resources ){
     storeSolution()
 
     resources.init(); //for multiple gameplay
-    scoring_text = cagrid.score(); //store the initial score
-    first_score = scoring_text;
+    var scoring = cagrid.score(); //store the initial score
+    first_score = scoring;
 
     resources_text = resources.getResState();
 
@@ -185,18 +185,21 @@ function game( resources ){
     resources.classList.add("scoreContent")
     resources.id = "resources";
 
-    var scoring1 = document.createElement("div");
-    scoring1.innerHTML = scoring_text[0];
-    scoring1.classList.add("scoreContent")
-    scoring1.id = "infected"
+    var percentgreen = scoring[1]*100/225;
+    var percentconnectivity =  scoring[2]*100/(225*4)
+
+    // var scoring1 = document.createElement("div");
+    // scoring1.innerHTML = scoring_text[0];
+    // scoring1.classList.add("scoreContent")
+    // scoring1.id = "infected"
 
     var scoring2 = document.createElement("div");
-    scoring2.innerHTML = scoring_text[1];
+    scoring2.innerHTML = "Green cells  : " + Math.round(percentgreen) + "%";
     scoring2.classList.add("scoreContent")
     scoring2.id = "safe"
 
     var scoring3 = document.createElement("div");
-    scoring3.innerHTML = scoring_text[2];
+    scoring3.innerHTML = "Green connected: " + Math.round(percentconnectivity) + "%" ;
     scoring3.classList.add("scoreContent")
     scoring3.id = "connected"
 
@@ -224,7 +227,7 @@ function game( resources ){
 
     scorediv.appendChild(timeleft);
     scorediv.appendChild(resources);
-    scorediv.appendChild(scoring1);
+    //scorediv.appendChild(scoring1);
     scorediv.appendChild(scoring2);
     scorediv.appendChild(scoring3);
     scorediv.appendChild(infoIcon);
@@ -412,10 +415,8 @@ function end(svgold){
     plot( "connected", cs);
 
     //provide feedback
-    scoring_text = last_score
-
-    let old_score = first_score.map( (s) => {return parseFloat((s.split(":")[1]))})
-    let cur_score = scoring_text.map( (s) => {return parseFloat((s.split(":")[1]))})
+    let old_score = first_score; //map( (s) => {return parseFloat((s.split(":")[1]))})
+    let cur_score = last_score; //map( (s) => {return parseFloat((s.split(":")[1]))})
 
     var inf = cur_score[0] - old_score[0];
     var saf = cur_score[1] - old_score[1];
@@ -580,14 +581,18 @@ function update( svg ){
     svg.selectAll(".road").remove();
 
     //update and store scores every time step
-    scoring_text = cagrid.score();
+    var scoring = cagrid.score();
+
+    var percentgreen = scoring[1]*100/225;
+    var percentconnectivity =  scoring[2]*100/(225*4);
+
     resources_text = resources.getResState();
 
     document.getElementById("timeleft").innerHTML = "Time Left: " + (maxTime-ts) + " days"
     document.getElementById("resources").innerHTML = "Resources left: " + resources_text
-    document.getElementById("infected").innerHTML = scoring_text[0];
-    document.getElementById("safe").innerHTML = scoring_text[1];
-    document.getElementById("connected").innerHTML = scoring_text[2];
+    //document.getElementById("infected").innerHTML = scoring_text[0];
+    document.getElementById("safe").innerHTML = "Green cells    : " + Math.round(percentgreen) + "%";
+    document.getElementById("connected").innerHTML = "Green connected : " + Math.ceil(percentconnectivity) + "%";
 
     //draw paths
     var bbbox = svg.node().getBoundingClientRect();
@@ -752,7 +757,7 @@ function getClickDispatcher (){
                     console.log(currentEvent)
                     clickEvent.click(currentEvent, projectProxy)
                     waitForDouble = null
-                }, 400);
+                }, 300);
             }
         })
     }, clickEvent, 'on');
@@ -837,6 +842,7 @@ function gamestateupdate(){
             });
 
         cagrid.score(); //store this score before the running of the simulations
+
         cagrid.update();
         cagrid.score(); //storing one step after the simulation (if there is testing at last step)
         storeSolution();
