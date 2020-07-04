@@ -433,7 +433,7 @@ function end(svgold){
 
     if(  saf> 0 && econ > 0){
 
-        feedbackinfo.innerHTML = "You have saved " + saf + " infected people and improved connectivity by " + econ + "%. This is quite a good soltuion for the game. Can we analyze your gameplay?"
+        feedbackinfo.innerHTML = "You have saved " + saf + " infected people and improved connectivity by " + econ + "%. This is quite a good solution for the game. Can we analyze your gameplay?"
     }
     else if ( saf > 0){
 
