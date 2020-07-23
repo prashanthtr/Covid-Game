@@ -1,0 +1,952 @@
+* {
+  box-sizing: border-box;
+}
+
+*:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  font-size: 100%;
+  line-height: 1.5;
+  font-family: 'Press Start 2P';
+  background: white;
+
+}
+
+.example {
+  max-width: 98%;
+  max-height: 98%;
+  /* max-width: 1200px; */
+  /* height: 700px; */
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+header, footer {
+  width: 100%;
+  height: 2%;
+  text-align: center;
+  vertical-align: text-top;
+  font-size: 1rem;
+  background-color:	#5cb85c;
+  border-radius: 10px;
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  height: 94%;
+  flex-direction: row;
+  justify-content: center;
+}
+
+nav, aside {
+  background-color:	#5cb85c;
+  min-width: 2%;
+}
+
+.centerElDiv{
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.mainmenuItem {
+  min-height: 7%;
+  min-width: 10%;
+  cursor: pointer;
+  color: #654321;
+}
+
+.mainTitle {
+  min-height: 12%;
+  min-width: 20%;
+  color: #5c4033;
+  font-size: 35px;
+}
+
+.gameDiv{
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.gameScreen {
+  background-color: #F5FCFF;
+  border: 1px solid #F5FCFF;
+  height: 100%;
+  position: relative;
+  width: 65%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.scoreScreen {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid #F5FCFF;
+  height:100%;
+  width: 35%;
+  overflow: hidden;
+}
+
+
+.graphDiv{
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.graphScreen{
+  height: 45%;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+
+.spacediv{
+  height:10%;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+}
+
+/* Space for the game progress */
+/* .spacebar{ */
+/*   display: table-cell; */
+/* } */
+
+.spacebar{
+  display: table-cell;
+  background: #a2c829;
+  min-height: 7%;
+  width: 60%;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #654321;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+}
+
+
+.graphs{
+  height: 100%;
+  width: 30%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.graphtitle{
+  height:10%;
+  font-size: 12px;
+  color: #654321;
+}
+
+.feedback{
+  max-height:25%;
+  width: 100%;
+  background-color: #ffffff;
+  text-align: center;
+  color: #654321;
+}
+
+.newgame{
+  max-height:20%;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.pboxed{
+  color: #5c4033;
+  border: 1px solid #888;
+}
+
+.scoreContent {
+  min-height: 7%;
+  color: #654321;
+}
+
+.infoContent {
+  min-height: 7%;
+  max-width: 60%;
+  color: #654321;
+  border: 1px solid #888;
+  text-align: center;
+  background: #BEBEBE;
+  cursor: pointer;
+  border-radius: 10px;
+
+}
+
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  color: #654321
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  color: #654321
+
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+.mainDiv {
+  background-color: #F5FCFF;
+  border: 1px solid #F5FCFF;
+  height:100%;
+  /* position: relative; */
+  width: 100%;
+  /* vertical-align: center; */
+  overflow: hidden;
+}
+
+.content1 {
+  background-color: #F5FCFF;
+  flex-grow: 0.75;
+  border: 1px solid #F5FCFF;
+  height:100%;
+  position: relative;
+  width: 30%;
+  vertical-align: center;
+  overflow: hidden;
+}
+
+
+
+.flexcol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: safe center;
+  height: 100%;
+}
+
+.testing {
+  touch-action: none;
+  user-select: none;
+  max-width: 40px;
+  height: 40px;
+}
+
+.disconnect {
+  touch-action: none;
+  user-select: none;
+  width: 40px;
+  height: 40px;
+}
+
+.connect {
+  touch-action: manipulate;
+  user-select: none;
+  width: 40px;
+  height: 40px;
+}
+
+.time {
+  width: 40px;
+  height: 40px;
+}
+
+.score {
+  width: 40px;
+  height: 40px;
+}
+
+.lock {
+  cursor: url(resources/lock.png), auto;
+  width: 10px;
+  height:10px;
+}
+
+.test {
+  cursor: url(resources/quarantine.png), auto;
+}
+
+.unlock{
+  cursor: url(resources/unlock.png), auto;
+}
+
+.bordered{
+  /* outline: 3px dotted white; */
+}
+
+.connected{
+  /* outline: 1px solid white; */
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+
+.testinprogress{
+  outline: 3px solid #a2c829;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.svg-content {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+
+@media only screen and (max-width: 1024px) and (max-height: 1366px) {
+
+
+  * {
+    box-sizing: content-box;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    font-size: 100%;
+    line-height: 1.5;
+    font-family: 'Press Start 2P';
+    background: white;
+    touch-action: manipulation;
+  }
+
+  .example {
+    max-width: 98%;
+    max-height: 98%;
+    margin: 0 auto;
+    background: #ffffff;
+    touch-action: manipulation;
+  }
+
+  .main {
+    display: flex;
+    max-width: 96%;
+    max-height: 94%;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  nav, aside {
+    background-color:	#5cb85c;
+    min-width: 2%;
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  header, footer {
+    width: 96%;
+    min-height: 2%;
+    background-color:	#5cb85c;
+    border-radius: 10px;
+  }
+
+
+  .centerElDiv{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    max-width: 100%;
+    height: 100%;
+  }
+
+  .mainmenuItem {
+    min-height: 7%;
+    min-width: 10%;
+    cursor: pointer;
+    color: #654321;
+    font-size: 25px;
+  }
+
+  .mainTitle {
+    min-height: 12%;
+    min-width: 30%;
+    color: #5c4033;
+    font-size: 35px;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    color: #654321
+  }
+
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    color: #654321;
+    font-size: 14px;
+  }
+
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .gameDiv{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  .gameScreen {
+    background-color: #F5FCFF;
+    border: 1px solid #F5FCFF;
+    height: 80%;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .scoreScreen {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #F5FCFF;
+    height: 20%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .scoreContent {
+    color: #654321;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .infoContent {
+    max-height: 20%;
+    max-width: 40%;
+    color: #654321;
+    border: 1px solid #888;
+    text-align: center;
+  }
+
+  /* the layout of the mainscreen for graphs, feedback text */
+  .graphDiv{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: space-between;
+    width: 100%;
+    height: 100%;
+  }
+
+  .graphScreen{
+    width: 100%;
+    max-height: 98%;
+    background-color: #ffffff;
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .spacediv{
+    height: 0%;
+    width: 100%;
+    background-color: #ffffff;
+    display: none;
+  }
+
+  /* need to tweak this for cross device compatability */
+  .graphs{
+    width: 50%;
+    height: 43%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .graphtitle{
+    max-height:10%;
+    width: 100%;
+    font-size: 13px;
+    color: #654321;
+    text-align: center;
+  }
+
+  .plot{
+    max-height: 85%;
+    width: 100%;
+    color: #654321;
+  }
+
+  .feedback{
+    max-height:25%;
+    width: 100%;
+    background-color: #ffffff;
+    text-align: center;
+    color: #654321;
+    font-size: 13px;
+  }
+
+  .newgame{
+    max-height:10%;
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .pboxed{
+    color: #5c4033;
+    border: 1px solid #888;
+    font-size: 14px;
+  }
+
+  .connected{
+    /* outline: 1px solid white; */
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+
+  .testinprogress{
+    outline: 3px solid #a2c829;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .spacebar{
+    display: table-cell;
+    background: #a2c829;
+    min-height: 7%;
+    min-width: 70%;
+    border-radius: 4px;
+    font-size: 15px;
+    color: #654321;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+
+}
+
+
+@media only screen and (max-width: 650px) and (max-height: 850px) {
+
+
+  * {
+    box-sizing: content-box;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    font-size: 100%;
+    line-height: 1.5;
+    font-family: 'Press Start 2P';
+    background: white;
+    touch-action: manipulation;
+  }
+
+  .example {
+    max-width: 98%;
+    max-height: 98%;
+    margin: 0 auto;
+    background: #ffffff;
+    touch-action: manipulation;
+  }
+
+  .main {
+    display: flex;
+    max-width: 96%;
+    max-height: 94%;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  nav, aside {
+    background-color:	#5cb85c;
+    min-width: 2%;
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  header, footer {
+    width: 96%;
+    min-height: 2%;
+    background-color:	#5cb85c;
+    border-radius: 10px;
+  }
+
+
+  .centerElDiv{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    max-width: 100%;
+    height: 100%;
+  }
+
+  .mainmenuItem {
+    min-height: 7%;
+    min-width: 10%;
+    cursor: pointer;
+    color: #654321;
+    font-size: 16px;
+  }
+
+  .mainTitle {
+    min-height: 12%;
+    min-width: 30%;
+    color: #5c4033;
+    font-size: 20px;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    color: #654321
+  }
+
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    color: #654321;
+    font-size: 9px;
+  }
+
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .gameDiv{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  .gameScreen {
+    background-color: #F5FCFF;
+    border: 1px solid #F5FCFF;
+    height: 80%;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .scoreScreen {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #F5FCFF;
+    height: 20%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .scoreContent {
+    color: #654321;
+    font-size: 11px;
+  }
+
+  .infoContent {
+    max-height: 100%;
+    max-width: 100%;
+    color: #654321;
+    border: 1px solid #888;
+    text-align: center;
+    font-size: 10px;
+  }
+
+  /* the layout of the mainscreen for graphs, feedback text */
+  .graphDiv{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: space-between;
+    width: 100%;
+    height: 100%;
+  }
+
+  .graphScreen{
+    width: 100%;
+    max-height: 98%;
+    background-color: #ffffff;
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .spacediv{
+    height: 0%;
+    width: 100%;
+    background-color: #ffffff;
+    display: none;
+  }
+
+  /* need to tweak this for cross device compatability */
+  .graphs{
+    width: 50%;
+    height: 43%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .graphtitle{
+    max-height:10%;
+    width: 100%;
+    font-size: 6px;
+    color: #654321;
+    text-align: center;
+  }
+
+  .plot{
+    max-height: 85%;
+    width: 100%;
+    color: #654321;
+  }
+
+  .feedback{
+    max-height:25%;
+    width: 100%;
+    background-color: #ffffff;
+    text-align: center;
+    color: #654321;
+    font-size: 10px;
+  }
+
+  .newgame{
+    max-height:10%;
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .pboxed{
+    color: #5c4033;
+    border: 1px solid #888;
+    font-size: 10px;
+  }
+
+  .connected{
+    /* outline: 1px solid white; */
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+
+  .testinprogress{
+    outline: 3px solid #a2c829;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .spacebar{
+    display: table-cell;
+    background: #a2c829;
+    min-height: 3%;
+    min-width: 70%;
+    border-radius: 4px;
+    font-size: 10px;
+    color: #654321;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+
+}
+
+
+
+
+/*   .flexcol { */
+/*     flex-direction: row; */
+/*     width: 100%; */
+/*     align-content: space-around; */
+/*     justify-content: baseline; */
+/*   } */
+
+
+/*   .content { */
+/*     background-color: #f5fcff; */
+/*     flex-grow: 0.9; */
+/*     border: 1px solid black; */
+/*     height:100%; */
+/*     position: relative; */
+/*     width: 100%; */
+/*     vertical-align: top; */
+/*     overflow: hidden; */
+
+/*   } */
+
+/*   .testing { */
+/*   touch-action: none; */
+/*   user-select: none; */
+/*   max-width: 30px; */
+/*   height: 30px; */
+/* } */
+
+/* .disconnect { */
+/*   touch-action: none; */
+/*   user-select: none; */
+/*   width: 30px; */
+/*   height: 30px; */
+/* } */
+
+/* .connect { */
+/*   touch-action: none; */
+/*   user-select: none; */
+/*   width: 30px; */
+/*   height: 30px; */
+/* } */
+
+/* .time { */
+/*   width: 30px; */
+/*   height: 30px; */
+/* } */
+
+/* .score { */
+/*   width: 30px; */
+/*   height: 30px; */
+/* } */
+
+
+
+/* .bordered{ */
+/*   outline: 4px solid black; */
+/* } */
+
+/* .testinprogress{ */
+/*   outline: 3px dotted black; */
+/* } */

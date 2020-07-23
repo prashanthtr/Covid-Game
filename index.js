@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 
 var kport = process.env.PORT || 3002; //dynamic port
 
-var m_useRoot="/www";
+var m_useRoot="/build";
 app.use(express.static(__dirname + m_useRoot));
 
 // app.get('/', function(req, res){

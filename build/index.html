@@ -1,0 +1,111 @@
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Press Start 2P" rel="stylesheet"">
+    <link rel="stylesheet" type="text/css" href="css/appstyle.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"> </script>
+    <script type="text/javascript"
+            src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"> </script>
+    <!-- <script src="https://d3js.org/topojson.v1.min.js"></script> -->
+
+    <script type="module" src="appscripts/main2.js"> </script>
+
+  </head>
+
+  <body>
+
+    <div class="example">
+      <header>
+      </header>
+      <main class="main">
+        <nav>
+        </nav>
+
+        <div class="mainDiv" id="mapdiv">
+
+        </div>
+
+        <div id="introText" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p> A virus has brought your city's operations to a standstill.
+            Experts predict that some patterns may be able to break the virus
+            spread and allow mobility. However, they need people's help to find
+            these patterns. </p>
+            <br>
+            <p> You have 30 days left to come up with a novel strategy to save
+              your city. Use your resources wisely to create good patterns and
+              break the virus chain. </p>
+          </div>
+        </div>
+
+        <div id="instructionsText" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4> Goal: Connect as many green cells on the screen as possible. </h4>
+            <h4> Rules:</h4>
+            <ul>
+              <i>
+                <li> No overcrowding (No >4 green cells around any green cell) </li>
+                <li> No undercrowding (No <2 green cells around any green cell) </li>
+                <li> Optimal crowding (2,3,4 green cells around
+                  any green cell) </li>
+                <li> Making new green cells </li>
+                <ul>
+                <li> Click <i class="fa fa-mouse-pointer" aria-hidden="true"></i>
+                or tap <i class="fa fa-hand-o-up" aria-hidden="true"></i> to select grey patch. </li>
+                <li>  Double click or tap to <b> Undo </b> </li>
+                <li> <i class="fa fa-keyboard-o fa-2x" aria-hidden="true"></i>
+                  Press spacebar or Press <i class="fa fa-arrow-circle-o-right
+                  fa-2x" aria-hidden="true"> </i> Forward to turn green </li>
+              </i>
+              </ul>
+              <li> Press <i class="fa fa-arrow-circle-o-right fa-2x" aria-hidden="true"> </i> tap to get more clicks (less days) </li>
+
+            </ul>
+            <h4> Hint: Try your own creative pattern(s). </h4>
+          </div>
+        </div>
+
+        <div id="creditsText" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4> Game development: Prashanth Thattai R </h4>
+            <h6> <i> PhD, National University of Singapore </i> </h6>
+            <h4> Modeling: Karthik Pushpavanam S </h4>
+            <h6> <i> PhD, Arizona State University </i> </h6>
+            <h4> Design and ideation: Adithya Kumar </h4>
+            <h6> <i> PhD, Pennsylvania State University </i> </h6>
+          </div>
+        </div>
+
+
+        <div id="email" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p> We would really apperciate if you take the time to send us your
+            gameplay for academic purposes. </p>
+             <button id="download"> Generate gameplay file </button> <br>
+            Please mail your gameplay file to covidlifegame@gmail.com! <br>
+            Thank you!
+          </div>
+        </div>
+
+        <aside>
+
+        </aside>
+
+      </main>
+      <footer>
+      </footer>
+    </div>
+
+  </body>
+
+</html>
