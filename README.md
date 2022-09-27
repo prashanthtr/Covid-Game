@@ -1,3 +1,4 @@
+# Website: [COVID-GAME](http://covidgame20.herokuapp.com/)
 
 This is a simple terminal-based simulation of resource allocation game.
 
